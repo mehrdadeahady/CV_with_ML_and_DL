@@ -1,0 +1,992 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:"Segoe UI Emoji";
+	panose-1:2 11 5 2 4 2 4 2 2 3;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:107%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+.MsoPapDefault
+	{margin-bottom:8.0pt;
+	line-height:107%;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:.5in .5in .5in .5in;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US style='word-wrap:break-word'>
+
+<div class=WordSection1>
+
+<p class=MsoNormal style='line-height:normal'><b><span style='font-size:16.0pt;
+font-family:"Times New Roman",serif'>Big Picture:</span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman",serif'>Machine learning (ML) in Computer Vision
+can be </span><a name="_Hlk203564825"><b><span style='font-size:14.0pt;
+font-family:"Times New Roman",serif'>Categorized</span></b></a><span
+style='font-size:12.0pt;font-family:"Times New Roman",serif'> </span><span
+style='font-size:12.0pt;font-family:"Times New Roman",serif'>in several ways
+depending on the <b>Task, Approach</b>, and <b>Learning Paradigm</b>. </span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman",serif'>Here's a breakdown to help make sense of
+it all:</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:14.0pt;
+font-family:"Segoe UI Emoji",sans-serif'>&#129504;</span><span
+style='font-size:14.0pt;font-family:"Times New Roman",serif'> <a
+name="_Hlk203564899"><b>Categorizing </b></a><b>by Learning Paradigm (Abstract)</b></span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+     font-family:"Times New Roman",serif'>Supervised Learning</span></b></li>
+ <ul type=circle>
+  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+      font-family:"Times New Roman",serif'>Models learn from labeled datasets</span></li>
+  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+      font-family:"Times New Roman",serif'>Common for tasks like image
+      classification and object detection</span></li>
+ </ul>
+ <li class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+     font-family:"Times New Roman",serif'>Unsupervised Learning</span></b></li>
+ <ul type=circle>
+  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+      font-family:"Times New Roman",serif'>Models explore patterns without
+      labels</span></li>
+  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+      font-family:"Times New Roman",serif'>Used for clustering, dimensionality
+      reduction (e.g., autoencoders)</span></li>
+ </ul>
+ <li class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+     font-family:"Times New Roman",serif'>Semi-Supervised Learning</span></b></li>
+ <ul type=circle>
+  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+      font-family:"Times New Roman",serif'>Combines a small amount of labeled
+      data with a large pool of unlabeled data</span></li>
+  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+      font-family:"Times New Roman",serif'>Helps when labeling is expensive or
+      slow</span></li>
+ </ul>
+ <li class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+     font-family:"Times New Roman",serif'>Self-Supervised Learning</span></b></li>
+ <ul type=circle>
+  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+      font-family:"Times New Roman",serif'>Learns representations from the data
+      itself (e.g., contrastive learning)</span></li>
+  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+      font-family:"Times New Roman",serif'>Powerful for pretraining models on
+      large unlabeled datasets</span></li>
+ </ul>
+ <li class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+     font-family:"Times New Roman",serif'>Reinforcement Learning</span></b></li>
+</ul>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman",serif'>Agents interact with environments and
+     learn via rewards</span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman",serif'>Used in robotics and vision-based
+     navigation</span></li>
+</ul>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman",serif'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:14.0pt;
+font-family:"Segoe UI Emoji",sans-serif'>&#128736;</span><span
+style='font-size:14.0pt;font-family:"Times New Roman",serif'>&#65039; <b>Categorizing
+by Technique or Architecture (Comprehensive)</b></span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman",serif'>Taxonomy of Machine-Learning Techniques
+&amp; Architectures in Computer Vision</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman",serif'>Below is a comprehensive, two-axis
+categorization. First by <b>Architectural Family</b>, then by <b>Learning Paradigm</b>.
+</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman",serif'>These categories often overlap in modern
+research:</span></p>
+
+<ol start=1 type=1>
+ <li class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+     font-family:"Times New Roman",serif'>Learning Technique</span></b><span
+     style='font-size:12.0pt;font-family:"Times New Roman",serif'> &gt;&gt; how
+     the model learns</span></li>
+ <li class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+     font-family:"Times New Roman",serif'>Model Architecture</span></b><span
+     style='font-size:12.0pt;font-family:"Times New Roman",serif'> &gt;&gt;
+     structural family of the network</span></li>
+</ol>
+
+<p class=MsoNormal style='margin-left:.5in;line-height:normal'><span
+style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:200%'><b><span style='font-size:14.0pt;
+line-height:200%;font-family:"Times New Roman",serif'>1. Categorizing by
+Learning Technique</span></b></p>
+
+<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+ style='border-collapse:collapse;border:none'>
+ <tr>
+  <td width=18 valign=top style='width:13.2pt;border:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>&nbsp;</span></p>
+  </td>
+  <td width=702 valign=top style='width:526.3pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>1.1 Supervised Learning</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Learns from labeled images or
+       videos</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Common tasks: image classification,
+       object detection, semantic/instance segmentation, pose estimation</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Typical architectures:</span></li>
+  </ul>
+  <p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+  normal'><span style='font-size:10.0pt;font-family:Wingdings'>Ø<span
+  style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span dir=LTR></span><span
+  style='font-size:12.0pt;font-family:"Times New Roman",serif'>CNN backbones
+  (ResNet, DenseNet, EfficientNet, U-Net)</span></p>
+  <p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+  normal'><span style='font-size:10.0pt;font-family:Wingdings'>Ø<span
+  style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span dir=LTR></span><span
+  style='font-size:12.0pt;font-family:"Times New Roman",serif'>Vision
+  Transformers (ViT, Swin Transformer)</span></p>
+  <p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+  normal'><span style='font-size:10.0pt;font-family:Wingdings'>Ø<span
+  style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span dir=LTR></span><span
+  style='font-size:12.0pt;font-family:"Times New Roman",serif'>Hybrid
+  CNN+Transformer (CvT, ConViT)</span></p>
+  <p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+  normal'><span style='font-size:10.0pt;font-family:Wingdings'>Ø<span
+  style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span dir=LTR></span><span
+  style='font-size:12.0pt;font-family:"Times New Roman",serif'>Metric networks
+  for face recognition (Siamese, triplet)</span></p>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>1.2 Unsupervised Learning</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Extracts structure without labels</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Tasks: clustering, density
+       estimation, feature encoding</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Key methods:</span></li>
+  </ul>
+  <p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+  normal'><span style='font-size:10.0pt;font-family:Wingdings'>Ø<span
+  style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span dir=LTR></span><span
+  style='font-size:12.0pt;font-family:"Times New Roman",serif'>Autoencoders
+  (vanilla AE, VAE)</span></p>
+  <p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+  normal'><span style='font-size:10.0pt;font-family:Wingdings'>Ø<span
+  style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span dir=LTR></span><span
+  style='font-size:12.0pt;font-family:"Times New Roman",serif'>Generative
+  models (GANs, Normalizing Flows, Autoregressive PixelCNN/RNN)</span></p>
+  <p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+  normal'><span style='font-size:10.0pt;font-family:Wingdings'>Ø<span
+  style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span dir=LTR></span><span
+  style='font-size:12.0pt;font-family:"Times New Roman",serif'>Deep clustering
+  (DeepCluster, IIC)</span></p>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>1.3 Self-Supervised Learning</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Creates proxy tasks from raw pixels</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Paradigms:</span></li>
+  </ul>
+  <p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+  normal'><span style='font-size:10.0pt;font-family:Wingdings'>Ø<span
+  style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span dir=LTR></span><span
+  style='font-size:12.0pt;font-family:"Times New Roman",serif'>Contrastive
+  learning (SimCLR, MoCo, BYOL)</span></p>
+  <p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+  normal'><span style='font-size:10.0pt;font-family:Wingdings'>Ø<span
+  style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span dir=LTR></span><span
+  style='font-size:12.0pt;font-family:"Times New Roman",serif'>Masked image
+  modeling (MAE, BEiT)</span></p>
+  <p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+  normal'><span style='font-size:10.0pt;font-family:Wingdings'>Ø<span
+  style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span dir=LTR></span><span
+  style='font-size:12.0pt;font-family:"Times New Roman",serif'>Pretext tasks
+  (rotation prediction, jigsaw puzzles)</span></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Backbones: CNNs or Vision
+       Transformers</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>1.4 Semi-Supervised &amp;
+  Weakly-Supervised Learning</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Mixes labeled + unlabeled (or weak
+       labels)</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Techniques: pseudo-labeling
+       (FixMatch), consistency regularization (UDA), multi-instance learning
+       (CAMs for localization)</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Architectures: primarily CNNs, with
+       emerging Transformer-based variants</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>1.5 Transfer Learning</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Pretrain on large corpus, fine-tune
+       on target domain</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Common in medical, satellite
+       imagery</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Models: pretrained CNNs (ImageNet
+       backbones), ViTs, CLIP</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>1.6 Meta-Learning &amp; Few-Shot
+  Learning</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Learns to adapt from very few
+       examples</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Approaches:</span></li>
+  </ul>
+  <p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+  normal'><span style='font-size:10.0pt;font-family:Wingdings'>Ø<span
+  style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span dir=LTR></span><span
+  style='font-size:12.0pt;font-family:"Times New Roman",serif'>Optimization-based
+  (MAML, Reptile)</span></p>
+  <p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+  normal'><span style='font-size:10.0pt;font-family:Wingdings'>Ø<span
+  style='font:7.0pt "Times New Roman"'>&nbsp; </span></span><span dir=LTR></span><span
+  style='font-size:12.0pt;font-family:"Times New Roman",serif'>Metric-based
+  (Prototypical Networks, Matching Nets)</span></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Backbones: lightweight CNNs,
+       occasionally GNNs</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>1.7 Zero-Shot &amp; Open-Set Learning</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Recognize unseen classes by attribute
+       or language embedding</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Methods: semantic prototypes,
+       CLIP-style contrastive image-text models</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>1.8 Domain Adaptation &amp;
+  Generalization</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Align distributions across
+       source/target</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Techniques: adversarial alignment,
+       cycle-consistency, feature normalization</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>1.9 Active Learning</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Queries most informative unlabeled
+       samples</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Strategies: uncertainty sampling,
+       diversity sampling</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Plugs into any backbone</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>1.10 Reinforcement Learning in Vision</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Vision-based control, navigation,
+       robotics</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Architectures: CNN+RNN/Transformer
+       for temporal state encoding</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>1.11 Federated &amp; Distributed
+  Learning</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Privacy-preserving cross-device
+       training</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Challenges: non-IID data,
+       communication efficiency</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>1.12 Continual &amp; Lifelong Learning</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Incremental updates without
+       catastrophic forgetting</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Methods: regularization (EWC),
+       replay buffers, dynamic architectures</span></li>
+  </ul>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='line-height:200%'><b><span style='font-size:14.0pt;
+line-height:200%;font-family:"Times New Roman",serif'>&nbsp;</span></b></p>
+
+<p class=MsoNormal style='line-height:200%'><b><span style='font-size:14.0pt;
+line-height:200%;font-family:"Times New Roman",serif'>2. Categorizing by Model
+Architecture</span></b></p>
+
+<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+ style='border-collapse:collapse;border:none'>
+ <tr>
+  <td width=18 valign=top style='width:13.2pt;border:solid windowtext 1.0pt;
+  padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:14.0pt;
+  font-family:"Times New Roman",serif'>&nbsp;</span></b></p>
+  </td>
+  <td width=702 valign=top style='width:526.3pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0in 5.4pt 0in 5.4pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.1 Convolutional Neural Networks (CNNs)</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>LeNet, AlexNet, VGG &#8594; ResNet,
+       DenseNet, EfficientNet</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Specialized: U-Net, FCN, DeepLab,
+       PSPNet</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Uses: all supervised, many
+       self-supervised, generative (DCGAN)</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.2 Vision Transformers</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>ViT, DeiT, T2T-ViT &#8594; Swin,
+       PVT, CoaT</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Applied in supervised, masked-model
+       pretraining, few-shot, detection (DETR)</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.3 MLP-Based Vision Models</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>MLP-Mixer, ResMLP, gMLP</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Simpler alternatives to
+       convolutions and transformers</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.4 Recurrent &amp; Spatiotemporal
+  Models</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>ConvLSTM, PredNet for video
+       prediction</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>3D CNNs (C3D, I3D, SlowFast) for
+       action recognition</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.5 Graph Neural Networks (GNNs)</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Scene graphs, relational reasoning
+       (Graph R-CNN, GATs)</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.6 Generative Architectures</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>GAN variants: DCGAN, StyleGAN,
+       CycleGAN, BigGAN</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>VAEs, &#946;-VAE, VQ-VAE</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Normalizing flows: RealNVP, Glow</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Autoregressive: PixelRNN, PixelCNN</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.7 Hybrid &amp; Multi-Modal Models</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>CNN+Transformer (CvT, ConViT)</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Vision+Language: CLIP, ALIGN,
+       VisualBERT, VilBERT</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>GNN+CNN for relational tasks</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.8 Metric &amp; Siamese Networks</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Siamese nets, Triplet nets for face
+       verification, one-shot recognition</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.9 Capsule Networks</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Dynamic routing for viewpoint
+       equivariance (CapsNet)</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.10 Spiking &amp; Event-Based Networks</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Neuromorphic sensors, spiking
+       neuron models for ultra-low-latency vision</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.11 Implicit &amp; 3D Representations</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Point clouds: PointNet, PointNet++,
+       DGCNN</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Neural fields: NeRF, DeepSDF for
+       volumetric rendering</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.12 Efficient, Pruned, Quantized Models</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>MobileNet, ShuffleNet, GhostNet for
+       edge devices</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Lottery ticket, structured pruning,
+       post-training quantization</span></li>
+  </ul>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>2.13 Explainable &amp; Robust Models</span></b></p>
+  <ul type=disc>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Interpretability: Grad-CAM, LIME,
+       saliency maps</span></li>
+   <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+       font-family:"Times New Roman",serif'>Adversarial defense: robust
+       training, certification methods</span></li>
+  </ul>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:14.0pt;
+font-family:"Segoe UI Emoji",sans-serif'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:14.0pt;
+font-family:"Segoe UI Emoji",sans-serif'>&#128248;</span><span
+style='font-size:14.0pt;font-family:"Times New Roman",serif'> <b>Categorizing by
+Vision Task</b></span></p>
+
+<table class=MsoNormalTable border=1 cellspacing=3 cellpadding=0
+ style='border:solid #ED7D31 1.0pt'>
+ <thead>
+  <tr>
+   <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+   <p class=MsoNormal style='line-height:normal'><b><span style='font-size:
+   12.0pt;font-family:"Times New Roman",serif'>Task</span></b></p>
+   </td>
+   <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+   <p class=MsoNormal style='line-height:normal'><b><span style='font-size:
+   12.0pt;font-family:"Times New Roman",serif'>Description</span></b></p>
+   </td>
+   <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+   <p class=MsoNormal style='line-height:normal'><b><span style='font-size:
+   12.0pt;font-family:"Times New Roman",serif'>Example Models/Techniques</span></b></p>
+   </td>
+  </tr>
+ </thead>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Image Classification</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Assign one or more labels to an entire
+  image</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>CNNs, ResNet, EfficientNet, MobileNet,
+  Vision Transformer (ViT)</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Object Detection</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Identify and localize objects with
+  bounding boxes</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>YOLO (v1–v8), SSD, Faster R-CNN,
+  RetinaNet, DETR</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Semantic Segmentation</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Classify each pixel into a semantic
+  category</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>U-Net, DeepLab, FCN, SegNet</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Instance Segmentation</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Segment and distinguish individual
+  object instances</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Mask R-CNN, SOLOv2, PointRend</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Panoptic Segmentation</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Combine semantic and instance
+  segmentation</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Panoptic FPN, UPSNet, Detectron2</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Keypoint Detection</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Detect anatomical/structural points
+  (e.g., joints on people)</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>OpenPose, HRNet, DeepCut</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Pose Estimation</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Predict human or object poses via
+  keypoints</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>MediaPipe, AlphaPose, PoseNet</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Facial Recognition</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Identify or verify individual faces</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>FaceNet, Dlib, ArcFace, DeepFace</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Image Generation (Synthesis)</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Generate realistic or stylized images
+  from input</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>GANs (StyleGAN, Pix2Pix), VAEs,
+  Diffusion Models (Stable Diffusion)</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Image-to-Image Translation</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Convert one image domain to another</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>CycleGAN, Pix2Pix, SPADE</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Super Resolution</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Enhance image resolution</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>ESRGAN, SRGAN, Real-ESRGAN</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Image Denoising</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Remove noise from images</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>DnCNN, N2N (Noise2Noise), BM3D</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Image Inpainting</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Fill in missing regions</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Contextual Attention GAN, DeepFill</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Image Captioning</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Generate natural language descriptions
+  of images</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>CNN+LSTM, Transformer-based (BLIP,
+  ViLBERT)</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Visual Question Answering (VQA)</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Answer questions based on image content</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>ViLT, VisualBERT, M4C Transformer</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Depth Estimation</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Infer depth from single or stereo images</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Monodepth2, MiDaS, DPT</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>3D Reconstruction</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Rebuild 3D models from 2D images or
+  video</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>NeRF, COLMAP, Meshroom</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Optical Flow Estimation</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Track motion between video frames</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>FlowNet, PWC-Net, RAFT</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Video Classification</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Assign labels to video clips</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>I3D, C3D, SlowFast, TimeSformer</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Action Recognition</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Identify human actions from video</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>TSN (Temporal Segment Network),
+  SlowFast, PoseC3D</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Object Tracking</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Follow object location over time in
+  video</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Deep SORT, ByteTrack, Tracktor</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Multimodal Learning</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Combine vision with language or audio</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>CLIP, BLIP, Flamingo, GIT</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Scene Text Recognition (OCR)</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Detect and read text from images</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>EAST, CRAFT (detection); CRNN, Tesseract
+  (recognition)</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Image Retrieval</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Find visually similar images</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Deep Metric Learning, CLIP, VGG
+  embeddings</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Domain Adaptation</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Apply vision models to new but similar
+  domains</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>DANN, ADDA, MMD</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Zero-shot Learning (ZSL)</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Recognize novel classes not seen during
+  training</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>CLIP, ZSL with attributes</span></p>
+  </td>
+ </tr>
+ <tr>
+  <td width=243 style='width:181.95pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Few-shot Learning</span></b></p>
+  </td>
+  <td width=382 style='width:286.5pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Learn from very few labeled examples</span></p>
+  </td>
+  <td width=477 style='width:357.75pt;border:solid #ED7D31 1.0pt;padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>Matching Networks, Prototypical
+  Networks, Meta-learning models</span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Segoe UI Emoji",sans-serif'>&#128216;</span><b><span
+style='font-size:12.0pt;font-family:"Times New Roman",serif'> Categorizing by Emerging
+&amp; Orthogonal Themes</span></b></p>
+
+<p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+normal'><span style='font-size:10.0pt;font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><span style='font-size:12.0pt;font-family:
+"Times New Roman",serif'>Efficient/Pruned/Quantized Models (MobileNet,
+PruneMix)</span></p>
+
+<p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+normal'><span style='font-size:10.0pt;font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><span style='font-size:12.0pt;font-family:
+"Times New Roman",serif'>Federated &amp; Distributed Learning for privacy</span></p>
+
+<p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+normal'><span style='font-size:10.0pt;font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><span style='font-size:12.0pt;font-family:
+"Times New Roman",serif'>Explainable Vision (Grad-CAM, LIME)</span></p>
+
+<p class=MsoNormal style='margin-left:.75in;text-indent:-.25in;line-height:
+normal'><span style='font-size:10.0pt;font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span dir=LTR></span><span style='font-size:12.0pt;font-family:
+"Times New Roman",serif'>Adversarial Robustness &amp; Security</span></p>
+
+</div>
+
+</body>
+
+</html>
