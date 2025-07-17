@@ -6,9 +6,17 @@
 import sys
 from functools import partial
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtWidgets import QMainWindow
-from PyQt6.QtGui import QResizeEvent
 import sys
+from PyQt6.QtWebEngineWidgets import QWebEngineView
+
+from PyQt6.QtWidgets import QFileDialog,QMenu,QApplication, QMainWindow, QWidget, QVBoxLayout
+from PyQt6.QtPdf import QPdfDocument
+from PyQt6.QtPdfWidgets import QPdfView
+import sys
+import os
+from PyQt6.QtCore import Qt
+from Custom_PDF_View import CustomPdfView
+
 
 import cv2
 
@@ -302,13 +310,47 @@ class Ui_MainWindow(QMainWindow,object):
         self.readPages()
         self.connectActions()
         
+       
+        self.pdf_view = CustomPdfView(self.pages)
+        self.pdf_document = QPdfDocument(self.pdf_view)
+        self.pages.addWidget(self.pdf_view)
+        self.pages.setCurrentWidget(self.pdf_view)
+        self.changePage(5)
         self.retranslateUi(MainWindow)
-        self.pages.setCurrentIndex(5)
+        #self.pages.setCurrentIndex(7)
         #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
 ##############################################################################windows-1252####utf-8
+    def changePage(self,index):
+        self.pdf_path = ""
+        match index: 
+             case 0:
+                  self.pdf_path = os.path.realpath("pages/BigPicture.pdf")
+             case 1:
+                  self.pdf_path = os.path.realpath("pages/UniversityCurriculum.pdf")
+             case 2:
+                  self.pdf_path = os.path.realpath("pages/RoadMap.pdf")
+             case 3:
+                  self.pdf_path = os.path.realpath("pages/StudyPlan.pdf")
+             case 4:
+                  self.pdf_path = os.path.realpath("pages/HeadingResearch.pdf")
+             case 5:
+                  self.pdf_path = os.path.realpath("pages/AboutTool.pdf")
+             case 6:
+                  self.pdf_path = os.path.realpath("pages/AboutAuthorDeveloper.pdf")
+                  
+        self.pdf_document.load(self.pdf_path)
+        self.pdf_view.pdf_path = self.pdf_path
+        self.pdf_view.setDocument(self.pdf_document)
+        self.pdf_view.pdf_document = self.pdf_document 
+        self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
+        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
+
+        #pdf_widget.setWindowTitle("PDF Viewer")        
+        #pdf_view.setZoomMode(QPdfView.ZoomMode.FitInView)       
+        #pdf_widget.resize(800, 600)
 
     def readPages(self):
         _translate = QtCore.QCoreApplication.translate
@@ -367,7 +409,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_CloseMainWindow.triggered.connect(self.closeMainWindow)
         self.action_CloseAllWindows.triggered.connect(self.closeAllWindow)
 
-    def changePage(self,index):
+    def changePage2(self,index):
         self.pages.setCurrentIndex(index)
 
     def closeAllWindow(self):
