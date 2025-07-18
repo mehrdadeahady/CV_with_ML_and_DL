@@ -24,7 +24,7 @@ class CustomPdfView(QPdfView):
             return
 
         file_path, _ = QFileDialog.getSaveFileName(
-            self, "Save PDF", "document.pdf", "PDF Files (*.pdf)"
+            self, "Save PDF", self.pdf_path , "PDF Files (*.pdf)"  #"document.pdf"
         )
         if file_path:
             try:

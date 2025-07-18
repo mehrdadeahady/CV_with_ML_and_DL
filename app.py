@@ -3,22 +3,15 @@
 """
 @Author | Developer: Mehrdad Ahady
 """
+import os
 import sys
+import cv2
 from functools import partial
 from PyQt6 import QtCore, QtGui, QtWidgets
-import sys
-from PyQt6.QtWebEngineWidgets import QWebEngineView
-
-from PyQt6.QtWidgets import QFileDialog,QMenu,QApplication, QMainWindow, QWidget, QVBoxLayout
+from PyQt6.QtWidgets import QFileDialog,QMenu,QApplication, QMainWindow, QWidget
 from PyQt6.QtPdf import QPdfDocument
 from PyQt6.QtPdfWidgets import QPdfView
-import sys
-import os
-from PyQt6.QtCore import Qt
-from Custom_PDF_View import CustomPdfView
-
-
-import cv2
+from utils.Custom_PDF_View import CustomPdfView
 
 class Ui_MainWindow(QMainWindow,object):
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -57,161 +50,24 @@ class Ui_MainWindow(QMainWindow,object):
         self.pages.setMaximumSize(QtCore.QSize(1011, 711))
         self.pages.setBaseSize(QtCore.QSize(1011, 711))
         self.pages.setObjectName("pages")
-        self.page_BigPicture = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.page_BigPicture.sizePolicy().hasHeightForWidth())
-        self.page_BigPicture.setSizePolicy(sizePolicy)
-        self.page_BigPicture.setMinimumSize(QtCore.QSize(1011, 711))
-        self.page_BigPicture.setMaximumSize(QtCore.QSize(1011, 711))
-        self.page_BigPicture.setBaseSize(QtCore.QSize(1011, 711))
-        self.page_BigPicture.setObjectName("page_BigPicture")
-        self.Text_BigPicture = QtWidgets.QTextEdit(parent=self.page_BigPicture)
-        self.Text_BigPicture.setGeometry(QtCore.QRect(0, 0, 1005, 711))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.Text_BigPicture.sizePolicy().hasHeightForWidth())
-        self.Text_BigPicture.setSizePolicy(sizePolicy)
-        self.Text_BigPicture.setMinimumSize(QtCore.QSize(1005, 711))
-        self.Text_BigPicture.setMaximumSize(QtCore.QSize(1005, 711))
-        self.Text_BigPicture.setBaseSize(QtCore.QSize(1005, 711))
-        self.Text_BigPicture.setAutoFillBackground(False)
-        self.Text_BigPicture.setObjectName("Text_BigPicture")
-        self.pages.addWidget(self.page_BigPicture)
-        self.pageTopics_UniversityCurriculum = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pageTopics_UniversityCurriculum.sizePolicy().hasHeightForWidth())
-        self.pageTopics_UniversityCurriculum.setSizePolicy(sizePolicy)
-        self.pageTopics_UniversityCurriculum.setMinimumSize(QtCore.QSize(1011, 711))
-        self.pageTopics_UniversityCurriculum.setMaximumSize(QtCore.QSize(1011, 711))
-        self.pageTopics_UniversityCurriculum.setBaseSize(QtCore.QSize(1011, 711))
-        self.pageTopics_UniversityCurriculum.setObjectName("pageTopics_UniversityCurriculum")
-        self.Text_UniversityCurriculum = QtWidgets.QTextEdit(parent=self.pageTopics_UniversityCurriculum)
-        self.Text_UniversityCurriculum.setGeometry(QtCore.QRect(0, 0, 1005, 711))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.Text_UniversityCurriculum.sizePolicy().hasHeightForWidth())
-        self.Text_UniversityCurriculum.setSizePolicy(sizePolicy)
-        self.Text_UniversityCurriculum.setMinimumSize(QtCore.QSize(1005, 711))
-        self.Text_UniversityCurriculum.setMaximumSize(QtCore.QSize(1005, 711))
-        self.Text_UniversityCurriculum.setBaseSize(QtCore.QSize(1005, 711))
-        self.Text_UniversityCurriculum.setObjectName("Text_UniversityCurriculum")
-        self.pages.addWidget(self.pageTopics_UniversityCurriculum)
-        self.pageTopics_RoadMap = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pageTopics_RoadMap.sizePolicy().hasHeightForWidth())
-        self.pageTopics_RoadMap.setSizePolicy(sizePolicy)
-        self.pageTopics_RoadMap.setMinimumSize(QtCore.QSize(1011, 711))
-        self.pageTopics_RoadMap.setMaximumSize(QtCore.QSize(1011, 711))
-        self.pageTopics_RoadMap.setBaseSize(QtCore.QSize(1011, 711))
-        self.pageTopics_RoadMap.setObjectName("pageTopics_RoadMap")
-        self.Text_RoadMap = QtWidgets.QTextEdit(parent=self.pageTopics_RoadMap)
-        self.Text_RoadMap.setGeometry(QtCore.QRect(0, 0, 1005, 711))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.Text_RoadMap.sizePolicy().hasHeightForWidth())
-        self.Text_RoadMap.setSizePolicy(sizePolicy)
-        self.Text_RoadMap.setMinimumSize(QtCore.QSize(1005, 711))
-        self.Text_RoadMap.setMaximumSize(QtCore.QSize(1005, 711))
-        self.Text_RoadMap.setBaseSize(QtCore.QSize(1005, 711))
-        self.Text_RoadMap.setObjectName("Text_RoadMap")
-        self.pages.addWidget(self.pageTopics_RoadMap)
-        self.pageTopics_StudyPlan = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pageTopics_StudyPlan.sizePolicy().hasHeightForWidth())
-        self.pageTopics_StudyPlan.setSizePolicy(sizePolicy)
-        self.pageTopics_StudyPlan.setMinimumSize(QtCore.QSize(1011, 711))
-        self.pageTopics_StudyPlan.setMaximumSize(QtCore.QSize(1011, 711))
-        self.pageTopics_StudyPlan.setBaseSize(QtCore.QSize(1011, 711))
-        self.pageTopics_StudyPlan.setObjectName("pageTopics_StudyPlan")
-        self.Text_StudyPlan = QtWidgets.QTextEdit(parent=self.pageTopics_StudyPlan)
-        self.Text_StudyPlan.setGeometry(QtCore.QRect(0, 0, 1005, 711))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.Text_StudyPlan.sizePolicy().hasHeightForWidth())
-        self.Text_StudyPlan.setSizePolicy(sizePolicy)
-        self.Text_StudyPlan.setMinimumSize(QtCore.QSize(1005, 711))
-        self.Text_StudyPlan.setMaximumSize(QtCore.QSize(1005, 711))
-        self.Text_StudyPlan.setBaseSize(QtCore.QSize(1005, 711))
-        self.Text_StudyPlan.setObjectName("Text_StudyPlan")
-        self.pages.addWidget(self.pageTopics_StudyPlan)
-        self.pageTopics_HeadingResearch = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pageTopics_HeadingResearch.sizePolicy().hasHeightForWidth())
-        self.pageTopics_HeadingResearch.setSizePolicy(sizePolicy)
-        self.pageTopics_HeadingResearch.setMinimumSize(QtCore.QSize(1011, 711))
-        self.pageTopics_HeadingResearch.setMaximumSize(QtCore.QSize(1011, 711))
-        self.pageTopics_HeadingResearch.setBaseSize(QtCore.QSize(1011, 711))
-        self.pageTopics_HeadingResearch.setObjectName("pageTopics_HeadingResearch")
-        self.Text_HeadingResearch = QtWidgets.QTextEdit(parent=self.pageTopics_HeadingResearch)
-        self.Text_HeadingResearch.setGeometry(QtCore.QRect(0, 0, 1005, 711))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.Text_HeadingResearch.sizePolicy().hasHeightForWidth())
-        self.Text_HeadingResearch.setSizePolicy(sizePolicy)
-        self.Text_HeadingResearch.setMinimumSize(QtCore.QSize(1005, 711))
-        self.Text_HeadingResearch.setMaximumSize(QtCore.QSize(1005, 711))
-        self.Text_HeadingResearch.setBaseSize(QtCore.QSize(1005, 711))
-        self.Text_HeadingResearch.setObjectName("Text_HeadingResearch")
-        self.pages.addWidget(self.pageTopics_HeadingResearch)
-        self.pageHelp_AboutTool = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pageHelp_AboutTool.sizePolicy().hasHeightForWidth())
-        self.pageHelp_AboutTool.setSizePolicy(sizePolicy)
-        self.pageHelp_AboutTool.setMinimumSize(QtCore.QSize(1011, 711))
-        self.pageHelp_AboutTool.setMaximumSize(QtCore.QSize(1011, 711))
-        self.pageHelp_AboutTool.setBaseSize(QtCore.QSize(1011, 711))
-        self.pageHelp_AboutTool.setObjectName("pageHelp_AboutTool")
-        self.Text_AboutTool = QtWidgets.QTextEdit(parent=self.pageHelp_AboutTool)
-        self.Text_AboutTool.setGeometry(QtCore.QRect(0, 0, 1005, 711))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.Text_AboutTool.sizePolicy().hasHeightForWidth())
-        self.Text_AboutTool.setSizePolicy(sizePolicy)
-        self.Text_AboutTool.setMinimumSize(QtCore.QSize(1005, 711))
-        self.Text_AboutTool.setMaximumSize(QtCore.QSize(1005, 711))
-        self.Text_AboutTool.setBaseSize(QtCore.QSize(1005, 711))
-        self.Text_AboutTool.setObjectName("Text_AboutTool")
-        self.pages.addWidget(self.pageHelp_AboutTool)
-        self.pageHelp_AboutAuthorDeveloper = QtWidgets.QWidget()
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pageHelp_AboutAuthorDeveloper.sizePolicy().hasHeightForWidth())
-        self.pageHelp_AboutAuthorDeveloper.setSizePolicy(sizePolicy)
-        self.pageHelp_AboutAuthorDeveloper.setMinimumSize(QtCore.QSize(1011, 711))
-        self.pageHelp_AboutAuthorDeveloper.setMaximumSize(QtCore.QSize(1011, 711))
-        self.pageHelp_AboutAuthorDeveloper.setBaseSize(QtCore.QSize(1011, 711))
-        self.pageHelp_AboutAuthorDeveloper.setObjectName("pageHelp_AboutAuthorDeveloper")
-        self.Text_AboutAuthorDeveloper = QtWidgets.QTextEdit(parent=self.pageHelp_AboutAuthorDeveloper)
-        self.Text_AboutAuthorDeveloper.setGeometry(QtCore.QRect(0, 0, 1005, 711))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.Text_AboutAuthorDeveloper.sizePolicy().hasHeightForWidth())
-        self.Text_AboutAuthorDeveloper.setSizePolicy(sizePolicy)
-        self.Text_AboutAuthorDeveloper.setMinimumSize(QtCore.QSize(1005, 711))
-        self.Text_AboutAuthorDeveloper.setMaximumSize(QtCore.QSize(1005, 711))
-        self.Text_AboutAuthorDeveloper.setBaseSize(QtCore.QSize(1005, 711))
-        self.Text_AboutAuthorDeveloper.setObjectName("Text_AboutAuthorDeveloper")
-        self.pages.addWidget(self.pageHelp_AboutAuthorDeveloper)
+        self.page_PythonProgramming = QtWidgets.QWidget()
+        self.page_PythonProgramming.setObjectName("page_PythonProgramming")
+        self.label_3 = QtWidgets.QLabel(parent=self.page_PythonProgramming)
+        self.label_3.setGeometry(QtCore.QRect(290, 120, 261, 16))
+        self.label_3.setObjectName("label_3")
+        self.pages.addWidget(self.page_PythonProgramming)
+        self.page_ProbabilityAndStatistics = QtWidgets.QWidget()
+        self.page_ProbabilityAndStatistics.setObjectName("page_ProbabilityAndStatistics")
+        self.label_2 = QtWidgets.QLabel(parent=self.page_ProbabilityAndStatistics)
+        self.label_2.setGeometry(QtCore.QRect(250, 120, 261, 16))
+        self.label_2.setObjectName("label_2")
+        self.pages.addWidget(self.page_ProbabilityAndStatistics)
+        self.page_LinearAlgebraAndCalculus = QtWidgets.QWidget()
+        self.page_LinearAlgebraAndCalculus.setObjectName("page_LinearAlgebraAndCalculus")
+        self.label = QtWidgets.QLabel(parent=self.page_LinearAlgebraAndCalculus)
+        self.label.setGeometry(QtCore.QRect(160, 60, 381, 16))
+        self.label.setObjectName("label")
+        self.pages.addWidget(self.page_LinearAlgebraAndCalculus)
         MainWindow.setCentralWidget(self.container)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1024, 33))
@@ -280,6 +136,21 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_StudyPlan.setObjectName("action_StudyPlan")
         self.action_HeadingResearch = QtGui.QAction(parent=MainWindow)
         self.action_HeadingResearch.setObjectName("action_HeadingResearch")
+        self.action_UserGuide = QtGui.QAction(parent=MainWindow)
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap(".\\icons/help.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.action_UserGuide.setIcon(icon6)
+        self.action_UserGuide.setObjectName("action_UserGuide")
+        self.menu_PreRequisites = QMenu(parent=MainWindow)     #**********************************
+        icon7 = QtGui.QIcon()
+        icon7.addPixmap(QtGui.QPixmap(".\\icons/n1.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.menu_PreRequisites.setIcon(icon7)
+        self.menu_PreRequisites.setObjectName("menu_PreRequisites")
+        self.menu_FundamentalOfComputerVision = QMenu(parent=MainWindow)  #********************************
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap(".\\icons/n2.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.menu_FundamentalOfComputerVision.setIcon(icon8)
+        self.menu_FundamentalOfComputerVision.setObjectName("menu_FundamentalOfComputerVision")
         self.menuTopics.addSeparator()
         self.menuTopics.addSeparator()
         self.menuTopics.addAction(self.action_BigPicture)
@@ -298,142 +169,32 @@ class Ui_MainWindow(QMainWindow,object):
         self.menuControls.addAction(self.action_CloseMainWindow)
         self.menuControls.addSeparator()
         self.menuControls.addAction(self.action_CloseAllWindows)
+        self.menuHelp.addAction(self.action_UserGuide)
+        self.menuHelp.addSeparator()
         self.menuHelp.addAction(self.action_AboutTool)
         self.menuHelp.addSeparator()
         self.menuHelp.addAction(self.action_AboutAuthorDeveloper)
+        self.menuHelp.addSeparator()
+        self.menuLab.addMenu(self.menu_PreRequisites)  #*************************************
+        self.menuLab.addSeparator()
+        self.menuLab.addMenu(self.menu_FundamentalOfComputerVision) #*************************************
         self.menubar.addAction(self.menuTopics.menuAction())
         self.menubar.addAction(self.menuLab.menuAction())
         self.menubar.addAction(self.menuSettings.menuAction())
         self.menubar.addAction(self.menuControls.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
+        #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>          
+        self.manualSetup()
         #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        self.readPages()
-        self.connectActions()
-        
-       
-        self.pdf_view = CustomPdfView(self.pages)
-        self.pdf_document = QPdfDocument(self.pdf_view)
-        self.pages.addWidget(self.pdf_view)
-        self.pages.setCurrentWidget(self.pdf_view)
-        self.changePage(5)
         self.retranslateUi(MainWindow)
-        #self.pages.setCurrentIndex(7)
-        #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-##############################################################################windows-1252####utf-8
-    def changePage(self,index):
-        self.pdf_path = ""
-        match index: 
-             case 0:
-                  self.pdf_path = os.path.realpath("pages/BigPicture.pdf")
-             case 1:
-                  self.pdf_path = os.path.realpath("pages/UniversityCurriculum.pdf")
-             case 2:
-                  self.pdf_path = os.path.realpath("pages/RoadMap.pdf")
-             case 3:
-                  self.pdf_path = os.path.realpath("pages/StudyPlan.pdf")
-             case 4:
-                  self.pdf_path = os.path.realpath("pages/HeadingResearch.pdf")
-             case 5:
-                  self.pdf_path = os.path.realpath("pages/AboutTool.pdf")
-             case 6:
-                  self.pdf_path = os.path.realpath("pages/AboutAuthorDeveloper.pdf")
-                  
-        self.pdf_document.load(self.pdf_path)
-        self.pdf_view.pdf_path = self.pdf_path
-        self.pdf_view.setDocument(self.pdf_document)
-        self.pdf_view.pdf_document = self.pdf_document 
-        self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
-        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
-
-        #pdf_widget.setWindowTitle("PDF Viewer")        
-        #pdf_view.setZoomMode(QPdfView.ZoomMode.FitInView)       
-        #pdf_widget.resize(800, 600)
-
-    def readPages(self):
-        _translate = QtCore.QCoreApplication.translate
-        
-        Text_BigPicture = ""
-        with open('pages/Text_BigPicture.html', 'r' ) as file:  
-             Text_BigPicture = file.read()
-        self.Text_BigPicture.setHtml(_translate("MainWindow", Text_BigPicture))
-        self.Text_BigPicture.setStyleSheet("padding:10px")
-
-        Text_UniversityCurriculum = ""
-        with open('pages/Text_UniversityCurriculum.html', 'r') as file:  
-             Text_UniversityCurriculum = file.read()
-        self.Text_UniversityCurriculum.setHtml(_translate("MainWindow", Text_UniversityCurriculum))
-        self.Text_UniversityCurriculum.setStyleSheet("padding:10px")
-        
-        Text_RoadMap = ""
-        with open('pages/Text_RoadMap.html', 'r') as file:  
-             Text_RoadMap = file.read()
-        self.Text_RoadMap.setHtml(_translate("MainWindow", Text_RoadMap))
-        self.Text_RoadMap.setStyleSheet("padding:10px")
-
-        Text_StudyPlan = ""
-        with open('pages/Text_StudyPlan.html', 'r') as file:  
-             Text_StudyPlan = file.read()
-        self.Text_StudyPlan.setHtml(_translate("MainWindow", Text_StudyPlan))
-        self.Text_StudyPlan.setStyleSheet("padding:10px")
-
-        Text_HeadingResearch = ""
-        with open('pages/Text_HeadingResearch.html', 'r') as file:  #, encoding='utf-8'
-             Text_HeadingResearch = file.read()
-        self.Text_HeadingResearch.setHtml(_translate("MainWindow", Text_HeadingResearch))
-        self.Text_HeadingResearch.setStyleSheet("padding:10px")
-
-        Text_AboutTool = ""
-        with open('pages/Text_AboutTool.html', 'r') as file:  
-             Text_AboutTool = file.read()
-        self.Text_AboutTool.setHtml(_translate("MainWindow", Text_AboutTool))
-        self.Text_AboutTool.setStyleSheet("padding:10px")
-
-        Text_AboutAuthorDeveloper = ""
-        with open('pages/Text_AboutAuthorDeveloper.html', 'r') as file: 
-             Text_AboutAuthorDeveloper = file.read()
-        self.Text_AboutAuthorDeveloper.setHtml(_translate("MainWindow", Text_AboutAuthorDeveloper))
-        self.Text_AboutAuthorDeveloper.setStyleSheet("padding:10px")
-    
-    def connectActions(self):
-        self.action_BigPicture.triggered.connect(partial(self.changePage,0))
-        self.action_UniversityCurriculum.triggered.connect(partial(self.changePage,1))
-        self.action_RoadMap.triggered.connect(partial(self.changePage,2))
-        self.action_StudyPlan.triggered.connect(partial(self.changePage,3))
-        self.action_HeadingResearch.triggered.connect(partial(self.changePage,4))
-        self.action_AboutTool.triggered.connect(partial(self.changePage,5))
-        self.action_AboutAuthorDeveloper.triggered.connect(partial(self.changePage,6))
-        self.action_CloseOtherWindows.triggered.connect(self.closeOtherWindows)
-        self.action_CloseMainWindow.triggered.connect(self.closeMainWindow)
-        self.action_CloseAllWindows.triggered.connect(self.closeAllWindow)
-
-    def changePage2(self,index):
-        self.pages.setCurrentIndex(index)
-
-    def closeAllWindow(self):
-          self.lower()
-          cv2.destroyAllWindows()
-          MainWindow.close()
-          MainWindow.destroy()
-          self.close()
-          self.destroy()
-
-    def closeOtherWindows(self):
-        self.lower()
-        cv2.destroyAllWindows()
-       
-    def closeMainWindow(self):
-        MainWindow.close()
-        MainWindow.destroy()
-        self.close()
-        self.destroy()
-#############################################################################
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Computer Vision with Machine Learning and Deep Learning"))
+        self.label_3.setText(_translate("MainWindow", "PythonProgramming"))
+        self.label_2.setText(_translate("MainWindow", "ProbabilityAndStatistics"))
+        self.label.setText(_translate("MainWindow", "LinearAlgebraAndCalculus"))
         self.menuTopics.setTitle(_translate("MainWindow", "Topics"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
         self.menuControls.setTitle(_translate("MainWindow", "Controls"))
@@ -451,6 +212,110 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_StudyPlan.setToolTip(_translate("MainWindow", "Study Plan"))
         self.action_HeadingResearch.setText(_translate("MainWindow", "📒 Heading Research"))
         self.action_HeadingResearch.setToolTip(_translate("MainWindow", "Heading Research"))
+        self.action_UserGuide.setText(_translate("MainWindow", "User Guide"))
+        self.action_UserGuide.setToolTip(_translate("MainWindow", "Help"))
+        self.menu_PreRequisites.setTitle(_translate("MainWindow", "Pre Requisites"))  #*******************************
+        self.menu_FundamentalOfComputerVision.setTitle(_translate("MainWindow", "Fundamental of Computer Vision"))  #**************************
+         #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        self.menu_Mathematics.setTitle(_translate("MainWindow", "🧮 Mathematics"))
+        self.action_LinearAlgebraAndCalculus.setText(_translate("MainWindow", "📊 Linear Algebra and Calculus"))
+        self.action_ProbabilityAndStatistics.setText(_translate("MainWindow", "📉 Probability and Statistics"))
+        self.action_PythonProgramming.setText(_translate("MainWindow", "🐍 Python Programming"))
+        self.action_CoreMachineLearningPrinciples.setText(_translate("MainWindow", "🧠 Core Machine Learning Principles"))
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+#############################################################################
+    def changePDFPage(self,index):
+        self.pages.setCurrentWidget(self.pdf_view)
+        self.pdf_path = ""
+        match index: 
+             case 0:
+                  self.pdf_path = os.path.relpath("pages/BigPicture.pdf")
+             case 1:
+                  self.pdf_path = os.path.relpath("pages/UniversityCurriculum.pdf")
+             case 2:
+                  self.pdf_path = os.path.relpath("pages/RoadMap.pdf")
+             case 3:
+                  self.pdf_path = os.path.relpath("pages/StudyPlan.pdf")
+             case 4:
+                  self.pdf_path = os.path.relpath("pages/HeadingResearch.pdf")
+             case 5:
+                  self.pdf_path = os.path.relpath("pages/UserGuide.pdf")
+             case 6:
+                  self.pdf_path = os.path.relpath("pages/AboutTool.pdf")
+             case 7:
+                  self.pdf_path = os.path.relpath("pages/AboutAuthorDeveloper.pdf")
+                  
+        self.pdf_document.load(self.pdf_path)
+        self.pdf_view.pdf_path = self.pdf_path
+        self.pdf_view.setDocument(self.pdf_document)
+        self.pdf_view.pdf_document = self.pdf_document 
+        self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
+        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
+
+    def connectActions(self):
+        self.action_BigPicture.triggered.connect(partial(self.changePDFPage,0))
+        self.action_UniversityCurriculum.triggered.connect(partial(self.changePDFPage,1))
+        self.action_RoadMap.triggered.connect(partial(self.changePDFPage,2))
+        self.action_StudyPlan.triggered.connect(partial(self.changePDFPage,3))
+        self.action_HeadingResearch.triggered.connect(partial(self.changePDFPage,4))
+        self.action_UserGuide.triggered.connect(partial(self.changePDFPage,5))
+        self.action_AboutTool.triggered.connect(partial(self.changePDFPage,6))
+        self.action_AboutAuthorDeveloper.triggered.connect(partial(self.changePDFPage,7))
+        self.action_CloseOtherWindows.triggered.connect(self.closeWindow)
+        self.action_CloseMainWindow.triggered.connect(self.closeWindow)
+        self.action_CloseAllWindows.triggered.connect(self.closeWindow)
+        self.action_PythonProgramming.triggered.connect(self.changePage)
+        self.action_LinearAlgebraAndCalculus.triggered.connect(self.changePage)
+        self.action_ProbabilityAndStatistics.triggered.connect(self.changePage)
+
+    def changePage(self):
+        selectedPage = self.pages.findChild(QtWidgets.QWidget,"page_" + self.sender().objectName().split("_")[1])
+        if selectedPage != None:
+           self.pages.setCurrentWidget(selectedPage)
+
+    def closeWindow(self):
+        match self.sender().objectName():
+             case "action_CloseOtherWindows":
+                  self.lower()
+                  cv2.destroyAllWindows()
+             case "action_CloseMainWindow":
+                  MainWindow.close()
+                  MainWindow.destroy()
+                  self.close()
+                  self.destroy()
+             case "action_CloseAllWindows":
+                  self.lower()
+                  cv2.destroyAllWindows()
+                  MainWindow.close()
+                  MainWindow.destroy()
+                  self.close()
+                  self.destroy()                
+
+    def manualSetup(self):
+        self.menu_Mathematics = QMenu(parent=MainWindow)  
+        self.menu_Mathematics.setObjectName("menu_Mathematics")
+        self.menu_PreRequisites.addMenu(self.menu_Mathematics)
+        self.action_LinearAlgebraAndCalculus = QtGui.QAction(parent=MainWindow)
+        self.action_LinearAlgebraAndCalculus.setObjectName("action_LinearAlgebraAndCalculus")    
+        self.menu_Mathematics.addAction(self.action_LinearAlgebraAndCalculus)
+        self.action_ProbabilityAndStatistics = QtGui.QAction(parent=MainWindow)
+        self.action_ProbabilityAndStatistics.setObjectName("action_ProbabilityAndStatistics")    
+        self.menu_Mathematics.addAction(self.action_ProbabilityAndStatistics)
+        self.action_PythonProgramming = QtGui.QAction(parent=MainWindow)  
+        self.action_PythonProgramming.setObjectName("action_PythonProgramming")
+        self.menu_PreRequisites.addAction(self.action_PythonProgramming)
+        self.action_CoreMachineLearningPrinciples = QtGui.QAction(parent=MainWindow)  
+        self.action_CoreMachineLearningPrinciples.setObjectName("action_CoreMachineLearningPrinciples")
+        self.menu_PreRequisites.addAction(self.action_CoreMachineLearningPrinciples)
+
+        self.pdf_view = CustomPdfView(self.pages)
+        self.pdf_document = QPdfDocument(self.pdf_view)
+        self.pages.addWidget(self.pdf_view)
+        self.pages.setCurrentWidget(self.pdf_view)
+        self.changePDFPage(6)
+        self.connectActions()   
+#############################################################################
 
 if __name__ == "__main__":
     import sys
