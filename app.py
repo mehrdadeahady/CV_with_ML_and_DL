@@ -6,12 +6,13 @@
 import os
 import sys
 import cv2
+import ctypes
 from functools import partial
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QFileDialog,QMenu,QApplication, QMainWindow, QWidget
 from PyQt6.QtPdf import QPdfDocument
 from PyQt6.QtPdfWidgets import QPdfView
-from utils.Custom_PDF_View import CustomPdfView
+from utils.CustomPDFView import CustomPdfView
 
 class Ui_MainWindow(QMainWindow,object):
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -50,24 +51,18 @@ class Ui_MainWindow(QMainWindow,object):
         self.pages.setMaximumSize(QtCore.QSize(1011, 711))
         self.pages.setBaseSize(QtCore.QSize(1011, 711))
         self.pages.setObjectName("pages")
-        self.page_PythonProgramming = QtWidgets.QWidget()
-        self.page_PythonProgramming.setObjectName("page_PythonProgramming")
-        self.label_3 = QtWidgets.QLabel(parent=self.page_PythonProgramming)
-        self.label_3.setGeometry(QtCore.QRect(290, 120, 261, 16))
-        self.label_3.setObjectName("label_3")
-        self.pages.addWidget(self.page_PythonProgramming)
-        self.page_ProbabilityAndStatistics = QtWidgets.QWidget()
-        self.page_ProbabilityAndStatistics.setObjectName("page_ProbabilityAndStatistics")
-        self.label_2 = QtWidgets.QLabel(parent=self.page_ProbabilityAndStatistics)
-        self.label_2.setGeometry(QtCore.QRect(250, 120, 261, 16))
-        self.label_2.setObjectName("label_2")
-        self.pages.addWidget(self.page_ProbabilityAndStatistics)
-        self.page_LinearAlgebraAndCalculus = QtWidgets.QWidget()
-        self.page_LinearAlgebraAndCalculus.setObjectName("page_LinearAlgebraAndCalculus")
-        self.label = QtWidgets.QLabel(parent=self.page_LinearAlgebraAndCalculus)
-        self.label.setGeometry(QtCore.QRect(160, 60, 381, 16))
-        self.label.setObjectName("label")
-        self.pages.addWidget(self.page_LinearAlgebraAndCalculus)
+        self.page_AboutTool = QtWidgets.QWidget()
+        self.page_AboutTool.setObjectName("page_AboutTool")
+        self.text_AboutTool = QtWidgets.QTextBrowser(parent=self.page_AboutTool)
+        self.text_AboutTool.setGeometry(QtCore.QRect(5, 1, 991, 711))
+        self.text_AboutTool.setObjectName("text_AboutTool")
+        self.pages.addWidget(self.page_AboutTool)
+        self.page_AboutAuthorDeveloper = QtWidgets.QWidget()
+        self.page_AboutAuthorDeveloper.setObjectName("page_AboutAuthorDeveloper")
+        self.text_AboutAuthorDeveloper = QtWidgets.QTextBrowser(parent=self.page_AboutAuthorDeveloper)
+        self.text_AboutAuthorDeveloper.setGeometry(QtCore.QRect(5, 1, 991, 711))
+        self.text_AboutAuthorDeveloper.setObjectName("text_AboutAuthorDeveloper")
+        self.pages.addWidget(self.page_AboutAuthorDeveloper)
         MainWindow.setCentralWidget(self.container)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1024, 33))
@@ -141,16 +136,46 @@ class Ui_MainWindow(QMainWindow,object):
         icon6.addPixmap(QtGui.QPixmap(".\\icons/help.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.action_UserGuide.setIcon(icon6)
         self.action_UserGuide.setObjectName("action_UserGuide")
-        self.menu_PreRequisites = QMenu(parent=MainWindow)     #**********************************
+        self.menu_PreRequisites = QMenu(parent=MainWindow)  #**********************************
         icon7 = QtGui.QIcon()
         icon7.addPixmap(QtGui.QPixmap(".\\icons/n1.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.menu_PreRequisites.setIcon(icon7)
         self.menu_PreRequisites.setObjectName("menu_PreRequisites")
-        self.menu_FundamentalOfComputerVision = QMenu(parent=MainWindow)  #********************************
+        self.menu_FundamentalOfComputerVision = QMenu(parent=MainWindow)  #**********************************
         icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap(".\\icons/n2.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon8.addPixmap(QtGui.QPixmap(".\\icons/n3.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.menu_FundamentalOfComputerVision.setIcon(icon8)
         self.menu_FundamentalOfComputerVision.setObjectName("menu_FundamentalOfComputerVision")
+        self.menu_Machine_Learning_Model_Fundamentals = QMenu(parent=MainWindow)  #**********************************
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap(".\\icons/n2.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.menu_Machine_Learning_Model_Fundamentals.setIcon(icon9)
+        self.menu_Machine_Learning_Model_Fundamentals.setObjectName("menu_Machine_Learning_Model_Fundamentals")
+        self.menu_Deep_Learning_Foundations = QMenu(parent=MainWindow)  #**********************************
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap(".\\icons/n4.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.menu_Deep_Learning_Foundations.setIcon(icon10)
+        self.menu_Deep_Learning_Foundations.setObjectName("menu_Deep_Learning_Foundations")
+        self.menu_Core_CV_Computer_Vision_Tasks = QMenu(parent=MainWindow)  #**********************************
+        icon11 = QtGui.QIcon()
+        icon11.addPixmap(QtGui.QPixmap(".\\icons/n5.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.menu_Core_CV_Computer_Vision_Tasks.setIcon(icon11)
+        self.menu_Core_CV_Computer_Vision_Tasks.setObjectName("menu_Core_CV_Computer_Vision_Tasks")
+        self.menu_Advanced_Generative_Models_Architectures = QMenu(parent=MainWindow)  #**********************************
+        icon12 = QtGui.QIcon()
+        icon12.addPixmap(QtGui.QPixmap(".\\icons/n6.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.menu_Advanced_Generative_Models_Architectures.setIcon(icon12)
+        self.menu_Advanced_Generative_Models_Architectures.setObjectName("menu_Advanced_Generative_Models_Architectures")
+        self.menu_Applications_Deployment_Optimization = QMenu(parent=MainWindow)  #**********************************
+        icon13 = QtGui.QIcon()
+        icon13.addPixmap(QtGui.QPixmap(".\\icons/n7.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.menu_Applications_Deployment_Optimization.setIcon(icon13)
+        self.menu_Applications_Deployment_Optimization.setObjectName("menu_Applications_Deployment_Optimization")
+        self.menu_Ethics_Explainability_and_Portfolios = QMenu(parent=MainWindow)  #**********************************
+        icon14 = QtGui.QIcon()
+        icon14.addPixmap(QtGui.QPixmap(".\\icons/n8.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.menu_Ethics_Explainability_and_Portfolios.setIcon(icon14)
+        self.menu_Ethics_Explainability_and_Portfolios.setObjectName("menu_Ethics_Explainability_and_Portfolios")
         self.menuTopics.addSeparator()
         self.menuTopics.addSeparator()
         self.menuTopics.addAction(self.action_BigPicture)
@@ -175,15 +200,31 @@ class Ui_MainWindow(QMainWindow,object):
         self.menuHelp.addSeparator()
         self.menuHelp.addAction(self.action_AboutAuthorDeveloper)
         self.menuHelp.addSeparator()
+        #
         self.menuLab.addMenu(self.menu_PreRequisites)  #*************************************
         self.menuLab.addSeparator()
+        self.menuLab.addMenu(self.menu_Machine_Learning_Model_Fundamentals)#*************************************
+        self.menuLab.addSeparator()
         self.menuLab.addMenu(self.menu_FundamentalOfComputerVision) #*************************************
+        self.menuLab.addSeparator()
+        self.menuLab.addMenu(self.menu_Deep_Learning_Foundations) #*************************************
+        self.menuLab.addSeparator()
+        self.menuLab.addMenu(self.menu_Core_CV_Computer_Vision_Tasks) #*************************************
+        self.menuLab.addSeparator()
+        self.menuLab.addMenu(self.menu_Advanced_Generative_Models_Architectures) #*************************************
+        self.menuLab.addSeparator()
+        self.menuLab.addMenu(self.menu_Applications_Deployment_Optimization) #*************************************
+        self.menuLab.addSeparator()
+        self.menuLab.addSeparator()
+        self.menuLab.addMenu(self.menu_Ethics_Explainability_and_Portfolios) #*************************************
+        #
         self.menubar.addAction(self.menuTopics.menuAction())
         self.menubar.addAction(self.menuLab.menuAction())
         self.menubar.addAction(self.menuSettings.menuAction())
         self.menubar.addAction(self.menuControls.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
-        #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>          
+
+         #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>          
         self.manualSetup()
         #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         self.retranslateUi(MainWindow)
@@ -192,9 +233,6 @@ class Ui_MainWindow(QMainWindow,object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Computer Vision with Machine Learning and Deep Learning"))
-        self.label_3.setText(_translate("MainWindow", "PythonProgramming"))
-        self.label_2.setText(_translate("MainWindow", "ProbabilityAndStatistics"))
-        self.label.setText(_translate("MainWindow", "LinearAlgebraAndCalculus"))
         self.menuTopics.setTitle(_translate("MainWindow", "Topics"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
         self.menuControls.setTitle(_translate("MainWindow", "Controls"))
@@ -215,8 +253,14 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_UserGuide.setText(_translate("MainWindow", "User Guide"))
         self.action_UserGuide.setToolTip(_translate("MainWindow", "Help"))
         self.menu_PreRequisites.setTitle(_translate("MainWindow", "Pre Requisites"))  #*******************************
-        self.menu_FundamentalOfComputerVision.setTitle(_translate("MainWindow", "Fundamental of Computer Vision"))  #**************************
-         #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        self.menu_FundamentalOfComputerVision.setTitle(_translate("MainWindow", "Fundamental of Computer Vision"))  #****************************
+        self.menu_Machine_Learning_Model_Fundamentals.setTitle(_translate("MainWindow", "Machine Learning Model Fundamentals"))  #*******************************
+        self.menu_Deep_Learning_Foundations.setTitle(_translate("MainWindow", "Deep Learning Foundations"))  #*******************************
+        self.menu_Core_CV_Computer_Vision_Tasks.setTitle(_translate("MainWindow", "Core CV (Computer Vision) Tasks"))  #*******************************
+        self.menu_Advanced_Generative_Models_Architectures.setTitle(_translate("MainWindow", "Advanced & Generative Models & Architectures"))  #*******************************
+        self.menu_Applications_Deployment_Optimization.setTitle(_translate("MainWindow", "Applications Deployment & Optimization"))  #*******************************
+        self.menu_Ethics_Explainability_and_Portfolios.setTitle(_translate("MainWindow", "Ethics, Explainability, and Portfolios"))  #*******************************
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         self.menu_Mathematics.setTitle(_translate("MainWindow", "🧮 Mathematics"))
         self.action_LinearAlgebraAndCalculus.setText(_translate("MainWindow", "📊 Linear Algebra and Calculus"))
         self.action_ProbabilityAndStatistics.setText(_translate("MainWindow", "📉 Probability and Statistics"))
@@ -241,10 +285,10 @@ class Ui_MainWindow(QMainWindow,object):
                   self.pdf_path = os.path.relpath("pages/HeadingResearch.pdf")
              case 5:
                   self.pdf_path = os.path.relpath("pages/UserGuide.pdf")
-             case 6:
-                  self.pdf_path = os.path.relpath("pages/AboutTool.pdf")
-             case 7:
-                  self.pdf_path = os.path.relpath("pages/AboutAuthorDeveloper.pdf")
+            #  case 6:
+            #       self.pdf_path = os.path.relpath("pages/AboutTool.pdf")
+            #  case 7:
+            #       self.pdf_path = os.path.relpath("pages/AboutAuthorDeveloper.pdf")
                   
         self.pdf_document.load(self.pdf_path)
         self.pdf_view.pdf_path = self.pdf_path
@@ -260,8 +304,8 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_StudyPlan.triggered.connect(partial(self.changePDFPage,3))
         self.action_HeadingResearch.triggered.connect(partial(self.changePDFPage,4))
         self.action_UserGuide.triggered.connect(partial(self.changePDFPage,5))
-        self.action_AboutTool.triggered.connect(partial(self.changePDFPage,6))
-        self.action_AboutAuthorDeveloper.triggered.connect(partial(self.changePDFPage,7))
+        self.action_AboutTool.triggered.connect(self.changePage)
+        self.action_AboutAuthorDeveloper.triggered.connect(self.changePage)
         self.action_CloseOtherWindows.triggered.connect(self.closeWindow)
         self.action_CloseMainWindow.triggered.connect(self.closeWindow)
         self.action_CloseAllWindows.triggered.connect(self.closeWindow)
@@ -270,6 +314,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_ProbabilityAndStatistics.triggered.connect(self.changePage)
 
     def changePage(self):
+        print(self.sender().objectName())
         selectedPage = self.pages.findChild(QtWidgets.QWidget,"page_" + self.sender().objectName().split("_")[1])
         if selectedPage != None:
            self.pages.setCurrentWidget(selectedPage)
@@ -291,6 +336,10 @@ class Ui_MainWindow(QMainWindow,object):
                   MainWindow.destroy()
                   self.close()
                   self.destroy()                
+    
+    def load_html_file(self,file_path):
+        with open(file_path, 'r') as f: #, encoding='utf-8'
+            return f.read()
 
     def manualSetup(self):
         self.menu_Mathematics = QMenu(parent=MainWindow)  
@@ -312,9 +361,17 @@ class Ui_MainWindow(QMainWindow,object):
         self.pdf_view = CustomPdfView(self.pages)
         self.pdf_document = QPdfDocument(self.pdf_view)
         self.pages.addWidget(self.pdf_view)
-        self.pages.setCurrentWidget(self.pdf_view)
-        self.changePDFPage(6)
-        self.connectActions()   
+        # self.pages.setCurrentWidget(self.pdf_view)
+        # self.changePDFPage(6)       
+        self.connectActions() 
+      
+        AboutAuthorDeveloper = self.load_html_file(os.path.relpath("pages/Text_AboutAuthorDeveloper.html"))
+        self.text_AboutAuthorDeveloper.setHtml(AboutAuthorDeveloper)
+        self.text_AboutAuthorDeveloper.setStyleSheet("padding:10px")
+        AboutTool = self.load_html_file(os.path.relpath("pages/Text_AboutTool.html"))
+        self.text_AboutTool.setHtml(AboutTool)
+        self.text_AboutTool.setStyleSheet("padding:10px")
+        self.pages.setCurrentWidget(self.page_AboutTool)
 #############################################################################
 
 if __name__ == "__main__":

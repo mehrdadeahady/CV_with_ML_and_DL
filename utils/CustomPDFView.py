@@ -3,6 +3,7 @@ from PyQt6.QtPdf import QPdfDocument
 from PyQt6.QtPdfWidgets import QPdfView
 from PyQt6.QtCore import Qt
 import shutil
+import ctypes
 
 class CustomPdfView(QPdfView):
     def __init__(self, parent=None):

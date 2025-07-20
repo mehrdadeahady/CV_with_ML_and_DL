@@ -100,50 +100,29 @@
      </size>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
-    <widget class="QWidget" name="page_PythonProgramming">
-     <widget class="QLabel" name="label_3">
+    <widget class="QWidget" name="page_AboutTool">
+     <widget class="QTextBrowser" name="text_AboutTool">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>120</y>
-        <width>261</width>
-        <height>16</height>
+        <x>5</x>
+        <y>1</y>
+        <width>991</width>
+        <height>711</height>
        </rect>
-      </property>
-      <property name="text">
-       <string>PythonProgramming</string>
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="page_ProbabilityAndStatistics">
-     <widget class="QLabel" name="label_2">
+    <widget class="QWidget" name="page_AboutAuthorDeveloper">
+     <widget class="QTextBrowser" name="text_AboutAuthorDeveloper">
       <property name="geometry">
        <rect>
-        <x>250</x>
-        <y>120</y>
-        <width>261</width>
-        <height>16</height>
+        <x>5</x>
+        <y>1</y>
+        <width>991</width>
+        <height>711</height>
        </rect>
-      </property>
-      <property name="text">
-       <string>ProbabilityAndStatistics</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="page_LinearAlgebraAndCalculus">
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>60</y>
-        <width>381</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>LinearAlgebraAndCalculus</string>
       </property>
      </widget>
     </widget>
@@ -230,7 +209,20 @@
     </property>
     <addaction name="menu_PreRequisites"/>
     <addaction name="separator"/>
+    <addaction name="menu_Machine_Learning_Model_Fundamentals"/>
+    <addaction name="separator"/>
     <addaction name="menu_FundamentalOfComputerVision"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Deep_Learning_Foundations"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Core_CV_Computer_Vision_Tasks"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Advanced_Generative_Models_Architectures"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Applications_Deployment_Optimization"/>
+    <addaction name="separator"/>
+    <addaction name="separator"/>
+    <addaction name="menu_Ethics_Explainability_and_Portfolios"/>
    </widget>
    <addaction name="menuTopics"/>
    <addaction name="menuLab"/>
@@ -339,10 +331,66 @@
   <action name="menu_FundamentalOfComputerVision">
    <property name="icon">
     <iconset>
-     <normaloff>icons/n2.png</normaloff>icons/n2.png</iconset>
+     <normaloff>icons/n3.png</normaloff>icons/n3.png</iconset>
    </property>
    <property name="text">
     <string>Fundamental of Computer Vision</string>
+   </property>
+  </action>
+  <action name="menu_Machine_Learning_Model_Fundamentals">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/n2.png</normaloff>icons/n2.png</iconset>
+   </property>
+   <property name="text">
+    <string>Machine Learning Model Fundamentals</string>
+   </property>
+  </action>
+  <action name="menu_Deep_Learning_Foundations">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/n4.png</normaloff>icons/n4.png</iconset>
+   </property>
+   <property name="text">
+    <string>Deep Learning Foundations</string>
+   </property>
+  </action>
+  <action name="menu_Core_CV_Computer_Vision_Tasks">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/n5.png</normaloff>icons/n5.png</iconset>
+   </property>
+   <property name="text">
+    <string>Core CV (Computer Vision) Tasks</string>
+   </property>
+  </action>
+  <action name="menu_Advanced_Generative_Models_Architectures">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/n6.png</normaloff>icons/n6.png</iconset>
+   </property>
+   <property name="text">
+    <string>Advanced &amp; Generative Models &amp; Architectures</string>
+   </property>
+  </action>
+  <action name="menu_Applications_Deployment_Optimization">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/n7.png</normaloff>icons/n7.png</iconset>
+   </property>
+   <property name="text">
+    <string>Applications Deployment &amp; Optimization</string>
+   </property>
+  </action>
+  <action name="menu_Ethics_Explainability_and_Portfolios">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/n8.png</normaloff>icons/n8.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ethics,
+Explainability, and
+Portfolios</string>
    </property>
   </action>
  </widget>
