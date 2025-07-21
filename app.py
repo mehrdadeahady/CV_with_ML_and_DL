@@ -6,7 +6,6 @@
 import os
 import sys
 import cv2
-import ctypes
 from functools import partial
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QFileDialog,QMenu,QApplication, QMainWindow, QWidget
