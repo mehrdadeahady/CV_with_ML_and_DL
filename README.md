@@ -1,4 +1,4 @@
-<pre>
+<pre style="margin:0;padding:0;">
    <b>Computer Vision</b> with <b>ML</b> (Machine Learning) and <b>DL</b> (Deep Learning)
    
    🎓 Assistant Tool for <b>Data Science</b> & <b>Computer Science</b> Students 
