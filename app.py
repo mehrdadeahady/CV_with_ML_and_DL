@@ -5,13 +5,25 @@
 """
 import os
 import sys
+import PyQt6
+import PyQt6.QtCore
 import cv2
 from functools import partial
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtWidgets import QFileDialog,QMenu,QApplication, QMainWindow, QWidget
+from PyQt6.QtWidgets import QMenu, QMainWindow, QApplication, QWidget
 from PyQt6.QtPdf import QPdfDocument
 from PyQt6.QtPdfWidgets import QPdfView
 from utils.CustomPDFView import CustomPdfView
+
+from PyQt6.QtWidgets import QApplication, QPushButton, QVBoxLayout, QWidget
+from PyQt6.QtGui import QDesktopServices
+
+from PyQt6.QtWebEngineWidgets import QWebEngineView
+from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import QUrl
+from PyQt6.QtWebEngineCore import QWebEngineProfile
+from os import path
 
 class Ui_MainWindow(QMainWindow,object):
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -222,9 +234,8 @@ class Ui_MainWindow(QMainWindow,object):
         self.menubar.addAction(self.menuSettings.menuAction())
         self.menubar.addAction(self.menuControls.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
-
-         #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>          
-        self.manualSetup()
+        #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                  
+        self.manualSetup()     
         #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -263,11 +274,16 @@ class Ui_MainWindow(QMainWindow,object):
         self.menu_Mathematics.setTitle(_translate("MainWindow", "🧮 Mathematics"))
         self.action_LinearAlgebraAndCalculus.setText(_translate("MainWindow", "📊 Linear Algebra and Calculus"))
         self.action_ProbabilityAndStatistics.setText(_translate("MainWindow", "📉 Probability and Statistics"))
-        self.action_PythonProgramming.setText(_translate("MainWindow", "🐍 Python Programming"))
+        self.action_PythonProgramming.setText(_translate("MainWindow", "🐍 Base of Python Programming"))
         self.action_CoreMachineLearningPrinciples.setText(_translate("MainWindow", "🧠 Core Machine Learning Principles"))
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<     
 #############################################################################
+    def html_in_window(self,path):
+      #  path = os.path.abspath(path)
+        self.webView.setUrl(QUrl(path))
+        #self.webView.load(QUrl.fromLocalFile(path))
+        self.webView.show()
+
     def changePDFPage(self,index):
         self.pages.setCurrentWidget(self.pdf_view)
         self.pdf_path = ""
@@ -296,6 +312,10 @@ class Ui_MainWindow(QMainWindow,object):
         self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
         self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
 
+    def pdf_in_browser(self,pdf_path):
+        pdf_path = os.path.relpath(pdf_path)
+        QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(pdf_path))
+
     def connectActions(self):
         self.action_BigPicture.triggered.connect(partial(self.changePDFPage,0))
         self.action_UniversityCurriculum.triggered.connect(partial(self.changePDFPage,1))
@@ -311,9 +331,13 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_PythonProgramming.triggered.connect(self.changePage)
         self.action_LinearAlgebraAndCalculus.triggered.connect(self.changePage)
         self.action_ProbabilityAndStatistics.triggered.connect(self.changePage)
+        self.action_PythonProgramming.triggered.connect(partial(self.html_in_window,"http://www.w3schools.com/python/default.asp"))
+        self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.html_in_window,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization"))
+        self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"./pages/Mathematics_for_Machine_Learning_mml_book.pdf"))
+
 
     def changePage(self):
-        print(self.sender().objectName())
+        #print(self.sender().objectName())
         selectedPage = self.pages.findChild(QtWidgets.QWidget,"page_" + self.sender().objectName().split("_")[1])
         if selectedPage != None:
            self.pages.setCurrentWidget(selectedPage)
@@ -341,6 +365,9 @@ class Ui_MainWindow(QMainWindow,object):
             return f.read()
 
     def manualSetup(self):
+        self.action_PythonProgramming = QtGui.QAction(parent=MainWindow)  
+        self.action_PythonProgramming.setObjectName("action_PythonProgramming")
+        self.menu_PreRequisites.addAction(self.action_PythonProgramming)
         self.menu_Mathematics = QMenu(parent=MainWindow)  
         self.menu_Mathematics.setObjectName("menu_Mathematics")
         self.menu_PreRequisites.addMenu(self.menu_Mathematics)
@@ -350,9 +377,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_ProbabilityAndStatistics = QtGui.QAction(parent=MainWindow)
         self.action_ProbabilityAndStatistics.setObjectName("action_ProbabilityAndStatistics")    
         self.menu_Mathematics.addAction(self.action_ProbabilityAndStatistics)
-        self.action_PythonProgramming = QtGui.QAction(parent=MainWindow)  
-        self.action_PythonProgramming.setObjectName("action_PythonProgramming")
-        self.menu_PreRequisites.addAction(self.action_PythonProgramming)
+        
         self.action_CoreMachineLearningPrinciples = QtGui.QAction(parent=MainWindow)  
         self.action_CoreMachineLearningPrinciples.setObjectName("action_CoreMachineLearningPrinciples")
         self.menu_PreRequisites.addAction(self.action_CoreMachineLearningPrinciples)
@@ -360,9 +385,6 @@ class Ui_MainWindow(QMainWindow,object):
         self.pdf_view = CustomPdfView(self.pages)
         self.pdf_document = QPdfDocument(self.pdf_view)
         self.pages.addWidget(self.pdf_view)
-        # self.pages.setCurrentWidget(self.pdf_view)
-        # self.changePDFPage(6)       
-        self.connectActions() 
       
         AboutAuthorDeveloper = self.load_html_file(os.path.relpath("pages/Text_AboutAuthorDeveloper.html"))
         self.text_AboutAuthorDeveloper.setHtml(AboutAuthorDeveloper)
@@ -371,6 +393,38 @@ class Ui_MainWindow(QMainWindow,object):
         self.text_AboutTool.setHtml(AboutTool)
         self.text_AboutTool.setStyleSheet("padding:10px")
         self.pages.setCurrentWidget(self.page_AboutTool)
+
+        self.webView = QWebEngineView(parent=None)
+        self.webView.setObjectName("Python Programming")
+        self.webView.setWindowTitle("Python Programming")
+        self.webView.resize(1024, 768)
+        self.webView.setMinimumSize(QtCore.QSize(1024, 768))
+        self.webView.setBaseSize(QtCore.QSize(1024, 768))
+        self.webView.setGeometry(QtCore.QRect(0, 0, 1024, 768))
+        profile = QWebEngineProfile.defaultProfile() 
+        webpage = QWebEnginePage(profile, self.webView)
+        self.webView.setPage(webpage)
+        settings = self.webView.page().settings()
+        settings.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.JavascriptEnabled, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.DnsPrefetchEnabled, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.AllowRunningInsecureContent, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.AllowGeolocationOnInsecureOrigins, True)
+        self.webView.setContextMenuPolicy(PyQt6.QtCore.Qt.ContextMenuPolicy.DefaultContextMenu)
+        self.webView.page().certificateError.connect(self.on_cert_error)
+
+        self.connectActions() 
+
+    def on_cert_error(self,e):
+        # print(f"cert error: {e.description()}")
+        # print(f"type: {e.type()}")
+        # print(f"overridable: {e.isOverridable()}")
+        # print(f"url: {e.url()}")
+        # for c in e.certificateChain():
+        #     print(c.toText())
+        e.acceptCertificate()
+        e.ignoreCertificateError()
+        return True
 #############################################################################
 
 if __name__ == "__main__":
