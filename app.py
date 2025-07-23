@@ -312,9 +312,12 @@ class Ui_MainWindow(QMainWindow,object):
         self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
         self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
 
-    def pdf_in_browser(self,pdf_path):
-        pdf_path = os.path.relpath(pdf_path)
-        QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(pdf_path))
+    def pdf_in_browser(self,pdf_path,local):
+        if local == True:
+           pdf_path = os.path.relpath(pdf_path)
+           QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(pdf_path))
+        else:
+            QDesktopServices.openUrl(QUrl(pdf_path))
 
     def connectActions(self):
         self.action_BigPicture.triggered.connect(partial(self.changePDFPage,0))
@@ -331,10 +334,11 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_PythonProgramming.triggered.connect(self.changePage)
         self.action_LinearAlgebraAndCalculus.triggered.connect(self.changePage)
         self.action_ProbabilityAndStatistics.triggered.connect(self.changePage)
-        self.action_PythonProgramming.triggered.connect(partial(self.html_in_window,"http://www.w3schools.com/python/default.asp"))
-        self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.html_in_window,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization"))
-        self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"./pages/Mathematics_for_Machine_Learning_mml_book.pdf"))
-
+        #self.action_PythonProgramming.triggered.connect(partial(self.html_in_window,"https://www.w3schools.com/python/default.asp"))
+        #self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.html_in_window,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization"))
+        self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"./pages/Mathematics_for_Machine_Learning_mml_book.pdf",True))
+        self.action_PythonProgramming.triggered.connect(partial(self.pdf_in_browser,"https://www.w3schools.com/python/default.asp",False))
+        self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.pdf_in_browser,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization",False))
 
     def changePage(self):
         #print(self.sender().objectName())
