@@ -4,26 +4,22 @@
 @Author | Developer: Mehrdad Ahady
 """
 import os
+from os import path
 import sys
+import cv2
 import PyQt6
 import PyQt6.QtCore
-import cv2
 from functools import partial
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QMenu, QMainWindow, QApplication, QWidget
 from PyQt6.QtPdf import QPdfDocument
 from PyQt6.QtPdfWidgets import QPdfView
-from utils.CustomPDFView import CustomPdfView
-
-from PyQt6.QtWidgets import QApplication, QPushButton, QVBoxLayout, QWidget
 from PyQt6.QtGui import QDesktopServices
-
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
-from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QUrl
 from PyQt6.QtWebEngineCore import QWebEngineProfile
-from os import path
+from utils.CustomPDFView import CustomPdfView
 
 class Ui_MainWindow(QMainWindow,object):
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -275,7 +271,11 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_LinearAlgebraAndCalculus.setText(_translate("MainWindow", "📊 Linear Algebra and Calculus"))
         self.action_ProbabilityAndStatistics.setText(_translate("MainWindow", "📉 Probability and Statistics"))
         self.action_PythonProgramming.setText(_translate("MainWindow", "🐍 Base of Python Programming"))
-        self.action_CoreMachineLearningPrinciples.setText(_translate("MainWindow", "🧠 Core Machine Learning Principles"))
+        self.action_CoreMachineLearningPrinciples.setTitle(_translate("MainWindow", "🧠 Core Machine Learning Principles"))
+        self.action_CategorizingByLearningParadigm.setText(_translate("MainWindow", "🗂️ Categorizing by Learning Paradigm"))
+        self.action_FromFundamentalsToAdvanced.setText(_translate("MainWindow", "🔍 From Fundamentals to Advanced"))
+        self.action_MLModelOverview.setText(_translate("MainWindow", "🌌 ML Model Overview"))
+        self.action_CoreMLModelFormatSpecification.setText(_translate("MainWindow", "📚 Core ML Model Format Specification"))
         #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<     
 #############################################################################
     def html_in_window(self,path):
@@ -300,10 +300,10 @@ class Ui_MainWindow(QMainWindow,object):
                   self.pdf_path = os.path.relpath("pages/HeadingResearch.pdf")
              case 5:
                   self.pdf_path = os.path.relpath("pages/UserGuide.pdf")
-            #  case 6:
-            #       self.pdf_path = os.path.relpath("pages/AboutTool.pdf")
-            #  case 7:
-            #       self.pdf_path = os.path.relpath("pages/AboutAuthorDeveloper.pdf")
+             case 6:
+                  self.pdf_path = os.path.relpath("pages/CategorizingByLearningParadigm.pdf")
+             case 7:
+                  self.pdf_path = os.path.relpath("pages/FromFundamentalsToAdvanced.pdf")
                   
         self.pdf_document.load(self.pdf_path)
         self.pdf_view.pdf_path = self.pdf_path
@@ -326,6 +326,9 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_StudyPlan.triggered.connect(partial(self.changePDFPage,3))
         self.action_HeadingResearch.triggered.connect(partial(self.changePDFPage,4))
         self.action_UserGuide.triggered.connect(partial(self.changePDFPage,5))
+        self.action_CategorizingByLearningParadigm.triggered.connect(partial(self.changePDFPage,6))
+        self.action_FromFundamentalsToAdvanced.triggered.connect(partial(self.changePDFPage,7))
+
         self.action_AboutTool.triggered.connect(self.changePage)
         self.action_AboutAuthorDeveloper.triggered.connect(self.changePage)
         self.action_CloseOtherWindows.triggered.connect(self.closeWindow)
@@ -334,11 +337,15 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_PythonProgramming.triggered.connect(self.changePage)
         self.action_LinearAlgebraAndCalculus.triggered.connect(self.changePage)
         self.action_ProbabilityAndStatistics.triggered.connect(self.changePage)
+        
         #self.action_PythonProgramming.triggered.connect(partial(self.html_in_window,"https://www.w3schools.com/python/default.asp"))
         #self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.html_in_window,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization"))
-        self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"./pages/Mathematics_for_Machine_Learning_mml_book.pdf",True))
+        #self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"./pages/Mathematics_for_Machine_Learning_mml_book.pdf",True))
+        self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"https://mml-book.github.io/book/mml-book.pdf",False))
         self.action_PythonProgramming.triggered.connect(partial(self.pdf_in_browser,"https://www.w3schools.com/python/default.asp",False))
         self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.pdf_in_browser,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization",False))
+        self.action_MLModelOverview.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/docs-guides/source/mlmodel.html",False))
+        self.action_CoreMLModelFormatSpecification.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/mlmodel/index.html",False))
 
     def changePage(self):
         #print(self.sender().objectName())
@@ -368,6 +375,17 @@ class Ui_MainWindow(QMainWindow,object):
         with open(file_path, 'r') as f: #, encoding='utf-8'
             return f.read()
 
+    def on_cert_error(self,e):
+            # print(f"cert error: {e.description()}")
+            # print(f"type: {e.type()}")
+            # print(f"overridable: {e.isOverridable()}")
+            # print(f"url: {e.url()}")
+            # for c in e.certificateChain():
+            #     print(c.toText())
+            e.acceptCertificate()
+            e.ignoreCertificateError()
+            return True
+
     def manualSetup(self):
         self.action_PythonProgramming = QtGui.QAction(parent=MainWindow)  
         self.action_PythonProgramming.setObjectName("action_PythonProgramming")
@@ -382,9 +400,22 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_ProbabilityAndStatistics.setObjectName("action_ProbabilityAndStatistics")    
         self.menu_Mathematics.addAction(self.action_ProbabilityAndStatistics)
         
-        self.action_CoreMachineLearningPrinciples = QtGui.QAction(parent=MainWindow)  
+        self.action_CoreMachineLearningPrinciples = QMenu(parent=MainWindow)  
         self.action_CoreMachineLearningPrinciples.setObjectName("action_CoreMachineLearningPrinciples")
-        self.menu_PreRequisites.addAction(self.action_CoreMachineLearningPrinciples)
+        self.menu_PreRequisites.addMenu(self.action_CoreMachineLearningPrinciples)
+        self.action_CategorizingByLearningParadigm = QtGui.QAction(parent=MainWindow)
+        self.action_CategorizingByLearningParadigm.setObjectName("action_CategorizingByLearningParadigm")    
+        self.action_CoreMachineLearningPrinciples.addAction(self.action_CategorizingByLearningParadigm)
+        self.action_FromFundamentalsToAdvanced = QtGui.QAction(parent=MainWindow)
+        self.action_FromFundamentalsToAdvanced.setObjectName("action_FromFundamentalsToAdvanced")    
+        self.action_CoreMachineLearningPrinciples.addAction(self.action_FromFundamentalsToAdvanced)
+
+        self.action_MLModelOverview = QtGui.QAction(parent=MainWindow)  
+        self.action_MLModelOverview.setObjectName("action_MLModelOverview")
+        self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_MLModelOverview)
+        self.action_CoreMLModelFormatSpecification = QtGui.QAction(parent=MainWindow)  
+        self.action_CoreMLModelFormatSpecification.setObjectName("action_CoreMLModelFormatSpecification")
+        self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_CoreMLModelFormatSpecification)
 
         self.pdf_view = CustomPdfView(self.pages)
         self.pdf_document = QPdfDocument(self.pdf_view)
@@ -419,16 +450,6 @@ class Ui_MainWindow(QMainWindow,object):
 
         self.connectActions() 
 
-    def on_cert_error(self,e):
-        # print(f"cert error: {e.description()}")
-        # print(f"type: {e.type()}")
-        # print(f"overridable: {e.isOverridable()}")
-        # print(f"url: {e.url()}")
-        # for c in e.certificateChain():
-        #     print(c.toText())
-        e.acceptCertificate()
-        e.ignoreCertificateError()
-        return True
 #############################################################################
 
 if __name__ == "__main__":

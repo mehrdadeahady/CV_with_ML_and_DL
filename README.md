@@ -5,7 +5,7 @@
 <h4>🎓 Assistant Tool for Data Science & Computer Science Students</h5>
 <dd>
     <dl>
-        <b>Purpose:</b>
+        &nbsp;&nbsp;&nbsp;&nbsp;<b>Purpose:</b>
     </dl>
 </dd>
 <dd>
@@ -21,7 +21,7 @@
 </dd>
 <dd>
     <dl>
-        <b>Capabilities:</b>
+        &nbsp;&nbsp;&nbsp;&nbsp;<b>Capabilities:</b>
     </dl>
 </dd>
 <dd>
@@ -37,7 +37,7 @@
     <dl>
         <dd>
             <dl>
-                🧠 ML/DL Integration: Offers tutorials and examples that apply machine learning and deep learning to real-world vision tasks.
+                🧠 ML/DL Integration: tutorials and examples apply machine learning and deep learning to real-world vision tasks.
             </dl>
         </dd>
     </dl>
@@ -71,7 +71,7 @@
 </dd>
 <dd>
     <dl>
-        <b>Ideal Users:</b>
+        &nbsp;&nbsp;&nbsp;&nbsp;<b>Ideal Users:</b>
     </dl>
 </dd>
 <dd>
