@@ -273,9 +273,11 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_PythonProgramming.setText(_translate("MainWindow", "🐍 Base of Python Programming"))
         self.action_CoreMachineLearningPrinciples.setTitle(_translate("MainWindow", "🧠 Core Machine Learning Principles"))
         self.action_CategorizingByLearningParadigm.setText(_translate("MainWindow", "🗂️ Categorizing by Learning Paradigm"))
-        self.action_FromFundamentalsToAdvanced.setText(_translate("MainWindow", "🔍 From Fundamentals to Advanced"))
+        self.action_FromFundamentalsToAdvanced.setText(_translate("MainWindow", "🔥 From Fundamentals to Advanced"))
         self.action_MLModelOverview.setText(_translate("MainWindow", "🌌 ML Model Overview"))
         self.action_CoreMLModelFormatSpecification.setText(_translate("MainWindow", "📚 Core ML Model Format Specification"))
+        self.action_CodeSamplesByLearningParadigm.setText(_translate("MainWindow", "📜 Code Samples by Learning Paradigm"))
+        self.action_DeeperCodeSamplesWithDefinitions.setText(_translate("MainWindow", "🔍 Deeper Code Samples with Definitions"))
         #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<     
 #############################################################################
     def html_in_window(self,path):
@@ -304,6 +306,10 @@ class Ui_MainWindow(QMainWindow,object):
                   self.pdf_path = os.path.relpath("pages/CategorizingByLearningParadigm.pdf")
              case 7:
                   self.pdf_path = os.path.relpath("pages/FromFundamentalsToAdvanced.pdf")
+             case 8:
+                  self.pdf_path = os.path.relpath("pages/CodeSamplesByLearningParadigm.pdf")
+             case 9:
+                  self.pdf_path = os.path.relpath("pages/DeeperCodeSamplesWithDefinitions.pdf")
                   
         self.pdf_document.load(self.pdf_path)
         self.pdf_view.pdf_path = self.pdf_path
@@ -328,6 +334,8 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_UserGuide.triggered.connect(partial(self.changePDFPage,5))
         self.action_CategorizingByLearningParadigm.triggered.connect(partial(self.changePDFPage,6))
         self.action_FromFundamentalsToAdvanced.triggered.connect(partial(self.changePDFPage,7))
+        self.action_CodeSamplesByLearningParadigm.triggered.connect(partial(self.changePDFPage,8))
+        self.action_DeeperCodeSamplesWithDefinitions.triggered.connect(partial(self.changePDFPage,9))
 
         self.action_AboutTool.triggered.connect(self.changePage)
         self.action_AboutAuthorDeveloper.triggered.connect(self.changePage)
@@ -416,6 +424,13 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_CoreMLModelFormatSpecification = QtGui.QAction(parent=MainWindow)  
         self.action_CoreMLModelFormatSpecification.setObjectName("action_CoreMLModelFormatSpecification")
         self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_CoreMLModelFormatSpecification)
+
+        self.action_CodeSamplesByLearningParadigm = QtGui.QAction(parent=MainWindow)  
+        self.action_CodeSamplesByLearningParadigm.setObjectName("action_CodeSamplesByLearningParadigm")
+        self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_CodeSamplesByLearningParadigm)
+        self.action_DeeperCodeSamplesWithDefinitions = QtGui.QAction(parent=MainWindow)  
+        self.action_DeeperCodeSamplesWithDefinitions.setObjectName("action_DeeperCodeSamplesWithDefinitions")
+        self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_DeeperCodeSamplesWithDefinitions)
 
         self.pdf_view = CustomPdfView(self.pages)
         self.pdf_document = QPdfDocument(self.pdf_view)
