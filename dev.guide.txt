@@ -1,0 +1,26 @@
+Main Courses for Computer Vision have Comments for begginers and Students.
+UI Code is Clean by Naming Technique so it does't need Comments, for extending or changing ui.ui inside qtDesigner:
+
+After change in designer run pyuic6 in terminal to convert the design to python code in qt6:
+pyuic6 -x -o ./app2.py ./ui.ui
+explanation:
+pyuic6 > command
+-x parameter > making it executable
+-o parameter > taking path and name of output file, here app2.py 
+   <Name of output file should be different than main file inside project 
+    to transfer functional code from former design to the new design>
+ui.ui > .ui is an extension for qtdesigner files, help you to change UI easily and faster.
+
+
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+Copy and Paste all codes inside two lines same as above and below comment lines from old app.py to new app2.py 
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+Change or Copy from old app.py to new app2.py all lines one by one that has a comment like 
+this beside it: #*******************************
+
+
+now you can delete or move old app.py and rename new app2.py to app.py, 
+ now you have new added design + old functionality ready for adding
+  new funtionality to new design.
