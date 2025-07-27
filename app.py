@@ -278,6 +278,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_CoreMLModelFormatSpecification.setText(_translate("MainWindow", "📚 Core ML Model Format Specification"))
         self.action_CodeSamplesByLearningParadigm.setText(_translate("MainWindow", "📜 Code Samples by Learning Paradigm"))
         self.action_DeeperCodeSamplesWithDefinitions.setText(_translate("MainWindow", "🔍 Deeper Code Samples with Definitions"))
+        self.action_TheoreticalFoundationsOfComputerVision.setText(_translate("MainWindow", "👀 Theoretical"))
         #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<     
 #############################################################################
     def html_in_window(self,path):
@@ -310,6 +311,8 @@ class Ui_MainWindow(QMainWindow,object):
                   self.pdf_path = os.path.relpath("pages/CodeSamplesByLearningParadigm.pdf")
              case 9:
                   self.pdf_path = os.path.relpath("pages/DeeperCodeSamplesWithDefinitions.pdf")
+             case 10:
+                  self.pdf_path = os.path.relpath("pages/TheoreticalFoundationsOfComputerVision.pdf")
                   
         self.pdf_document.load(self.pdf_path)
         self.pdf_view.pdf_path = self.pdf_path
@@ -336,6 +339,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_FromFundamentalsToAdvanced.triggered.connect(partial(self.changePDFPage,7))
         self.action_CodeSamplesByLearningParadigm.triggered.connect(partial(self.changePDFPage,8))
         self.action_DeeperCodeSamplesWithDefinitions.triggered.connect(partial(self.changePDFPage,9))
+        self.action_TheoreticalFoundationsOfComputerVision.triggered.connect(partial(self.changePDFPage,10))
 
         self.action_AboutTool.triggered.connect(self.changePage)
         self.action_AboutAuthorDeveloper.triggered.connect(self.changePage)
@@ -431,6 +435,10 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_DeeperCodeSamplesWithDefinitions = QtGui.QAction(parent=MainWindow)  
         self.action_DeeperCodeSamplesWithDefinitions.setObjectName("action_DeeperCodeSamplesWithDefinitions")
         self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_DeeperCodeSamplesWithDefinitions)
+
+        self.action_TheoreticalFoundationsOfComputerVision = QtGui.QAction(parent=MainWindow)  
+        self.action_TheoreticalFoundationsOfComputerVision.setObjectName("action_TheoreticalFoundationsOfComputerVision")
+        self.menu_FundamentalOfComputerVision.addAction(self.action_TheoreticalFoundationsOfComputerVision)
 
         self.pdf_view = CustomPdfView(self.pages)
         self.pdf_document = QPdfDocument(self.pdf_view)
