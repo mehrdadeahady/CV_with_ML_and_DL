@@ -272,6 +272,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_ProbabilityAndStatistics.setText(_translate("MainWindow", "📉 Probability and Statistics"))
         self.action_PythonProgramming.setText(_translate("MainWindow", "🐍 Base of Python Programming"))
         self.action_CoreMachineLearningPrinciples.setTitle(_translate("MainWindow", "🧠 Core Machine Learning Principles"))
+        self.action_MLBigPicture.setText(_translate("MainWindow", "🖼️ ML Big Picture"))
         self.action_CategorizingByLearningParadigm.setText(_translate("MainWindow", "🗂️ Categorizing by Learning Paradigm"))
         self.action_FromFundamentalsToAdvanced.setText(_translate("MainWindow", "🔥 From Fundamentals to Advanced"))
         self.action_MLModelOverview.setText(_translate("MainWindow", "🌌 ML Model Overview"))
@@ -305,14 +306,16 @@ class Ui_MainWindow(QMainWindow,object):
              case 5:
                   self.pdf_path = os.path.relpath("pages/UserGuide.pdf")
              case 6:
-                  self.pdf_path = os.path.relpath("pages/CategorizingByLearningParadigm.pdf")
+                  self.pdf_path = os.path.relpath("pages/ML_BigPicture.pdf")
              case 7:
-                  self.pdf_path = os.path.relpath("pages/FromFundamentalsToAdvanced.pdf")
+                  self.pdf_path = os.path.relpath("pages/CategorizingByLearningParadigm.pdf")
              case 8:
-                  self.pdf_path = os.path.relpath("pages/CodeSamplesByLearningParadigm.pdf")
+                  self.pdf_path = os.path.relpath("pages/FromFundamentalsToAdvanced.pdf")
              case 9:
-                  self.pdf_path = os.path.relpath("pages/DeeperCodeSamplesWithDefinitions.pdf")
+                  self.pdf_path = os.path.relpath("pages/CodeSamplesByLearningParadigm.pdf")
              case 10:
+                  self.pdf_path = os.path.relpath("pages/DeeperCodeSamplesWithDefinitions.pdf")
+             case 11:
                   self.pdf_path = os.path.relpath("pages/TheoreticalFoundationsOfComputerVision.pdf")
                   
         self.pdf_document.load(self.pdf_path)
@@ -336,11 +339,12 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_StudyPlan.triggered.connect(partial(self.changePDFPage,3))
         self.action_HeadingResearch.triggered.connect(partial(self.changePDFPage,4))
         self.action_UserGuide.triggered.connect(partial(self.changePDFPage,5))
-        self.action_CategorizingByLearningParadigm.triggered.connect(partial(self.changePDFPage,6))
-        self.action_FromFundamentalsToAdvanced.triggered.connect(partial(self.changePDFPage,7))
-        self.action_CodeSamplesByLearningParadigm.triggered.connect(partial(self.changePDFPage,8))
-        self.action_DeeperCodeSamplesWithDefinitions.triggered.connect(partial(self.changePDFPage,9))
-        self.action_TheoreticalFoundationsOfComputerVision.triggered.connect(partial(self.changePDFPage,10))
+        self.action_MLBigPicture.triggered.connect(partial(self.changePDFPage,6))
+        self.action_CategorizingByLearningParadigm.triggered.connect(partial(self.changePDFPage,7))
+        self.action_FromFundamentalsToAdvanced.triggered.connect(partial(self.changePDFPage,8))
+        self.action_CodeSamplesByLearningParadigm.triggered.connect(partial(self.changePDFPage,9))
+        self.action_DeeperCodeSamplesWithDefinitions.triggered.connect(partial(self.changePDFPage,10))
+        self.action_TheoreticalFoundationsOfComputerVision.triggered.connect(partial(self.changePDFPage,11))
 
         self.action_AboutTool.triggered.connect(self.changePage)
         self.action_AboutAuthorDeveloper.triggered.connect(self.changePage)
@@ -416,13 +420,16 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_CoreMachineLearningPrinciples = QMenu(parent=MainWindow)  
         self.action_CoreMachineLearningPrinciples.setObjectName("action_CoreMachineLearningPrinciples")
         self.menu_PreRequisites.addMenu(self.action_CoreMachineLearningPrinciples)
+        self.action_MLBigPicture = QtGui.QAction(parent=MainWindow)
+        self.action_MLBigPicture.setObjectName("action_MLBigPicture")    
+        self.action_CoreMachineLearningPrinciples.addAction(self.action_MLBigPicture)
         self.action_CategorizingByLearningParadigm = QtGui.QAction(parent=MainWindow)
         self.action_CategorizingByLearningParadigm.setObjectName("action_CategorizingByLearningParadigm")    
         self.action_CoreMachineLearningPrinciples.addAction(self.action_CategorizingByLearningParadigm)
         self.action_FromFundamentalsToAdvanced = QtGui.QAction(parent=MainWindow)
         self.action_FromFundamentalsToAdvanced.setObjectName("action_FromFundamentalsToAdvanced")    
         self.action_CoreMachineLearningPrinciples.addAction(self.action_FromFundamentalsToAdvanced)
-
+        
         self.action_MLModelOverview = QtGui.QAction(parent=MainWindow)  
         self.action_MLModelOverview.setObjectName("action_MLModelOverview")
         self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_MLModelOverview)
