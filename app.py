@@ -266,11 +266,14 @@ class Ui_MainWindow(QMainWindow,object):
         self.menu_Advanced_Generative_Models_Architectures.setTitle(_translate("MainWindow", "Advanced & Generative Models & Architectures"))  #*******************************
         self.menu_Applications_Deployment_Optimization.setTitle(_translate("MainWindow", "Applications Deployment & Optimization"))  #*******************************
         self.menu_Ethics_Explainability_and_Portfolios.setTitle(_translate("MainWindow", "Ethics, Explainability, and Portfolios"))  #*******************************
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<📊
         self.menu_Mathematics.setTitle(_translate("MainWindow", "🧮 Mathematics"))
-        self.action_LinearAlgebraAndCalculus.setText(_translate("MainWindow", "📊 Linear Algebra and Calculus"))
-        self.action_ProbabilityAndStatistics.setText(_translate("MainWindow", "📉 Probability and Statistics"))
+        self.action_LinearAlgebraAndCalculus.setText(_translate("MainWindow", "📉 Linear Algebra and Calculus"))
+        self.action_ProbabilityAndStatistics.setText(_translate("MainWindow", "🎲 Probability and Statistics"))
+        self.menu_PythonProgramming.setTitle(_translate("MainWindow", "🐍 Python Programming"))
         self.action_PythonProgramming.setText(_translate("MainWindow", "🐍 Base of Python Programming"))
+        self.action_Numpy.setText(_translate("MainWindow", "🔢 Numpy Library Sheet"))
+        self.action_Pandas.setText(_translate("MainWindow", "🥨 Pandas Library Sheet"))
         self.action_CoreMachineLearningPrinciples.setTitle(_translate("MainWindow", "🧠 Core Machine Learning Principles"))
         self.action_MLBigPicture.setText(_translate("MainWindow", "🖼️ ML Big Picture"))
         self.action_CategorizingByLearningParadigm.setText(_translate("MainWindow", "🗂️ Categorizing by Learning Paradigm"))
@@ -317,6 +320,10 @@ class Ui_MainWindow(QMainWindow,object):
                   self.pdf_path = os.path.relpath("pages/DeeperCodeSamplesWithDefinitions.pdf")
              case 11:
                   self.pdf_path = os.path.relpath("pages/TheoreticalFoundationsOfComputerVision.pdf")
+             case 12:
+                  self.pdf_path = os.path.relpath("pages/Numpy_Sheet.pdf")
+             case 13:
+                  self.pdf_path = os.path.relpath("pages/Pandas_Sheet.pdf")
                   
         self.pdf_document.load(self.pdf_path)
         self.pdf_view.pdf_path = self.pdf_path
@@ -345,6 +352,8 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_CodeSamplesByLearningParadigm.triggered.connect(partial(self.changePDFPage,9))
         self.action_DeeperCodeSamplesWithDefinitions.triggered.connect(partial(self.changePDFPage,10))
         self.action_TheoreticalFoundationsOfComputerVision.triggered.connect(partial(self.changePDFPage,11))
+        self.action_Numpy.triggered.connect(partial(self.changePDFPage,12))
+        self.action_Pandas.triggered.connect(partial(self.changePDFPage,13))
 
         self.action_AboutTool.triggered.connect(self.changePage)
         self.action_AboutAuthorDeveloper.triggered.connect(self.changePage)
@@ -404,9 +413,19 @@ class Ui_MainWindow(QMainWindow,object):
             return True
 
     def manualSetup(self):
+        self.menu_PythonProgramming = QMenu(parent=MainWindow)  
+        self.menu_PythonProgramming.setObjectName("action_PythonProgramming")
+        self.menu_PreRequisites.addMenu(self.menu_PythonProgramming)
         self.action_PythonProgramming = QtGui.QAction(parent=MainWindow)  
         self.action_PythonProgramming.setObjectName("action_PythonProgramming")
-        self.menu_PreRequisites.addAction(self.action_PythonProgramming)
+        self.menu_PythonProgramming.addAction(self.action_PythonProgramming)
+        self.action_Numpy = QtGui.QAction(parent=MainWindow)  
+        self.action_Numpy.setObjectName("action_Numpy")
+        self.menu_PythonProgramming.addAction(self.action_Numpy)
+        self.action_Pandas = QtGui.QAction(parent=MainWindow)  
+        self.action_Pandas.setObjectName("action_Pandas")
+        self.menu_PythonProgramming.addAction(self.action_Pandas)
+
         self.menu_Mathematics = QMenu(parent=MainWindow)  
         self.menu_Mathematics.setObjectName("menu_Mathematics")
         self.menu_PreRequisites.addMenu(self.menu_Mathematics)
