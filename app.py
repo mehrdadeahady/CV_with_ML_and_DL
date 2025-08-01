@@ -11,7 +11,7 @@ import PyQt6
 import PyQt6.QtCore
 from functools import partial
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtWidgets import QMenu, QMainWindow, QApplication, QWidget
+from PyQt6.QtWidgets import QMenu, QMainWindow, QApplication, QWidget, QMessageBox
 from PyQt6.QtPdf import QPdfDocument
 from PyQt6.QtPdfWidgets import QPdfView
 from PyQt6.QtGui import QDesktopServices
@@ -373,6 +373,9 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_MLModelOverview.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/docs-guides/source/mlmodel.html",False))
         self.action_CoreMLModelFormatSpecification.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/mlmodel/index.html",False))
 
+    def message(self):
+          QMessageBox.information(self, "Selected Text", f"Selected Text: {"test"}")
+
     def changePage(self):
         #print(self.sender().objectName())
         selectedPage = self.pages.findChild(QtWidgets.QWidget,"page_" + self.sender().objectName().split("_")[1])
@@ -479,24 +482,24 @@ class Ui_MainWindow(QMainWindow,object):
         self.text_AboutTool.setStyleSheet("padding:10px")
         self.pages.setCurrentWidget(self.page_AboutTool)
 
-        self.webView = QWebEngineView(parent=None)
-        self.webView.setObjectName("Python Programming")
-        self.webView.setWindowTitle("Python Programming")
-        self.webView.resize(1024, 768)
-        self.webView.setMinimumSize(QtCore.QSize(1024, 768))
-        self.webView.setBaseSize(QtCore.QSize(1024, 768))
-        self.webView.setGeometry(QtCore.QRect(0, 0, 1024, 768))
-        profile = QWebEngineProfile.defaultProfile() 
-        webpage = QWebEnginePage(profile, self.webView)
-        self.webView.setPage(webpage)
-        settings = self.webView.page().settings()
-        settings.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
-        settings.setAttribute(QWebEngineSettings.WebAttribute.JavascriptEnabled, True)
-        settings.setAttribute(QWebEngineSettings.WebAttribute.DnsPrefetchEnabled, True)
-        settings.setAttribute(QWebEngineSettings.WebAttribute.AllowRunningInsecureContent, True)
-        settings.setAttribute(QWebEngineSettings.WebAttribute.AllowGeolocationOnInsecureOrigins, True)
-        self.webView.setContextMenuPolicy(PyQt6.QtCore.Qt.ContextMenuPolicy.DefaultContextMenu)
-        self.webView.page().certificateError.connect(self.on_cert_error)
+     #    self.webView = QWebEngineView(parent=None)
+     #    self.webView.setObjectName("Python Programming")
+     #    self.webView.setWindowTitle("Python Programming")
+     #    self.webView.resize(1024, 768)
+     #    self.webView.setMinimumSize(QtCore.QSize(1024, 768))
+     #    self.webView.setBaseSize(QtCore.QSize(1024, 768))
+     #    self.webView.setGeometry(QtCore.QRect(0, 0, 1024, 768))
+     #    profile = QWebEngineProfile.defaultProfile() 
+     #    webpage = QWebEnginePage(profile, self.webView)
+     #    self.webView.setPage(webpage)
+     #    settings = self.webView.page().settings()
+     #    settings.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
+     #    settings.setAttribute(QWebEngineSettings.WebAttribute.JavascriptEnabled, True)
+     #    settings.setAttribute(QWebEngineSettings.WebAttribute.DnsPrefetchEnabled, True)
+     #    settings.setAttribute(QWebEngineSettings.WebAttribute.AllowRunningInsecureContent, True)
+     #    settings.setAttribute(QWebEngineSettings.WebAttribute.AllowGeolocationOnInsecureOrigins, True)
+     #    self.webView.setContextMenuPolicy(PyQt6.QtCore.Qt.ContextMenuPolicy.DefaultContextMenu)
+     #    self.webView.page().certificateError.connect(self.on_cert_error)
 
         self.connectActions() 
 
