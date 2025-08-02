@@ -266,7 +266,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.menu_Advanced_Generative_Models_Architectures.setTitle(_translate("MainWindow", "Advanced & Generative Models & Architectures"))  #*******************************
         self.menu_Applications_Deployment_Optimization.setTitle(_translate("MainWindow", "Applications Deployment & Optimization"))  #*******************************
         self.menu_Ethics_Explainability_and_Portfolios.setTitle(_translate("MainWindow", "Ethics, Explainability, and Portfolios"))  #*******************************
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<📊
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         self.menu_Mathematics.setTitle(_translate("MainWindow", "🧮 Mathematics"))
         self.action_LinearAlgebraAndCalculus.setText(_translate("MainWindow", "📉 Linear Algebra and Calculus"))
         self.action_ProbabilityAndStatistics.setText(_translate("MainWindow", "🎲 Probability and Statistics"))
@@ -274,6 +274,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_PythonProgramming.setText(_translate("MainWindow", "🐍 Base of Python Programming"))
         self.action_Numpy.setText(_translate("MainWindow", "🔢 Numpy Library Sheet"))
         self.action_Pandas.setText(_translate("MainWindow", "🥨 Pandas Library Sheet"))
+        self.action_MatPlotLib.setText(_translate("MainWindow", "📊 MatPlotLib Library Sheet"))
         self.action_CoreMachineLearningPrinciples.setTitle(_translate("MainWindow", "🧠 Core Machine Learning Principles"))
         self.action_MLBigPicture.setText(_translate("MainWindow", "🖼️ ML Big Picture"))
         self.action_CategorizingByLearningParadigm.setText(_translate("MainWindow", "🗂️ Categorizing by Learning Paradigm"))
@@ -324,6 +325,8 @@ class Ui_MainWindow(QMainWindow,object):
                   self.pdf_path = os.path.relpath("pages/Numpy_Sheet.pdf")
              case 13:
                   self.pdf_path = os.path.relpath("pages/Pandas_Sheet.pdf")
+             case 14:
+                  self.pdf_path = os.path.relpath("pages/MatPlotLib_Sheet.pdf")
                   
         self.pdf_document.load(self.pdf_path)
         self.pdf_view.pdf_path = self.pdf_path
@@ -354,6 +357,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_TheoreticalFoundationsOfComputerVision.triggered.connect(partial(self.changePDFPage,11))
         self.action_Numpy.triggered.connect(partial(self.changePDFPage,12))
         self.action_Pandas.triggered.connect(partial(self.changePDFPage,13))
+        self.action_MatPlotLib.triggered.connect(partial(self.changePDFPage,14))
 
         self.action_AboutTool.triggered.connect(self.changePage)
         self.action_AboutAuthorDeveloper.triggered.connect(self.changePage)
@@ -428,6 +432,9 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_Pandas = QtGui.QAction(parent=MainWindow)  
         self.action_Pandas.setObjectName("action_Pandas")
         self.menu_PythonProgramming.addAction(self.action_Pandas)
+        self.action_MatPlotLib = QtGui.QAction(parent=MainWindow)  
+        self.action_MatPlotLib.setObjectName("action_MatPlotLib")
+        self.menu_PythonProgramming.addAction(self.action_MatPlotLib)
 
         self.menu_Mathematics = QMenu(parent=MainWindow)  
         self.menu_Mathematics.setObjectName("menu_Mathematics")
