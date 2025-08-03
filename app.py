@@ -282,6 +282,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_FromFundamentalsToAdvanced.setText(_translate("MainWindow", "🔥 From Fundamentals to Advanced"))
         self.action_MLModelOverview.setText(_translate("MainWindow", "🌌 ML Model Overview"))
         self.action_CoreMLModelFormatSpecification.setText(_translate("MainWindow", "📚 Core ML Model Format Specification"))
+        self.action_SupervisedMLProcess.setText(_translate("MainWindow", "🎵 Supervised ML Process"))
         self.action_CodeSamplesByLearningParadigm.setText(_translate("MainWindow", "📜 Code Samples by Learning Paradigm"))
         self.action_DeeperCodeSamplesWithDefinitions.setText(_translate("MainWindow", "🔍 Deeper Code Samples with Definitions"))
         self.action_TheoreticalFoundationsOfComputerVision.setText(_translate("MainWindow", "👀 Theoretical"))
@@ -330,6 +331,8 @@ class Ui_MainWindow(QMainWindow,object):
                   self.pdf_path = os.path.relpath("pages/MatPlotLib_Sheet.pdf")
              case 15:
                   self.pdf_path = os.path.relpath("pages/SeaBorn_Sheet.pdf")
+             case 16:
+                  self.pdf_path = os.path.relpath("pages/SupervisedML_Process.pdf")
                   
         self.pdf_document.load(self.pdf_path)
         self.pdf_view.pdf_path = self.pdf_path
@@ -362,6 +365,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_Pandas.triggered.connect(partial(self.changePDFPage,13))
         self.action_MatPlotLib.triggered.connect(partial(self.changePDFPage,14))
         self.action_SeaBorn.triggered.connect(partial(self.changePDFPage,15))
+        self.action_SupervisedMLProcess.triggered.connect(partial(self.changePDFPage,16))
 
         self.action_AboutTool.triggered.connect(self.changePage)
         self.action_AboutAuthorDeveloper.triggered.connect(self.changePage)
@@ -472,7 +476,9 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_CoreMLModelFormatSpecification = QtGui.QAction(parent=MainWindow)  
         self.action_CoreMLModelFormatSpecification.setObjectName("action_CoreMLModelFormatSpecification")
         self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_CoreMLModelFormatSpecification)
-
+        self.action_SupervisedMLProcess = QtGui.QAction(parent=MainWindow)  
+        self.action_SupervisedMLProcess.setObjectName("action_SupervisedMLProcess")
+        self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_SupervisedMLProcess)
         self.action_CodeSamplesByLearningParadigm = QtGui.QAction(parent=MainWindow)  
         self.action_CodeSamplesByLearningParadigm.setObjectName("action_CodeSamplesByLearningParadigm")
         self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_CodeSamplesByLearningParadigm)
