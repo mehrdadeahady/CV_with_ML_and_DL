@@ -1,4 +1,4 @@
-For creating executable file from python apps there are a lot of options.
+For creating executable file for python apps there are a lot of options.
 Main tool is pyinstaller but its ouput.exe file is very slow for unpacking and loading embedded resources.
 Other option is nuitka tool, that is compatible with python 3.4 to 3.12, so if main python version is different, 
 install a compatible version separately and run that version by pointing to its path.
