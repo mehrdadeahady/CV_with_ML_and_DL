@@ -11,18 +11,21 @@ import cv2
 import shutil
 import inspect
 from functools import partial
+import emoji
+import regex
 import PyQt6
 import PyQt6.QtCore
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QMenu, QMainWindow, QApplication, QWidget, QMessageBox, QFileDialog
 from PyQt6.QtPdf import QPdfDocument
 from PyQt6.QtPdfWidgets import QPdfView
-from PyQt6.QtGui import QDesktopServices
+from PyQt6.QtGui import QDesktopServices, QCloseEvent
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
 from PyQt6.QtCore import QUrl
 from PyQt6.QtWebEngineCore import QWebEngineProfile
 from utils.CustomPDFView import CustomPdfView
+from utils.ImagesAndColors import ImagesAndColors
 
 class Ui_MainWindow(QMainWindow,object):
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -37,6 +40,7 @@ class Ui_MainWindow(QMainWindow,object):
         MainWindow.setMinimumSize(QtCore.QSize(1024, 768))
         MainWindow.setMaximumSize(QtCore.QSize(1024, 768))
         MainWindow.setBaseSize(QtCore.QSize(1024, 768))
+        self.ImagesAndColorsHandler = ImagesAndColors()
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(".\\icons/eye.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
@@ -91,6 +95,11 @@ class Ui_MainWindow(QMainWindow,object):
         self.comboBox_ColorSpaceConversion.setObjectName("comboBox_ColorSpaceConversion")
         self.comboBox_ColorSpaceConversion.addItem("")
         self.comboBox_ColorSpaceConversion.setItemText(0, "")
+        self.comboBox_ColorSpaceConversion.addItem("")
+        self.comboBox_ColorSpaceConversion.addItem("")
+        self.comboBox_ColorSpaceConversion.addItem("")
+        self.comboBox_ColorSpaceConversion.addItem("")
+        self.comboBox_ColorSpaceConversion.addItem("")
         self.comboBox_ColorSpaceConversion.addItem("")
         self.comboBox_ColorSpaceConversion.addItem("")
         self.comboBox_ColorSpaceConversion.addItem("")
@@ -601,7 +610,7 @@ class Ui_MainWindow(QMainWindow,object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Computer Vision with Machine Learning and Deep Learning"))
-        self.pushButton_UploadImages.setText(_translate("MainWindow", "Upload Image"))
+        self.pushButton_UploadImages.setText(_translate("MainWindow", "Upload Images"))
         self.pushButton_SaveCode.setText(_translate("MainWindow", "Save Code"))
         self.pushButton_SaveImage.setText(_translate("MainWindow", "Save Image"))
         self.label_SelectImage.setText(_translate("MainWindow", "Select an Image:"))
@@ -609,6 +618,11 @@ class Ui_MainWindow(QMainWindow,object):
         self.comboBox_ColorSpaceConversion.setItemText(1, _translate("MainWindow", "BGR Channel to Gray Scale Channel"))
         self.comboBox_ColorSpaceConversion.setItemText(2, _translate("MainWindow", "BGR Channel to RGB Channel"))
         self.comboBox_ColorSpaceConversion.setItemText(3, _translate("MainWindow", "BGR Channel to HSV Channel"))
+        self.comboBox_ColorSpaceConversion.setItemText(4, _translate("MainWindow", "RGB Channel to Gray Scale Channel"))
+        self.comboBox_ColorSpaceConversion.setItemText(5, _translate("MainWindow", "RGB Channel to BGR Channel"))
+        self.comboBox_ColorSpaceConversion.setItemText(6, _translate("MainWindow", "RGB Channel to HSV Channel"))
+        self.comboBox_ColorSpaceConversion.setItemText(7, _translate("MainWindow", "HSV Channel to RGB Channel"))
+        self.comboBox_ColorSpaceConversion.setItemText(8, _translate("MainWindow", "HSV Channel to BGR Channel"))
         self.groupBox_FlipImage.setTitle(_translate("MainWindow", "Flip"))
         self.checkBox_FlipVertical.setText(_translate("MainWindow", "Vertical"))
         self.checkBox_FlipHorizantal.setText(_translate("MainWindow", "Horizantal"))
@@ -799,19 +813,115 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_LinearAlgebraAndCalculus.triggered.connect(self.changePage)
         self.action_ProbabilityAndStatistics.triggered.connect(self.changePage)
         self.action_ImagesAndColors.triggered.connect(self.changePage)
+
+        self.actionUpload_Images.triggered.connect(self.upload_files)
+        self.pushButton_UploadImages.clicked.connect(self.upload_files)
+        self.comboBox_SelectImage.currentTextChanged.connect(self.PrepareSelectImageComboBox)
+        self.comboBox_ColorSpaceConversion.currentTextChanged.connect(partial(self.ImagesAndColorsHandler.ConvertColorSpace))
+        self.ImagesAndColorsHandler.valueChanged.connect(self.SetImageInfo)
+        self.pushButton_SaveCode.clicked.connect(self.SaveImagesAndColorsCode)    
+        self.pushButton_SaveImage.clicked.connect(self.ImagesAndColorsHandler.SaveImage)
         
-        #self.action_PythonProgramming.triggered.connect(partial(self.html_in_window,"https://www.w3schools.com/python/default.asp"))
-        #self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.html_in_window,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization"))
-        #self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"./pages/Mathematics_for_Machine_Learning_mml_book.pdf",True))
+        for channel in self.ColorChannelChangeCheckBoxes:
+            channel.clicked.connect(partial(self.PrepareColorChannelSelection,channel.objectName()))#stateChanged
+
         self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"https://mml-book.github.io/book/mml-book.pdf",False))
         self.action_PythonProgramming.triggered.connect(partial(self.pdf_in_browser,"https://www.w3schools.com/python/default.asp",False))
         self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.pdf_in_browser,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization",False))
         self.action_MLModelOverview.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/docs-guides/source/mlmodel.html",False))
         self.action_CoreMLModelFormatSpecification.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/mlmodel/index.html",False))
 
-    def message(self):
-          QMessageBox.information(self, "Selected Text", f"Selected Text: {"test"}")
+    def PrepareColorChannelSelection(self,text,check):
+        if self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None:
+             channels = {}
+             for channel in self.ColorChannelChangeCheckBoxes:
+                 channels[channel.objectName().split("_")[1]] = channel.isChecked()
+                 if channel.isChecked():pass
+                 else:
+                      channel.setDisabled(True)
+                      channel.setEnabled(False)
+             
+             self.ImagesAndColorsHandler.ColorChannelSelection(channels)
 
+        else:
+             QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
+   
+    def PrepareSelectImageComboBox(self,text):
+        self.lower()
+        cv2.destroyAllWindows()
+        self.comboBox_ColorSpaceConversion.setCurrentIndex(0)
+        self.label_ImageShapeValue.clear()
+        self.label_ImageHeightValue.clear() 
+        self.label_ImageWidthValue.clear()
+        self.label_ImageDepthValue.clear()
+        for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
+                 option.setChecked(False)
+                 option.setDisabled(True)
+                 option.setEnabled(False)
+        
+        if self.comboBox_SelectImage.currentText().strip() != "":
+           self.ImagesAndColorsHandler.ReadShowImage(text)
+            
+    def SetImageInfo(self,text):
+        # if text:
+        #     channel = text.split("2")[1]
+        #     print(channel)
+        if self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None:                              
+            self.label_ImageShapeValue.setText(str(self.ImagesAndColorsHandler.image.shape))
+            self.label_ImageHeightValue.setText(str(self.ImagesAndColorsHandler.image.shape[0]))  
+            self.label_ImageWidthValue.setText(str(self.ImagesAndColorsHandler.image.shape[1]))
+            if self.ImagesAndColorsHandler.imageConversion not in ["BGR2GRAY","RGB2GRAY"]:       
+                self.label_ImageDepthValue.setText(str(self.ImagesAndColorsHandler.image.shape[2]))
+            if self.ImagesAndColorsHandler.imageConversion is not None:
+               match self.ImagesAndColorsHandler.imageConversion:
+                    case "BGR2GRAY"|"RGB2GRAY":
+                        for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
+                                option.setDisabled(True)
+                                option.setEnabled(False)
+                                option.setChecked(False)
+
+                    case "BGR2RGB"|"RGB2BGR"|"HSV2BGR"|"HSV2RGB":
+                        for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
+                                if counter in [0,1,2]:
+                                    option.setDisabled(False)
+                                    option.setEnabled(True)
+                                    option.setChecked(True)
+                                else:
+                                    option.setDisabled(True)
+                                    option.setEnabled(False)
+                                    option.setChecked(False)
+                                                                        
+                    case "BGR2HSV"|"RGB2HSV":
+                        for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
+                                if counter in [3,4,5]:
+                                    option.setDisabled(False)
+                                    option.setEnabled(True)
+                                    option.setChecked(True)
+                                else:
+                                    option.setDisabled(True)
+                                    option.setEnabled(False)
+                                    option.setChecked(False)
+                  
+            else:
+              for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
+                                if counter in [0,1,2]:
+                                     option.setDisabled(False)
+                                     option.setEnabled(True)
+                                     option.setChecked(True)
+                                else:
+                                     option.setDisabled(True)
+                                     option.setEnabled(False)
+                                     option.setChecked(False)
+                  
+    def messageBox(self,type,title,contents):
+          match type:
+              case "red":
+                  QMessageBox.critical(self, title, contents)
+              case "blue":
+                  QMessageBox.information(self, title, contents)
+              case "yellow":
+                  QMessageBox.warning(self, title, contents)
+              
     def changePage(self):
         #print(self.sender().objectName())
         selectedPage = self.pages.findChild(QtWidgets.QWidget,"page_" + self.sender().objectName().split("_")[1])
@@ -834,7 +944,7 @@ class Ui_MainWindow(QMainWindow,object):
                   MainWindow.close()
                   MainWindow.destroy()
                   self.close()
-                  self.destroy()                
+                  self.destroy()   
     
     def load_html_file(self,file_path):
         with open(file_path, 'r') as f: #, encoding='utf-8'
@@ -873,18 +983,22 @@ class Ui_MainWindow(QMainWindow,object):
             else:
                 os.makedirs(styles, exist_ok=True)
 
+    def split_emojis(self,text):
+        return regex.sub(r'\p{Emoji}', '', text)
+
     def upload_files(self):
           self.CheckCreateDefaultFolders()
           destination_folder = os.path.normpath("resources")
-          sender = self.sender()
-          #print(sender.text())
+          senderObject = self.sender()
+          sender = (self.split_emojis(senderObject.text())).strip()
+          #print(sender)
           file_paths, _ = QFileDialog.getOpenFileNames(self, "Select File", "", "All Files (*);;Text Files (*.txt)")
           if file_paths:
-               if sender.text() == "Upload Models":
+               if sender.__contains__("Upload Models"):
                   destination_folder = os.path.normpath(join("resources","models")) 
-               if sender.text() == "Upload Images":
+               if sender.__contains__("Upload Images"):
                   destination_folder = os.path.normpath(join("resources","images")) 
-               if sender.text() == "Upload Styles":
+               if sender.__contains__("Upload Styles"):
                   destination_folder = os.path.normpath(join("resources","styles")) 
 
                # Copy each file
@@ -898,15 +1012,15 @@ class Ui_MainWindow(QMainWindow,object):
      
     def LoadResources(self):
         Base_Image_Path = os.path.normpath(join("resources","images"))
-     #    for f in listdir(Base_Image_Path):
-     #        if isfile(join(Base_Image_Path, f)):             
-     #           if self.comboBox_2.findText(f) == -1 :
-     #              self.comboBox_2.addItem(f)   
-     #              index = self.comboBox_2.findText(f)                           
-     #              self.comboBox_2.setCurrentIndex(index)
-     #    for index in range(self.comboBox_2.count()):
-     #        if self.comboBox_2.itemText(index).strip() == "":
-     #            self.comboBox_2.removeItem(index)                                         
+        for f in listdir(Base_Image_Path):
+            if isfile(join(Base_Image_Path, f)):             
+               if self.comboBox_SelectImage.findText(f) == -1 :
+                  self.comboBox_SelectImage.addItem(f)   
+               #    index = self.comboBox_SelectImage.findText(f)                           
+               #    self.comboBox_SelectImage.setCurrentIndex(index)
+     #    for index in range(self.comboBox_SelectImage.count()):
+     #        if self.comboBox_SelectImage.itemText(index).strip() == "":
+     #            self.comboBox_SelectImage.removeItem(index)                                         
 
      #    model_file_path = os.path.normpath(join("resources","models"))# "./models/"
      #    for f in listdir(model_file_path):
@@ -920,7 +1034,48 @@ class Ui_MainWindow(QMainWindow,object):
      #        if self.comboBox_1.itemText(index).strip() == "":
      #            self.comboBox_1.removeItem(index)  
 
+    def closeEvent(self, event: QCloseEvent):
+        #print(self.sender().objectName())
+        event.accept()  
+
+    def FillImagesAndColorsCode(self):
+        function_code = inspect.getsource(ImagesAndColors)
+        lines = function_code.splitlines()[9:]
+        ChangedContent = ""
+        for line in lines:
+            stripedLine = line.strip()
+            if(stripedLine.startswith("#")):
+                line = "<span style='color: green'>" + line +"</span>" #.strip()
+            ChangedContent += line +"\n"
+        self.textBrowser_ImageAndColors.setHtml(("<pre>" + ChangedContent ).strip())
+        self.textBrowser_ImageAndColors.show()
+
+    def SaveImagesAndColorsCode(self):
+        # Choose file location
+        file_path, _ = QFileDialog.getSaveFileName(self, "Save File", "", "Text Files (*.txt);;HTML Files (*.html);;All Files (*)")
+        if file_path:
+            content = ""
+            # Choose between plain text or HTML
+            if(file_path.endswith("html") or file_path.endswith("htm")):
+                content = self.textBrowser_ImageAndColors.toHtml()                
+            else:
+                content = self.textBrowser_ImageAndColors.toPlainText()
+            with open(file_path, 'w', encoding='utf-8') as file:
+                    file.write(content)
+
     def manualSetup(self):
+        self.ColorChannelChangeCheckBoxes = [
+            self.checkBox_BlueChannel,
+            self.checkBox_GreenChannel,
+            self.checkBox_RedChannel,
+            self.checkBox_HSVHueChannel,
+            self.checkBox_HSVSaturation,
+            self.checkBox_HSVValue
+        ]
+        for channel in self.ColorChannelChangeCheckBoxes:
+                channel.setDisabled(True)
+                channel.setEnabled(False)
+
         self.menu_PythonProgramming = QMenu(parent=MainWindow)  
         self.menu_PythonProgramming.setObjectName("action_PythonProgramming")
         self.menu_PreRequisites.addMenu(self.menu_PythonProgramming)
@@ -1000,7 +1155,12 @@ class Ui_MainWindow(QMainWindow,object):
         self.text_AboutTool.setHtml(AboutTool)
         self.text_AboutTool.setStyleSheet("padding:10px")
         self.pages.setCurrentWidget(self.page_AboutTool)
-
+        
+        self.label_ImageDepthValue.setStyleSheet("color:red")
+        self.label_ImageShapeValue.setStyleSheet("color:red")
+        self.label_ImageWidthValue.setStyleSheet("color:red")
+        self.label_ImageHeightValue.setStyleSheet("color:red")
+        #self.textBrowser_ImageAndColors.setStyleSheet("font-size:12px")
      #    self.webView = QWebEngineView(parent=None)
      #    self.webView.setObjectName("Python Programming")
      #    self.webView.setWindowTitle("Python Programming")
@@ -1020,8 +1180,9 @@ class Ui_MainWindow(QMainWindow,object):
      #    self.webView.setContextMenuPolicy(PyQt6.QtCore.Qt.ContextMenuPolicy.DefaultContextMenu)
      #    self.webView.page().certificateError.connect(self.on_cert_error)
         self.CheckCreateDefaultFolders()
-        self.connectActions() 
-   
+        self.connectActions()        
+        self.LoadResources()
+        self.FillImagesAndColorsCode()
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 if __name__ == "__main__":
