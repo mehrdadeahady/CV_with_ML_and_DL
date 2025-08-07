@@ -7,6 +7,7 @@ import os
 from os import path, listdir
 from os.path import isfile, join
 import sys
+import time
 import cv2
 import shutil
 import inspect
@@ -821,9 +822,15 @@ class Ui_MainWindow(QMainWindow,object):
         self.ImagesAndColorsHandler.valueChanged.connect(self.SetImageInfo)
         self.pushButton_SaveCode.clicked.connect(self.SaveImagesAndColorsCode)    
         self.pushButton_SaveImage.clicked.connect(self.ImagesAndColorsHandler.SaveImage)
+        self.ImagesAndColorsHandler.ImageSizeChanged.connect(self.ImageSizeChanged)
         
         for channel in self.ColorChannelChangeCheckBoxes:
-            channel.clicked.connect(partial(self.PrepareColorChannelSelection,channel.objectName()))#stateChanged
+            channel.clicked.connect(partial(self.PrepareColorChannelRemove,channel.objectName()))#stateChanged
+        
+        self.horizontalSlider_SkewHeight.valueChanged.connect(self.PrepareSkewImage)
+        self.horizontalSlider_SkewWidth.valueChanged.connect(self.PrepareSkewImage)
+        self.horizontalSlider_ResizeHeight.valueChanged.connect(self.PrepareResizeImage)
+        self.horizontalSlider_ResizeWidth.valueChanged.connect(self.PrepareResizeImage)
 
         self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"https://mml-book.github.io/book/mml-book.pdf",False))
         self.action_PythonProgramming.triggered.connect(partial(self.pdf_in_browser,"https://www.w3schools.com/python/default.asp",False))
@@ -831,7 +838,24 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_MLModelOverview.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/docs-guides/source/mlmodel.html",False))
         self.action_CoreMLModelFormatSpecification.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/mlmodel/index.html",False))
 
-    def PrepareColorChannelSelection(self,text,check):
+    def PrepareSkewImage(self,value):
+        #print(value,type(value))
+        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+            self.lower()
+            cv2.destroyAllWindows()
+            name = self.sender().objectName().split("_")[1]
+            #value = self.sender().value()
+            #time.sleep(0.1)
+            self.ImagesAndColorsHandler.SkewImage(name,value)
+
+    def PrepareResizeImage(self,value):
+        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+            self.lower()
+            cv2.destroyAllWindows()
+            name = self.sender().objectName().split("_")[1]
+            self.ImagesAndColorsHandler.ResizeImage(name,value)
+
+    def PrepareColorChannelRemove(self,text,check):
         if self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None:
              channels = {}
              for channel in self.ColorChannelChangeCheckBoxes:
@@ -841,7 +865,7 @@ class Ui_MainWindow(QMainWindow,object):
                       channel.setDisabled(True)
                       channel.setEnabled(False)
              
-             self.ImagesAndColorsHandler.ColorChannelSelection(channels)
+             self.ImagesAndColorsHandler.ColorChannelRemove(channels)
 
         else:
              QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
@@ -850,28 +874,71 @@ class Ui_MainWindow(QMainWindow,object):
         self.lower()
         cv2.destroyAllWindows()
         self.comboBox_ColorSpaceConversion.setCurrentIndex(0)
+
         self.label_ImageShapeValue.clear()
         self.label_ImageHeightValue.clear() 
         self.label_ImageWidthValue.clear()
-        self.label_ImageDepthValue.clear()
+        self.label_ImageDepthValue.clear() 
+
+        self.horizontalSlider_ResizeHeight.setValue(50)   
+        self.horizontalSlider_ResizeWidth.setValue(50)   
+        self.horizontalSlider_SkewHeight.setValue(50)                          
+        self.horizontalSlider_SkewWidth.setValue(50) 
+       
         for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
-                 option.setChecked(False)
-                 option.setDisabled(True)
-                 option.setEnabled(False)
-        
+                option.setChecked(False)
+                option.setDisabled(True)
+                option.setEnabled(False)
         if self.comboBox_SelectImage.currentText().strip() != "":
            self.ImagesAndColorsHandler.ReadShowImage(text)
-            
+        else:
+             self.ImagesAndColorsHandler.image = None
+             self.ImagesAndColorsHandler.imageName = None
+             self.ImagesAndColorsHandler.imageConversion = None
+
+    def ImageSizeChanged(self):
+            shape = self.ImagesAndColorsHandler.image.shape
+            height = self.ImagesAndColorsHandler.image.shape[0]
+            width = self.ImagesAndColorsHandler.image.shape[1]
+
+            self.horizontalSlider_ResizeHeight.blockSignals(True)
+            self.horizontalSlider_ResizeWidth.blockSignals(True)
+            self.horizontalSlider_SkewHeight.blockSignals(True)
+            self.horizontalSlider_SkewWidth.blockSignals(True)
+            self.horizontalSlider_ResizeHeight.setValue(height)   
+            self.horizontalSlider_ResizeWidth.setValue(width)   
+            self.horizontalSlider_SkewHeight.setValue(height)                          
+            self.horizontalSlider_SkewWidth.setValue(width) 
+            self.horizontalSlider_ResizeHeight.blockSignals(False)
+            self.horizontalSlider_ResizeWidth.blockSignals(False)
+            self.horizontalSlider_SkewHeight.blockSignals(False)
+            self.horizontalSlider_SkewWidth.blockSignals(False) 
+
+            self.label_ImageShapeValue.setText(str(shape))
+            self.label_ImageHeightValue.setText(str(height))  
+            self.label_ImageWidthValue.setText(str(width))
+            if self.ImagesAndColorsHandler.imageConversion not in ["BGR2GRAY","RGB2GRAY"]:
+                depth = self.ImagesAndColorsHandler.image.shape[2]       
+                self.label_ImageDepthValue.setText(str(depth))
+              
     def SetImageInfo(self,text):
-        # if text:
-        #     channel = text.split("2")[1]
-        #     print(channel)
-        if self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None:                              
-            self.label_ImageShapeValue.setText(str(self.ImagesAndColorsHandler.image.shape))
-            self.label_ImageHeightValue.setText(str(self.ImagesAndColorsHandler.image.shape[0]))  
-            self.label_ImageWidthValue.setText(str(self.ImagesAndColorsHandler.image.shape[1]))
-            if self.ImagesAndColorsHandler.imageConversion not in ["BGR2GRAY","RGB2GRAY"]:       
-                self.label_ImageDepthValue.setText(str(self.ImagesAndColorsHandler.image.shape[2]))
+        if self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+            shape = self.ImagesAndColorsHandler.image.shape
+            height = self.ImagesAndColorsHandler.image.shape[0]
+            width = self.ImagesAndColorsHandler.image.shape[1]
+
+            self.horizontalSlider_ResizeHeight.setValue(height)   
+            self.horizontalSlider_ResizeWidth.setValue(width)   
+            self.horizontalSlider_SkewHeight.setValue(height)                          
+            self.horizontalSlider_SkewWidth.setValue(width)  
+
+            self.label_ImageShapeValue.setText(str(shape))
+            self.label_ImageHeightValue.setText(str(height))  
+            self.label_ImageWidthValue.setText(str(width))
+            if self.ImagesAndColorsHandler.imageConversion not in ["BGR2GRAY","RGB2GRAY"]:
+                depth = self.ImagesAndColorsHandler.image.shape[2]       
+                self.label_ImageDepthValue.setText(str(depth))
+            
             if self.ImagesAndColorsHandler.imageConversion is not None:
                match self.ImagesAndColorsHandler.imageConversion:
                     case "BGR2GRAY"|"RGB2GRAY":
@@ -903,15 +970,32 @@ class Ui_MainWindow(QMainWindow,object):
                                     option.setChecked(False)
                   
             else:
-              for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
-                                if counter in [0,1,2]:
-                                     option.setDisabled(False)
-                                     option.setEnabled(True)
-                                     option.setChecked(True)
-                                else:
-                                     option.setDisabled(True)
-                                     option.setEnabled(False)
-                                     option.setChecked(False)
+                for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
+                                    if counter in [0,1,2]:
+                                        option.setDisabled(False)
+                                        option.setEnabled(True)
+                                        option.setChecked(True)
+                                    else:
+                                        option.setDisabled(True)
+                                        option.setEnabled(False)
+                                        option.setChecked(False)
+
+        else:
+            self.lower()
+            cv2.destroyAllWindows()
+            self.comboBox_ColorSpaceConversion.setCurrentIndex(0)
+            self.label_ImageShapeValue.clear()
+            self.label_ImageHeightValue.clear() 
+            self.label_ImageWidthValue.clear()
+            self.label_ImageDepthValue.clear()
+            self.horizontalSlider_ResizeHeight.setValue(50)   
+            self.horizontalSlider_ResizeWidth.setValue(50)   
+            self.horizontalSlider_SkewHeight.setValue(50)                          
+            self.horizontalSlider_SkewWidth.setValue(50)  
+            for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
+                    option.setChecked(False)
+                    option.setDisabled(True)
+                    option.setEnabled(False)
                   
     def messageBox(self,type,title,contents):
           match type:
