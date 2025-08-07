@@ -9,6 +9,7 @@ from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QMessageBox, QFileDialog
 
 class ImagesAndColors(QObject):
+    ResetParams = pyqtSignal(int)
     valueChanged = pyqtSignal(str)
     ImageSizeChanged = pyqtSignal(str)
     def __init__(self,parent=None):
@@ -24,6 +25,9 @@ class ImagesAndColors(QObject):
         cv2.waitKey(0)
         # Close All cv2 Windows
         cv2.destroyAllWindows()
+        self.ResetParams.emit(0)
+        if cv2.getWindowProperty(self.imageName, cv2.WND_PROP_VISIBLE) == -1:
+           self.ResetParams.emit(0)
 
     # Reading and Showing an Image from the Path
     def ReadShowImage(self,ImageName):
@@ -318,8 +322,9 @@ class ImagesAndColors(QObject):
             cv2.destroyAllWindows()
             # resize is a Function in OpenCV for Changing Dimentions of an Image
             # resize takes several Parameters -> for Skew here:
-            # Parameter 1 = Image, Parameter 2 = new Dimentions, Parameter 3 = Filters
-            # New Dimensions is a tuple (width, height)
+            # Parameter 1 = Image, Parameter 2 = new Dimentions, Parameter 3 = Interpolation TO Calculate new Pixel Values (Optional)
+            # If no Interpolation is specified cv.INTER_LINEAR is used as default
+            # New Dimensions is a Tuple (width, height)
             match name:
                   case "SkewHeight":
                      self.image = cv2.resize(self.image, (self.image.shape[1],value)) # interpolation = cv2.INTER_AREA
@@ -338,7 +343,7 @@ class ImagesAndColors(QObject):
             # resize is a Function in OpenCV for Changing Dimentions of an Image
             # resize can be Symmetric or Asymmetric
             # resize takes several Parameters -> here Symmetric:
-            # Parameter 1 = Image, Parameter 2 = new Dimentions, Parameter 3 = Filters
+            # Parameter 1 = Image, Parameter 2 = new Dimentions, Parameter 3 = Interpolation TO Calculate new Pixel Values (Optional)
             # New Dimensions is a tuple (width, height) by Saving Accept Ratio
             match name:
                   case "ResizeHeight":
@@ -350,4 +355,31 @@ class ImagesAndColors(QObject):
             self.ImageSizeChanged.emit(name)
             cv2.imshow(self.imageName,self.image)
             self.WaitKeyCloseWindows()
+            # There are other OverLoads (Same Method Name with Different Parameters) for Resize:
+            # Double the size of an image:
+            # Parameters: 1) Image 2) None for dsize 3) fx > Coefficient for Width 4) fy > Coefficient for Height 5) Interpolation TO Calculate new Pixel Values (Optional)
+            # cv2.resize(image, None, fx=2, fy=2)
+            # Interpolations: INTER_LINEAR(default), INTER_CUBIC, INTER_NEAREST, INTER_AREA
+        
+    # Scaling Image
+    def PyrUpDown(self,name):
+        # pyrUp and pyrDown are Scaling Funcions in OpenCV, They take only 1 Parameter: Image.
+        # They have an Internal Coefficient and Multiplying Dimensions to 2 in each Execution.
+        match name:
+            case "LargerPyrUp":
+                    if self.image.shape[0] * 2 <= 2000:
+                       self.image = cv2.pyrUp(self.image)
+                    else:
+                        QMessageBox.warning(None, "Size Error", "Dimention limited between 50 and 2000!")
+
+            case "SmallerPyrDown":
+                     if self.image.shape[0] / 2 >= 50:
+                       self.image = cv2.pyrDown(self.image)
+                     else:
+                        QMessageBox.warning(None, "Size Error", "Dimention limited between 50 and 2000!")
+
+        self.imageName = name + "_" + self.imageName
+        self.ImageSizeChanged.emit(name)
+        cv2.imshow(self.imageName,self.image)
+        self.WaitKeyCloseWindows()
         

@@ -831,6 +831,9 @@ class Ui_MainWindow(QMainWindow,object):
         self.horizontalSlider_SkewWidth.valueChanged.connect(self.PrepareSkewImage)
         self.horizontalSlider_ResizeHeight.valueChanged.connect(self.PrepareResizeImage)
         self.horizontalSlider_ResizeWidth.valueChanged.connect(self.PrepareResizeImage)
+        self.pushButton_LargerPyrUp.clicked.connect(self.PreparePyrUpDown)
+        self.pushButton_SmallerPyrDown.clicked.connect(self.PreparePyrUpDown)
+        self.ImagesAndColorsHandler.ResetParams.connect(self.ResetParams)
 
         self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"https://mml-book.github.io/book/mml-book.pdf",False))
         self.action_PythonProgramming.triggered.connect(partial(self.pdf_in_browser,"https://www.w3schools.com/python/default.asp",False))
@@ -854,6 +857,46 @@ class Ui_MainWindow(QMainWindow,object):
             cv2.destroyAllWindows()
             name = self.sender().objectName().split("_")[1]
             self.ImagesAndColorsHandler.ResizeImage(name,value)
+
+    def PreparePyrUpDown(self):
+        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+            self.lower()
+            cv2.destroyAllWindows()
+            name = self.sender().objectName().split("_")[1]
+            self.ImagesAndColorsHandler.PyrUpDown(name)    
+
+    def ResetParams(self):
+        self.lower()
+        cv2.destroyAllWindows()
+        self.comboBox_ColorSpaceConversion.setCurrentIndex(0)
+        self.comboBox_SelectImage.setCurrentIndex(0)
+
+        self.label_ImageShapeValue.clear()
+        self.label_ImageHeightValue.clear() 
+        self.label_ImageWidthValue.clear()
+        self.label_ImageDepthValue.clear() 
+
+        for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
+                option.setChecked(False)
+                option.setDisabled(True)
+                option.setEnabled(False)
+        
+        self.ImagesAndColorsHandler.image = None
+        self.ImagesAndColorsHandler.imageName = None
+        self.ImagesAndColorsHandler.imageConversion = None
+
+        self.horizontalSlider_ResizeHeight.blockSignals(True)
+        self.horizontalSlider_ResizeWidth.blockSignals(True)
+        self.horizontalSlider_SkewHeight.blockSignals(True)
+        self.horizontalSlider_SkewWidth.blockSignals(True)
+        self.horizontalSlider_ResizeHeight.setValue(50)   
+        self.horizontalSlider_ResizeWidth.setValue(50)   
+        self.horizontalSlider_SkewHeight.setValue(50)                          
+        self.horizontalSlider_SkewWidth.setValue(50) 
+        self.horizontalSlider_ResizeHeight.blockSignals(False)
+        self.horizontalSlider_ResizeWidth.blockSignals(False)
+        self.horizontalSlider_SkewHeight.blockSignals(False)
+        self.horizontalSlider_SkewWidth.blockSignals(False)                         
 
     def PrepareColorChannelRemove(self,text,check):
         if self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None:
