@@ -18,6 +18,7 @@ class ImagesAndColors(QObject):
         self.image = None
         self.imageName = None
         self.imageConversion = None
+        self.tempImage = None
 
     # Wait for Clicking a Key on Keyboard to Close All cv2 Windows
     def WaitKeyCloseWindows(self):
@@ -25,9 +26,11 @@ class ImagesAndColors(QObject):
         cv2.waitKey(0)
         # Close All cv2 Windows
         cv2.destroyAllWindows()
+        self.tempImage = None
         self.ResetParams.emit(0)
         if cv2.getWindowProperty(self.imageName, cv2.WND_PROP_VISIBLE) == -1:
            self.ResetParams.emit(0)
+           self.tempImage = None
 
     # Reading and Showing an Image from the Path
     def ReadShowImage(self,ImageName):
@@ -201,12 +204,20 @@ class ImagesAndColors(QObject):
 
     # Saving the Image
     def SaveImage(self):
-        if self.image is not None and self.imageName is not None: 
-           file_path, _ = QFileDialog.getSaveFileName(None, "Save File", self.imageName)
-           if file_path:
-               # imwrite is Saving Image Function in OpenCV that takes 2 parameter
-               # cv2.imwrite(Parameter1 = Name of Image, Parameter2 = Path to Image ) 
-               cv2.imwrite(file_path,self.image)
+        if self.image is not None and self.imageName is not None:
+           file_path = None 
+           if self.tempImage is not None:
+               file_path, _ = QFileDialog.getSaveFileName(None, "Save File", self.imageName)
+               if file_path:
+                     # imwrite is Saving Image Function in OpenCV that takes 2 parameter
+                     # cv2.imwrite(Parameter1 = Name of Image, Parameter2 = Path to Image ) 
+                     cv2.imwrite(file_path,self.tempImage)
+           else: 
+               file_path, _ = QFileDialog.getSaveFileName(None, "Save File", self.imageName)         
+               if file_path:
+                     # imwrite is Saving Image Function in OpenCV that takes 2 parameter
+                     # cv2.imwrite(Parameter1 = Name of Image, Parameter2 = Path to Image ) 
+                     cv2.imwrite(file_path,self.image)
         else:
              QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
         
@@ -363,23 +374,122 @@ class ImagesAndColors(QObject):
         
     # Scaling Image
     def PyrUpDown(self,name):
-        # pyrUp and pyrDown are Scaling Funcions in OpenCV, They take only 1 Parameter: Image.
-        # They have an Internal Coefficient and Multiplying Dimensions to 2 in each Execution.
-        match name:
-            case "LargerPyrUp":
-                    if self.image.shape[0] * 2 <= 2000:
-                       self.image = cv2.pyrUp(self.image)
-                    else:
-                        QMessageBox.warning(None, "Size Error", "Dimention limited between 50 and 2000!")
+        if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+            # pyrUp and pyrDown are Scaling Funcions in OpenCV, They take only 1 Parameter: Image.
+            # They have an Internal Coefficient and Multiplying Dimensions to 2 in each Execution.
+            match name:
+                  case "LargerPyrUp":
+                        if self.image.shape[0] * 2 <= 2000:
+                           self.image = cv2.pyrUp(self.image)
+                        else:
+                              QMessageBox.warning(None, "Size Error", "Dimention limited between 50 and 2000!")
 
-            case "SmallerPyrDown":
-                     if self.image.shape[0] / 2 >= 50:
-                       self.image = cv2.pyrDown(self.image)
-                     else:
-                        QMessageBox.warning(None, "Size Error", "Dimention limited between 50 and 2000!")
+                  case "SmallerPyrDown":
+                           if self.image.shape[0] / 2 >= 50:
+                              self.image = cv2.pyrDown(self.image)
+                           else:
+                              QMessageBox.warning(None, "Size Error", "Dimention limited between 50 and 2000!")
 
-        self.imageName = name + "_" + self.imageName
-        self.ImageSizeChanged.emit(name)
-        cv2.imshow(self.imageName,self.image)
-        self.WaitKeyCloseWindows()
+            self.imageName = name + "_" + self.imageName
+            self.ImageSizeChanged.emit(name)
+            cv2.imshow(self.imageName,self.image)
+            self.WaitKeyCloseWindows()
+        
+     # Scaling Image
+    
+    # Scaling Screen behind the Image with Coefficient
+    def ScaleByCoefficient(self,coefficient):
+        if coefficient != 0 and self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+            height, width = self.image.shape[:2]         
+            # getRotationMatrix2D is a Function for Rotation in OpenCV
+            # Look in Rotation, here Parameters set for no Rotation
+            Rotation_Matrix2D = cv2.getRotationMatrix2D((width/2, height/2), 0, 1)
+            _width_ = int(width*(1*coefficient))
+            _height_ = int(height*(1*coefficient))
+            try:
+                  # if self.image.shape[0] * coefficient <= 2000 and self.image.shape[0] / coefficient >= 50:
+                  # warpAffine is a Function in OpenCV for Scaling, Rotation, Translation and etc.
+                  # There are several Overload for warpAffine Function based on Functionality needed.
+                  ScaledImage = cv2.warpAffine(self.image, Rotation_Matrix2D, ( _width_, _height_ ))
+                  name = "Scaled" + str(coefficient) + "Times"
+                  ScaledImageName = name + "_" + self.imageName
+                  self.ImageSizeChanged.emit(name)
+                  cv2.imshow(self.imageName,self.image)
+                  cv2.imshow(ScaledImageName,ScaledImage)
+                  self.WaitKeyCloseWindows()
+
+            except:
+                QMessageBox.warning(None, "Parameter Error", "Value errors in parameters!")
+
+     # Scaling Screen behind the Image with Coefficient
+    
+    # Rotate Image around its center by Angle
+    def RotationByAngle(self,angle):
+        if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+            height, width = self.image.shape[:2]         
+            # getRotationMatrix2D is a Function for Rotation in OpenCV
+            # Parameters: 1) Tuple containing Center Point for Rotation 2) Angle 3) Scale Coefficient
+            # Dimensions in Tuple Divided by two to Rotate the image around its centre
+            # Scale is 1 for Displaying Image in Same Size
+            Rotation_Matrix2D = cv2.getRotationMatrix2D((width/2, height/2), angle, 1)
+            try:
+                  # if self.image.shape[0] * coefficient <= 2000 and self.image.shape[0] / coefficient >= 50:
+                  # warpAffine is a Function in OpenCV for Scaling, Rotation, Translation and etc.
+                  # There are several Overload for warpAffine Function based on Functionality needed.
+                  # Scaling screen Dimentions 2 Times to see the Rotation better
+                  RotatedImage = cv2.warpAffine(self.image, Rotation_Matrix2D, (width*2,height*2))
+                  name = "Rotated" + str(angle) + "Degree"
+                  RotatedImageName = name + "_" + self.imageName
+                  self.ImageSizeChanged.emit(name)
+                  cv2.imshow(self.imageName,self.image)
+                  cv2.imshow(RotatedImageName,RotatedImage)
+                  self.WaitKeyCloseWindows()
+
+            except:
+                QMessageBox.warning(None, "Parameter Error", "Value errors in parameters!")  
+
+    # Translation Image
+    def TranslateImage(self,name,value,Diff_Array):
+        if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray) and isinstance(Diff_Array, np.ndarray):
+            # Store height and width of the Image
+            height, width = self.image.shape[:2]
+            # MainArray is a Sample of an Image Array for Comparison with DiffArray
+            MainArray = np.float32([[50, 50],[200, 50], [50, 200]])
+            # DiffArray is an Array with Shape Same as MainArray With slightly Different Values
+            # Translation Implements the Difference between MainArray and DiffArray on the Image
+            M = cv2.getAffineTransform(MainArray, Diff_Array)
+            TranslatedImage = cv2.warpAffine(self.image, M, (height, width))
+            TranslatedImageName = name + "_" + self.imageName
+            self.ImageSizeChanged.emit(name)
+            self.tempImage = TranslatedImage
+            cv2.imshow(TranslatedImageName,TranslatedImage)
+            cv2.imshow(self.imageName,self.image)
+            self.WaitKeyCloseWindows()
+            self.tempImage = None
+
+    # Flip or UnFlip Image Vetically or Horisantally
+    def Flip(self,name):
+        if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+            match name:
+                  case "FlipHorizantal":
+                          # Horizontal Flip with Code 2
+                          self.image = cv2.flip(self.image, 2)
+                  case "FlipVertical":
+                          # Vertical Flip with Code 0
+                          self.image = cv2.flip(self.image, 0)
+
+            self.imageName = name + "_" + self.imageName
+            self.ImageSizeChanged.emit(name)
+            cv2.imshow(self.imageName,self.image)
+            self.WaitKeyCloseWindows()
+
+    # Transpose Image Swapping Rows value with Columns values (90 Degree Rotation)
+    def Transpose(self):
+         if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):  
+            # transpose Function for 90 Degree Rotation has only Image Parameter
+            self.image = cv2.transpose(self.image)       
+            self.imageName = "Transposed_" + self.imageName
+            self.ImageSizeChanged.emit("Transpose")
+            cv2.imshow(self.imageName,self.image)
+            self.WaitKeyCloseWindows()
         

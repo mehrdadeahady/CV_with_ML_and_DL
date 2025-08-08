@@ -1,4 +1,4 @@
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 1
 # -*- Encoding: utf-8 -*- #
 """
 @Author | Developer: Mehrdad Ahady
@@ -13,6 +13,7 @@ import shutil
 import inspect
 from functools import partial
 import emoji
+import numpy as np
 import regex
 import PyQt6
 import PyQt6.QtCore
@@ -29,7 +30,8 @@ from utils.CustomPDFView import CustomPdfView
 from utils.ImagesAndColors import ImagesAndColors
 
 class Ui_MainWindow(QMainWindow,object):
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 1
+    
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1024, 768)
@@ -257,10 +259,14 @@ class Ui_MainWindow(QMainWindow,object):
         self.dial_RotationDegree = QtWidgets.QDial(parent=self.gridLayoutWidget_5)
         self.dial_RotationDegree.setMaximum(360)
         self.dial_RotationDegree.setSingleStep(10)
+        self.dial_RotationDegree.setMinimum(10)
+        self.dial_RotationDegree.setValue(10)
         self.dial_RotationDegree.setObjectName("dial_RotationDegree")
         self.gridLayout_RotationScale.addWidget(self.dial_RotationDegree, 1, 0, 1, 1)
         self.dial_RotationScale = QtWidgets.QDial(parent=self.gridLayoutWidget_5)
         self.dial_RotationScale.setMaximum(10)
+        self.dial_RotationScale.setMinimum(1)
+        self.dial_RotationScale.setValue(1)
         self.dial_RotationScale.setObjectName("dial_RotationScale")
         self.gridLayout_RotationScale.addWidget(self.dial_RotationScale, 1, 1, 1, 1)
         self.label_RotationDegree = QtWidgets.QLabel(parent=self.gridLayoutWidget_5)
@@ -602,9 +608,9 @@ class Ui_MainWindow(QMainWindow,object):
         self.menubar.addAction(self.menuSettings.menuAction())
         self.menubar.addAction(self.menuControls.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 2
         self.manualSetup()     
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 2
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -702,7 +708,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.actionUpload_Images.setText(_translate("MainWindow", "⤴️ Upload Images"))
         self.actionUlpoad_Models.setText(_translate("MainWindow", "🔼 Ulpoad Models"))
         self.actionUpload_Styles.setText(_translate("MainWindow", "⏫ Upload Styles"))
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 3
         self.menu_Mathematics.setTitle(_translate("MainWindow", "🧮 Mathematics"))
         self.action_LinearAlgebraAndCalculus.setText(_translate("MainWindow", "📉 Linear Algebra and Calculus"))
         self.action_ProbabilityAndStatistics.setText(_translate("MainWindow", "🎲 Probability and Statistics"))
@@ -724,68 +730,10 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_TheoreticalFoundationsOfComputerVision.setText(_translate("MainWindow", "👀 Theoretical"))
         self.action_PracticalFoundationsOfComputerVision.setTitle(_translate("MainWindow", "🛠 Practical"))
         self.action_ImagesAndColors.setText(_translate("MainWindow", "🎨 Images and Colors"))
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 3
 
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    def html_in_window(self,path):
-      #  path = os.path.abspath(path)
-        self.webView.setUrl(QUrl(path))
-        #self.webView.load(QUrl.fromLocalFile(path))
-        self.webView.show()
-
-    def changePDFPage(self,index):
-        self.pages.setCurrentWidget(self.pdf_view)
-        self.pdf_path = ""
-        match index: 
-             case 0:
-                  self.pdf_path = os.path.relpath("pages/BigPicture.pdf")
-             case 1:
-                  self.pdf_path = os.path.relpath("pages/UniversityCurriculum.pdf")
-             case 2:
-                  self.pdf_path = os.path.relpath("pages/RoadMap.pdf")
-             case 3:
-                  self.pdf_path = os.path.relpath("pages/StudyPlan.pdf")
-             case 4:
-                  self.pdf_path = os.path.relpath("pages/HeadingResearch.pdf")
-             case 5:
-                  self.pdf_path = os.path.relpath("pages/UserGuide.pdf")
-             case 6:
-                  self.pdf_path = os.path.relpath("pages/ML_BigPicture.pdf")
-             case 7:
-                  self.pdf_path = os.path.relpath("pages/CategorizingByLearningParadigm.pdf")
-             case 8:
-                  self.pdf_path = os.path.relpath("pages/FromFundamentalsToAdvanced.pdf")
-             case 9:
-                  self.pdf_path = os.path.relpath("pages/CodeSamplesByLearningParadigm.pdf")
-             case 10:
-                  self.pdf_path = os.path.relpath("pages/DeeperCodeSamplesWithDefinitions.pdf")
-             case 11:
-                  self.pdf_path = os.path.relpath("pages/TheoreticalFoundationsOfComputerVision.pdf")
-             case 12:
-                  self.pdf_path = os.path.relpath("pages/Numpy_Sheet.pdf")
-             case 13:
-                  self.pdf_path = os.path.relpath("pages/Pandas_Sheet.pdf")
-             case 14:
-                  self.pdf_path = os.path.relpath("pages/MatPlotLib_Sheet.pdf")
-             case 15:
-                  self.pdf_path = os.path.relpath("pages/SeaBorn_Sheet.pdf")
-             case 16:
-                  self.pdf_path = os.path.relpath("pages/SupervisedML_Process.pdf")
-                  
-        self.pdf_document.load(self.pdf_path)
-        self.pdf_view.pdf_path = self.pdf_path
-        self.pdf_view.setDocument(self.pdf_document)
-        self.pdf_view.pdf_document = self.pdf_document 
-        self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
-        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
-
-    def pdf_in_browser(self,pdf_path,local):
-        if local == True:
-           pdf_path = os.path.relpath(pdf_path)
-           QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(pdf_path))
-        else:
-            QDesktopServices.openUrl(QUrl(pdf_path))
-
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 4
+    
     def connectActions(self):
         self.action_BigPicture.triggered.connect(partial(self.changePDFPage,0))
         self.action_UniversityCurriculum.triggered.connect(partial(self.changePDFPage,1))
@@ -815,6 +763,12 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_ProbabilityAndStatistics.triggered.connect(self.changePage)
         self.action_ImagesAndColors.triggered.connect(self.changePage)
 
+        self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"https://mml-book.github.io/book/mml-book.pdf",False))
+        self.action_PythonProgramming.triggered.connect(partial(self.pdf_in_browser,"https://www.w3schools.com/python/default.asp",False))
+        self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.pdf_in_browser,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization",False))
+        self.action_MLModelOverview.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/docs-guides/source/mlmodel.html",False))
+        self.action_CoreMLModelFormatSpecification.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/mlmodel/index.html",False))
+
         self.actionUpload_Images.triggered.connect(self.upload_files)
         self.pushButton_UploadImages.clicked.connect(self.upload_files)
         self.comboBox_SelectImage.currentTextChanged.connect(self.PrepareSelectImageComboBox)
@@ -826,6 +780,9 @@ class Ui_MainWindow(QMainWindow,object):
         
         for channel in self.ColorChannelChangeCheckBoxes:
             channel.clicked.connect(partial(self.PrepareColorChannelRemove,channel.objectName()))#stateChanged
+
+        for translation in self.TranslationDials:
+             translation.valueChanged.connect(self.PrepareTranslateImage)
         
         self.horizontalSlider_SkewHeight.valueChanged.connect(self.PrepareSkewImage)
         self.horizontalSlider_SkewWidth.valueChanged.connect(self.PrepareSkewImage)
@@ -834,12 +791,54 @@ class Ui_MainWindow(QMainWindow,object):
         self.pushButton_LargerPyrUp.clicked.connect(self.PreparePyrUpDown)
         self.pushButton_SmallerPyrDown.clicked.connect(self.PreparePyrUpDown)
         self.ImagesAndColorsHandler.ResetParams.connect(self.ResetParams)
+        self.dial_RotationScale.valueChanged.connect(self.PrepareScaleByCoefficient)
+        self.dial_RotationDegree.valueChanged.connect(self.PrepareRotationByAngle)
+        self.checkBox_FlipHorizantal.checkStateChanged.connect(self.PrepareFlip)
+        self.checkBox_FlipVertical.checkStateChanged.connect(self.PrepareFlip)
+        self.checkBox_SwapTranspose.checkStateChanged.connect(self.PrepareTranspose)
 
-        self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"https://mml-book.github.io/book/mml-book.pdf",False))
-        self.action_PythonProgramming.triggered.connect(partial(self.pdf_in_browser,"https://www.w3schools.com/python/default.asp",False))
-        self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.pdf_in_browser,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization",False))
-        self.action_MLModelOverview.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/docs-guides/source/mlmodel.html",False))
-        self.action_CoreMLModelFormatSpecification.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/mlmodel/index.html",False))
+    def PrepareTranspose(self):
+        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+            self.lower()
+            cv2.destroyAllWindows()
+            self.ImagesAndColorsHandler.Transpose()
+
+    def PrepareFlip(self,check):
+        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+            self.lower()
+            cv2.destroyAllWindows()
+            name = self.sender().objectName().split("_")[1]
+            self.ImagesAndColorsHandler.Flip(name)
+
+    def PrepareRotationByAngle(self,angle):
+          if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+             if angle == 0:
+                QMessageBox.critical(None, "Value Error", "Angle Must be Greater than 0!") 
+             else:
+                self.lower()
+                cv2.destroyAllWindows()
+                self.ImagesAndColorsHandler.RotationByAngle(angle)
+
+    def PrepareScaleByCoefficient(self,coefficient):
+          if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+             if coefficient == 0:
+                QMessageBox.critical(None, "Value Error", "Coefficient Must be Greater than 0!") 
+             else:
+                self.lower()
+                cv2.destroyAllWindows()
+                self.ImagesAndColorsHandler.ScaleByCoefficient(coefficient)       
+
+    def PrepareTranslateImage(self,value):
+        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+            self.lower()
+            cv2.destroyAllWindows()
+            name = self.sender().objectName().split("_")[1]
+            Diff_Array = [
+                 [self.dial_X1.value(),self.dial_X2.value()],
+                 [self.dial_Y1.value(),self.dial_Y2.value()],
+                 [self.dial_Z1.value(),self.dial_Z2.value()]
+            ]
+            self.ImagesAndColorsHandler.TranslateImage(name,value,np.float32(Diff_Array))
 
     def PrepareSkewImage(self,value):
         #print(value,type(value))
@@ -884,6 +883,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.ImagesAndColorsHandler.image = None
         self.ImagesAndColorsHandler.imageName = None
         self.ImagesAndColorsHandler.imageConversion = None
+        self.ImagesAndColorsHandler.tempImage = None
 
         self.horizontalSlider_ResizeHeight.blockSignals(True)
         self.horizontalSlider_ResizeWidth.blockSignals(True)
@@ -932,6 +932,9 @@ class Ui_MainWindow(QMainWindow,object):
                 option.setChecked(False)
                 option.setDisabled(True)
                 option.setEnabled(False)
+
+        self.ImagesAndColorsHandler.tempImage = None
+
         if self.comboBox_SelectImage.currentText().strip() != "":
            self.ImagesAndColorsHandler.ReadShowImage(text)
         else:
@@ -1137,6 +1140,65 @@ class Ui_MainWindow(QMainWindow,object):
                self.LoadResources()
                #print(f"Selected file: {file_paths}")
      
+    def html_in_window(self,path):
+        #  path = os.path.abspath(path)
+        self.webView.setUrl(QUrl(path))
+        #self.webView.load(QUrl.fromLocalFile(path))
+        self.webView.show()
+
+    def changePDFPage(self,index):
+        self.pages.setCurrentWidget(self.pdf_view)
+        self.pdf_path = ""
+        match index: 
+             case 0:
+                  self.pdf_path = os.path.relpath("pages/BigPicture.pdf")
+             case 1:
+                  self.pdf_path = os.path.relpath("pages/UniversityCurriculum.pdf")
+             case 2:
+                  self.pdf_path = os.path.relpath("pages/RoadMap.pdf")
+             case 3:
+                  self.pdf_path = os.path.relpath("pages/StudyPlan.pdf")
+             case 4:
+                  self.pdf_path = os.path.relpath("pages/HeadingResearch.pdf")
+             case 5:
+                  self.pdf_path = os.path.relpath("pages/UserGuide.pdf")
+             case 6:
+                  self.pdf_path = os.path.relpath("pages/ML_BigPicture.pdf")
+             case 7:
+                  self.pdf_path = os.path.relpath("pages/CategorizingByLearningParadigm.pdf")
+             case 8:
+                  self.pdf_path = os.path.relpath("pages/FromFundamentalsToAdvanced.pdf")
+             case 9:
+                  self.pdf_path = os.path.relpath("pages/CodeSamplesByLearningParadigm.pdf")
+             case 10:
+                  self.pdf_path = os.path.relpath("pages/DeeperCodeSamplesWithDefinitions.pdf")
+             case 11:
+                  self.pdf_path = os.path.relpath("pages/TheoreticalFoundationsOfComputerVision.pdf")
+             case 12:
+                  self.pdf_path = os.path.relpath("pages/Numpy_Sheet.pdf")
+             case 13:
+                  self.pdf_path = os.path.relpath("pages/Pandas_Sheet.pdf")
+             case 14:
+                  self.pdf_path = os.path.relpath("pages/MatPlotLib_Sheet.pdf")
+             case 15:
+                  self.pdf_path = os.path.relpath("pages/SeaBorn_Sheet.pdf")
+             case 16:
+                  self.pdf_path = os.path.relpath("pages/SupervisedML_Process.pdf")
+                  
+        self.pdf_document.load(self.pdf_path)
+        self.pdf_view.pdf_path = self.pdf_path
+        self.pdf_view.setDocument(self.pdf_document)
+        self.pdf_view.pdf_document = self.pdf_document 
+        self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
+        self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
+
+    def pdf_in_browser(self,pdf_path,local):
+        if local == True:
+           pdf_path = os.path.relpath(pdf_path)
+           QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(pdf_path))
+        else:
+            QDesktopServices.openUrl(QUrl(pdf_path))
+
     def LoadResources(self):
         Base_Image_Path = os.path.normpath(join("resources","images"))
         for f in listdir(Base_Image_Path):
@@ -1202,6 +1264,21 @@ class Ui_MainWindow(QMainWindow,object):
         for channel in self.ColorChannelChangeCheckBoxes:
                 channel.setDisabled(True)
                 channel.setEnabled(False)
+
+        self.TranslationDials = [
+             self.dial_X1,
+             self.dial_Y1,
+             self.dial_Z1,
+              self.dial_X2,
+             self.dial_Y2,
+             self.dial_Z2
+        ]
+        self.dial_X1.setValue(10)
+        self.dial_X2.setValue(100)
+        self.dial_Y1.setValue(200)
+        self.dial_Y2.setValue(50)
+        self.dial_Z1.setValue(100)
+        self.dial_Z2.setValue(250)
 
         self.menu_PythonProgramming = QMenu(parent=MainWindow)  
         self.menu_PythonProgramming.setObjectName("action_PythonProgramming")
@@ -1310,7 +1387,8 @@ class Ui_MainWindow(QMainWindow,object):
         self.connectActions()        
         self.LoadResources()
         self.FillImagesAndColorsCode()
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 4
 
 if __name__ == "__main__":
     import sys

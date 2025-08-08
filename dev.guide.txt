@@ -15,7 +15,7 @@ ui.ui > .ui is an extension for qtdesigner files, help you to change UI easily a
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 Copy and Paste from old app.py to new app2.py all codes inside (between) two lines same as above and below comment line. 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-(There are three blocks)
+(There are 4 blocks)
 
 Change or Copy from old app.py to new app2.py all lines one by one that has a comment like 
 this beside it: #*******************************
