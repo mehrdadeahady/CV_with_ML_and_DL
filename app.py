@@ -411,6 +411,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.gridLayout_Crop.addWidget(self.label_CropBottomRightCoefficient, 1, 1, 1, 1)
         self.horizontalSlider_CropTopLefCoefficien = QtWidgets.QSlider(parent=self.gridLayoutWidget_9)
         self.horizontalSlider_CropTopLefCoefficien.setMaximum(100)
+        self.horizontalSlider_CropTopLefCoefficien.setMinimum(1)
         self.horizontalSlider_CropTopLefCoefficien.setSingleStep(5)
         self.horizontalSlider_CropTopLefCoefficien.setOrientation(QtCore.Qt.Orientation.Horizontal)
         self.horizontalSlider_CropTopLefCoefficien.setObjectName("horizontalSlider_CropTopLefCoefficien")
@@ -418,6 +419,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.horizontalSlider_CropBottomRightCoefficient = QtWidgets.QSlider(parent=self.gridLayoutWidget_9)
         self.horizontalSlider_CropBottomRightCoefficient.setMaximum(100)
         self.horizontalSlider_CropBottomRightCoefficient.setSingleStep(5)
+        self.horizontalSlider_CropBottomRightCoefficient.setMinimum(1)
         self.horizontalSlider_CropBottomRightCoefficient.setOrientation(QtCore.Qt.Orientation.Horizontal)
         self.horizontalSlider_CropBottomRightCoefficient.setObjectName("horizontalSlider_CropBottomRightCoefficient")
         self.gridLayout_Crop.addWidget(self.horizontalSlider_CropBottomRightCoefficient, 0, 1, 1, 1)
@@ -796,7 +798,40 @@ class Ui_MainWindow(QMainWindow,object):
         self.checkBox_FlipHorizantal.checkStateChanged.connect(self.PrepareFlip)
         self.checkBox_FlipVertical.checkStateChanged.connect(self.PrepareFlip)
         self.checkBox_SwapTranspose.checkStateChanged.connect(self.PrepareTranspose)
+        self.horizontalSlider_CropTopLefCoefficien.valueChanged.connect(self.PrepareCrop)
+        self.horizontalSlider_CropBottomRightCoefficient.valueChanged.connect(self.PrepareCrop)
+        self.pushButton_AddText.clicked.connect(self.PrepareAddText)
+        self.comboBox_DrawShape.currentTextChanged.connect(self.PrepareDrawShape)
 
+    def PrepareDrawShape(self,shape):
+        if str(shape).strip() != "":
+           self.ImagesAndColorsHandler.DrawShape(shape)
+        else:
+             QMessageBox.warning(None, "No Shape Selected", "First, Select a Shape!")
+
+    def PrepareAddText(self):
+        text = self.textEdit_AddText.toPlainText().strip()
+        if text != "":
+             self.ImagesAndColorsHandler.AddText(text)     
+        else:
+             QMessageBox.warning(None, "Empty Text", "First, Write a Text!")
+                
+    def PrepareCrop(self):
+        # print(value,self.sender().objectName())
+        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+            name = self.sender().objectName().split("_")[1]
+            if name == "CropTopLefCoefficien":
+                 QMessageBox.warning(None, "Top Lef Coefficient is Set", "Set Bottom Right Coefficient to Continue!") 
+            else:
+                TopLeft= self.horizontalSlider_CropTopLefCoefficien.value()
+                BottomRight = self.horizontalSlider_CropBottomRightCoefficient.value()
+                if TopLeft == 0 or BottomRight == 0:
+                   QMessageBox.critical(None, "Coefficient Error", "Coefficient Can't be 0!")  
+                else:
+                    self.lower()
+                    cv2.destroyAllWindows()
+                    self.ImagesAndColorsHandler.Crop(TopLeft/100,BottomRight/100) 
+         
     def PrepareTranspose(self):
         if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
             self.lower()
@@ -867,6 +902,7 @@ class Ui_MainWindow(QMainWindow,object):
     def ResetParams(self):
         self.lower()
         cv2.destroyAllWindows()
+        self.textEdit_AddText.clear()
         self.comboBox_ColorSpaceConversion.setCurrentIndex(0)
         self.comboBox_SelectImage.setCurrentIndex(0)
 
@@ -884,6 +920,10 @@ class Ui_MainWindow(QMainWindow,object):
         self.ImagesAndColorsHandler.imageName = None
         self.ImagesAndColorsHandler.imageConversion = None
         self.ImagesAndColorsHandler.tempImage = None
+
+        self.comboBox_DrawShape.blockSignals(True)
+        self.comboBox_DrawShape.setCurrentIndex(0)
+        self.comboBox_DrawShape.blockSignals(False)
 
         self.horizontalSlider_ResizeHeight.blockSignals(True)
         self.horizontalSlider_ResizeWidth.blockSignals(True)
@@ -917,11 +957,16 @@ class Ui_MainWindow(QMainWindow,object):
         self.lower()
         cv2.destroyAllWindows()
         self.comboBox_ColorSpaceConversion.setCurrentIndex(0)
+        self.textEdit_AddText.clear()
 
         self.label_ImageShapeValue.clear()
         self.label_ImageHeightValue.clear() 
         self.label_ImageWidthValue.clear()
         self.label_ImageDepthValue.clear() 
+
+        self.comboBox_DrawShape.blockSignals(True)
+        self.comboBox_DrawShape.setCurrentIndex(0)
+        self.comboBox_DrawShape.blockSignals(False)
 
         self.horizontalSlider_ResizeHeight.setValue(50)   
         self.horizontalSlider_ResizeWidth.setValue(50)   
@@ -1229,7 +1274,7 @@ class Ui_MainWindow(QMainWindow,object):
 
     def FillImagesAndColorsCode(self):
         function_code = inspect.getsource(ImagesAndColors)
-        lines = function_code.splitlines()[9:]
+        lines = function_code.splitlines()[12:]
         ChangedContent = ""
         for line in lines:
             stripedLine = line.strip()

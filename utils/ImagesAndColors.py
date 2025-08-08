@@ -493,3 +493,87 @@ class ImagesAndColors(QObject):
             cv2.imshow(self.imageName,self.image)
             self.WaitKeyCloseWindows()
         
+    # Crop Image by Coordinates: TopLeft and BottomRight
+    def Crop(self,TopLeft,BottomRight):
+        if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):  
+            # Image dimensions
+            height, width = self.image.shape[:2]
+            # Assign Starting Pixel Coordiantes (Top  Left for Cropping Rectangle)
+            # Using TopLeft to get the x,y Position that is Down from the Top Left (0,0)
+            start_row, start_col = int(height * TopLeft), int(width * TopLeft)
+            # Assign Ending Pixel Coordinates (Bottom Right for Cropping Rectangle)
+            end_row, end_col = int(height * BottomRight), int(width * BottomRight)
+            # Crop out the Desired Rectangle by Indexes:
+            # +3 and -3 to start and end is for removing Rectangle Tickness that is 3 
+            croppedImage = self.image[start_row + 3 :end_row - 3 , start_col + 3 :end_col - 3]
+            # cv2.rectangle Function draws a Rectangle over Image (in-place Operation)
+            # Explained in Shapes Function
+            cv2.rectangle(self.image, (start_col,start_row), (end_col,end_row), (0,255,255), 3)
+            self.imageName = "CropedArea_" + self.imageName
+            self.tempImage = croppedImage
+            cv2.imshow(self.imageName, self.image)
+            cv2.imshow("Cropped_Image", croppedImage) 
+            self.WaitKeyCloseWindows()
+
+    # Add Text to Image
+    def AddText(self,text):
+        # Check if Image does not Exist then Create a Colored Image
+        if self.image is None or self.imageName is None or not isinstance(self.image, np.ndarray): 
+           self.image = np.zeros((800,600,3), np.uint8) 
+        # putText is a Function for Adding Text to Image
+        # Parameters: 1) Image 2) DesiredText 3) Inser Point 4) Font 5) Font Scale 6) Color 7) Thickness
+        cv2.putText(self.image,text, (10,int(self.image.shape[0]/2)), cv2.FONT_HERSHEY_SIMPLEX, 1, (240,170,0) , 2)
+        cv2.imshow(self.imageName,self.image)
+        self.WaitKeyCloseWindows()
+       
+    # Draw Some Shapes
+    def DrawShape(self,shape): 
+        # Check if Image does not Exist then Create a Colored Image
+        if self.image is None or self.imageName is None or not isinstance(self.image, np.ndarray): 
+           self.image = np.zeros((800,600,3), np.uint8) 
+
+        match shape:
+              case "Line":
+                   # Line Function to Draw a Line
+                   # Parameters: 1) Image 2) Start Point Coordinate 3) End Point Coordinate 4) Color 5) Thickness
+                   cv2.line(self.image, (0,0), (self.image.shape[1],self.image.shape[0]), (255,127,0), 5) 
+              case "Rectangle":                   
+                   TopLeft = (int(self.image.shape[1]/4) , int(self.image.shape[0]/4))
+                   BottomRight = (int(self.image.shape[1]/4)*3 , int(self.image.shape[0]/4)*3)
+                   Color = (127,50,127)
+                   Thickness = 4
+                   # cv2.rectangle is a Function for Drawing Rectangle
+                   # Parameters: 1) Image 2) Top Left Point 3) Bottom Right Point 4) Color 5) Thickness
+                   # Negative thickness means that it is filled instead Stroke (OutLine)
+                   cv2.rectangle(self.image, TopLeft, BottomRight, Color, Thickness)
+              case "Circle":                   
+                   CenterPoint = (int(self.image.shape[1]/2), int(self.image.shape[0]/2))
+                   Radius = 0
+                   if self.image.shape[0] > self.image.shape[1]:
+                      Radius = int((self.image.shape[1]/5)*2)
+                   else:
+                      Radius = int((self.image.shape[0]/5)*2)
+                   Color = (15,75,50)
+                   Thickness = -1
+                   # cv2.circle is a Function for Drawing Circle
+                   # Parameters: 1) Image 2) Center Point 3) Radius 4) Color 5) Thickness
+                   # Negative thickness means that it is filled instead Stroke (OutLine)
+                   cv2.circle(self.image, CenterPoint, Radius, Color, Thickness)
+              case "PolyLines":                   
+                   # Define 4 Points
+                   Points = np.array( [[10,5], 
+                                       [self.image.shape[1]-5,self.image.shape[0]-10], 
+                                       [int(self.image.shape[1]/3),int(self.image.shape[0]/4)],
+                                       [20,int(self.image.shape[0]/2)]], 
+                                       np.int32)
+                   # cv2.polylines is a Function for Drawing PolyLines
+                   # Parameters: 1) Image 2) Array of Points 3) isClosed Bool 4) Color 5) Thickness
+                   cv2.polylines(self.image, [Points], True, (0,0,255), 3)
+
+        cv2.imshow(self.imageName,self.image)
+        self.WaitKeyCloseWindows()
+              
+            
+        
+        
+        
