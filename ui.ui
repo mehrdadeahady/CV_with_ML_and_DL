@@ -252,7 +252,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>410</y>
+        <y>350</y>
         <width>481</width>
         <height>81</height>
        </rect>
@@ -298,7 +298,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>60</y>
+        <y>50</y>
         <width>981</width>
         <height>51</height>
        </rect>
@@ -379,7 +379,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>120</y>
+        <y>100</y>
         <width>481</width>
         <height>51</height>
        </rect>
@@ -425,7 +425,7 @@
       <property name="geometry">
        <rect>
         <x>500</x>
-        <y>120</y>
+        <y>100</y>
         <width>491</width>
         <height>51</height>
        </rect>
@@ -480,7 +480,7 @@
       <property name="geometry">
        <rect>
         <x>500</x>
-        <y>180</y>
+        <y>150</y>
         <width>491</width>
         <height>91</height>
        </rect>
@@ -600,9 +600,9 @@
       <property name="geometry">
        <rect>
         <x>500</x>
-        <y>280</y>
+        <y>240</y>
         <width>491</width>
-        <height>121</height>
+        <height>111</height>
        </rect>
       </property>
       <property name="title">
@@ -612,7 +612,7 @@
        <property name="geometry">
         <rect>
          <x>40</x>
-         <y>20</y>
+         <y>10</y>
          <width>451</width>
          <height>91</height>
         </rect>
@@ -668,7 +668,7 @@
       <property name="geometry">
        <rect>
         <x>500</x>
-        <y>500</y>
+        <y>430</y>
         <width>491</width>
         <height>71</height>
        </rect>
@@ -707,6 +707,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Ellipse</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>PolyLines</string>
         </property>
        </item>
@@ -716,9 +721,9 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>280</y>
+        <y>240</y>
         <width>481</width>
-        <height>121</height>
+        <height>111</height>
        </rect>
       </property>
       <property name="title">
@@ -730,7 +735,7 @@
          <x>0</x>
          <y>10</y>
          <width>481</width>
-         <height>101</height>
+         <height>91</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_Translation">
@@ -747,7 +752,7 @@
         <item row="1" column="2">
          <widget class="QLabel" name="label_Y1">
           <property name="text">
-           <string>Y3</string>
+           <string>Y1</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -762,6 +767,9 @@
           <property name="singleStep">
            <number>5</number>
           </property>
+          <property name="value">
+           <number>10</number>
+          </property>
          </widget>
         </item>
         <item row="0" column="1">
@@ -771,6 +779,9 @@
           </property>
           <property name="singleStep">
            <number>5</number>
+          </property>
+          <property name="value">
+           <number>100</number>
           </property>
          </widget>
         </item>
@@ -792,6 +803,9 @@
           <property name="singleStep">
            <number>5</number>
           </property>
+          <property name="value">
+           <number>50</number>
+          </property>
          </widget>
         </item>
         <item row="1" column="0">
@@ -812,6 +826,9 @@
           <property name="singleStep">
            <number>5</number>
           </property>
+          <property name="value">
+           <number>100</number>
+          </property>
          </widget>
         </item>
         <item row="0" column="2">
@@ -821,6 +838,9 @@
           </property>
           <property name="singleStep">
            <number>5</number>
+          </property>
+          <property name="value">
+           <number>200</number>
           </property>
          </widget>
         </item>
@@ -842,6 +862,9 @@
           <property name="singleStep">
            <number>5</number>
           </property>
+          <property name="value">
+           <number>250</number>
+          </property>
          </widget>
         </item>
         <item row="1" column="5">
@@ -861,7 +884,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>500</y>
+        <y>430</y>
         <width>481</width>
         <height>71</height>
        </rect>
@@ -907,7 +930,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>180</y>
+        <y>150</y>
         <width>481</width>
         <height>91</height>
        </rect>
@@ -984,7 +1007,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <property name="geometry">
        <rect>
         <x>500</x>
-        <y>410</y>
+        <y>350</y>
         <width>491</width>
         <height>81</height>
        </rect>
@@ -1055,6 +1078,140 @@ li.checked::marker { content: &quot;\2612&quot;; }
          </widget>
         </item>
        </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_ArithmeticAndBitwiseOperations">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>500</y>
+        <width>320</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Arithmetic and Bitwise Operations</string>
+      </property>
+      <widget class="QComboBox" name="comboBox_ArithmeticAndBitwiseO">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>301</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Arithmetic Operations</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Bitwise Operations</string>
+        </property>
+       </item>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_Filters">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>500</y>
+        <width>320</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Filters (Bluring, Sharppening, De-Noising)</string>
+      </property>
+      <widget class="QComboBox" name="comboBox_Filters">
+       <property name="geometry">
+        <rect>
+         <x>9</x>
+         <y>20</y>
+         <width>301</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Bluring and Sharprning by Kernel</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>De-Noising by Filter</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Bluring by Filter</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Segmenting by Threshold - Binarization</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Segmenting by Adaptive Threshold - Binarization</string>
+        </property>
+       </item>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_DilationErosionEdgeDetection">
+      <property name="geometry">
+       <rect>
+        <x>670</x>
+        <y>500</y>
+        <width>320</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Dilation, Erosion, Opening, Closing, Edge Detection </string>
+      </property>
+      <widget class="QComboBox" name="comboBox_DilationErosionEdgeDe">
+       <property name="geometry">
+        <rect>
+         <x>9</x>
+         <y>20</y>
+         <width>301</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Dilation, Erosion, Opening, Closing</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Edge Detection by Canny (Normal, Wide, Narrow)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Edge Detection Comparison (Canny, Sobel, Laplacian)</string>
+        </property>
+       </item>
       </widget>
      </widget>
     </widget>

@@ -19,6 +19,10 @@ class ImagesAndColors(QObject):
         self.imageName = None
         self.imageConversion = None
         self.tempImage = None
+        self.tempImageName = None
+
+    # Consider|Attention: 
+    # Here all parameters Assigned have relation to Image Dimensions for Visibility of Changes > image.shape = (height,width,depth)
 
     # Wait for Clicking a Key on Keyboard to Close All cv2 Windows
     def WaitKeyCloseWindows(self):
@@ -27,10 +31,12 @@ class ImagesAndColors(QObject):
         # Close All cv2 Windows
         cv2.destroyAllWindows()
         self.tempImage = None
+        self.tempImageName = None
         self.ResetParams.emit(0)
         if cv2.getWindowProperty(self.imageName, cv2.WND_PROP_VISIBLE) == -1:
            self.ResetParams.emit(0)
            self.tempImage = None
+           self.tempImageName = None
 
     # Reading and Showing an Image from the Path
     def ReadShowImage(self,ImageName):
@@ -204,22 +210,22 @@ class ImagesAndColors(QObject):
 
     # Saving the Image
     def SaveImage(self):
-        if self.image is not None and self.imageName is not None:
-           file_path = None 
-           if self.tempImage is not None:
-               file_path, _ = QFileDialog.getSaveFileName(None, "Save File", self.imageName)
-               if file_path:
-                     # imwrite is Saving Image Function in OpenCV that takes 2 parameter
-                     # cv2.imwrite(Parameter1 = Name of Image, Parameter2 = Path to Image ) 
-                     cv2.imwrite(file_path,self.tempImage)
-           else: 
-               file_path, _ = QFileDialog.getSaveFileName(None, "Save File", self.imageName)         
-               if file_path:
-                     # imwrite is Saving Image Function in OpenCV that takes 2 parameter
-                     # cv2.imwrite(Parameter1 = Name of Image, Parameter2 = Path to Image ) 
-                     cv2.imwrite(file_path,self.image)
-        else:
-             QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
+         file_path = None 
+         if self.tempImage is not None and self.tempImageName is not None and isinstance(self.tempImage, np.ndarray):
+            file_path, _ = QFileDialog.getSaveFileName(None, "Save File", self.tempImageName)
+            if file_path:
+                  # imwrite is Saving Image Function in OpenCV that takes 2 parameter
+                  # cv2.imwrite(Parameter1 = Name of Image, Parameter2 = Path to Image ) 
+                  cv2.imwrite(file_path,self.tempImage)
+         elif self.image is not None and self.imageName is not None:
+            file_path, _ = QFileDialog.getSaveFileName(None, "Save File", self.imageName)         
+            if file_path:
+                  # imwrite is Saving Image Function in OpenCV that takes 2 parameter
+                  # cv2.imwrite(Parameter1 = Name of Image, Parameter2 = Path to Image ) 
+                  cv2.imwrite(file_path,self.image)
+               
+         else:
+               QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
         
     # Remove Color Channels   
     def ColorChannelRemove(self,channels):
@@ -411,8 +417,10 @@ class ImagesAndColors(QObject):
                   # warpAffine is a Function in OpenCV for Scaling, Rotation, Translation and etc.
                   # There are several Overload for warpAffine Function based on Functionality needed.
                   ScaledImage = cv2.warpAffine(self.image, Rotation_Matrix2D, ( _width_, _height_ ))
-                  name = "Scaled" + str(coefficient) + "Times"
+                  name = "BackScaled" + str(coefficient) + "Times"
                   ScaledImageName = name + "_" + self.imageName
+                  self.tempImage = ScaledImage
+                  self.tempImageName = ScaledImageName
                   self.ImageSizeChanged.emit(name)
                   cv2.imshow(self.imageName,self.image)
                   cv2.imshow(ScaledImageName,ScaledImage)
@@ -440,6 +448,8 @@ class ImagesAndColors(QObject):
                   RotatedImage = cv2.warpAffine(self.image, Rotation_Matrix2D, (width*2,height*2))
                   name = "Rotated" + str(angle) + "Degree"
                   RotatedImageName = name + "_" + self.imageName
+                  self.tempImage = RotatedImage
+                  self.tempImageName = RotatedImageName
                   self.ImageSizeChanged.emit(name)
                   cv2.imshow(self.imageName,self.image)
                   cv2.imshow(RotatedImageName,RotatedImage)
@@ -459,11 +469,12 @@ class ImagesAndColors(QObject):
             # Translation Implements the Difference between MainArray and DiffArray on the Image
             M = cv2.getAffineTransform(MainArray, Diff_Array)
             TranslatedImage = cv2.warpAffine(self.image, M, (height, width))
-            TranslatedImageName = name + "_" + self.imageName
+            TranslatedImageName = name + "Translation_" + self.imageName
             self.ImageSizeChanged.emit(name)
             self.tempImage = TranslatedImage
-            cv2.imshow(TranslatedImageName,TranslatedImage)
+            self.tempImageName = TranslatedImageName
             cv2.imshow(self.imageName,self.image)
+            cv2.imshow(TranslatedImageName,TranslatedImage)
             self.WaitKeyCloseWindows()
             self.tempImage = None
 
@@ -506,13 +517,15 @@ class ImagesAndColors(QObject):
             # Crop out the Desired Rectangle by Indexes:
             # +3 and -3 to start and end is for removing Rectangle Tickness that is 3 
             croppedImage = self.image[start_row + 3 :end_row - 3 , start_col + 3 :end_col - 3]
+            croppedImageName = "CroppedImage_" + self.imageName
             # cv2.rectangle Function draws a Rectangle over Image (in-place Operation)
             # Explained in Shapes Function
             cv2.rectangle(self.image, (start_col,start_row), (end_col,end_row), (0,255,255), 3)
-            self.imageName = "CropedArea_" + self.imageName
             self.tempImage = croppedImage
+            self.tempImageName = croppedImageName
+            self.imageName = "CropedArea_" + self.imageName
             cv2.imshow(self.imageName, self.image)
-            cv2.imshow("Cropped_Image", croppedImage) 
+            cv2.imshow(croppedImageName, croppedImage) 
             self.WaitKeyCloseWindows()
 
     # Add Text to Image
@@ -520,10 +533,16 @@ class ImagesAndColors(QObject):
         # Check if Image does not Exist then Create a Colored Image
         if self.image is None or self.imageName is None or not isinstance(self.image, np.ndarray): 
            self.image = np.zeros((800,600,3), np.uint8) 
+           self.imageName = "ExampleImage.jpg"
         # putText is a Function for Adding Text to Image
         # Parameters: 1) Image 2) DesiredText 3) Inser Point 4) Font 5) Font Scale 6) Color 7) Thickness
-        cv2.putText(self.image,text, (10,int(self.image.shape[0]/2)), cv2.FONT_HERSHEY_SIMPLEX, 1, (240,170,0) , 2)
-        cv2.imshow(self.imageName,self.image)
+        if self.tempImage is not None and self.tempImageName is not None:
+            cv2.putText(self.tempImage,text, (10,int(self.image.shape[0]/2)), cv2.FONT_HERSHEY_SIMPLEX, 1, (240,170,0) , 2)
+            cv2.imshow(self.tempImageName,self.tempImage)
+        else:
+            cv2.putText(self.image,text, (10,int(self.image.shape[0]/2)), cv2.FONT_HERSHEY_SIMPLEX, 1, (240,170,0) , 2)
+            cv2.imshow(self.imageName,self.image)
+        
         self.WaitKeyCloseWindows()
        
     # Draw Some Shapes
@@ -559,6 +578,18 @@ class ImagesAndColors(QObject):
                    # Parameters: 1) Image 2) Center Point 3) Radius 4) Color 5) Thickness
                    # Negative thickness means that it is filled instead Stroke (OutLine)
                    cv2.circle(self.image, CenterPoint, Radius, Color, Thickness)
+              case "Ellipse":
+                   # cv2.ellipse is a Function for Drawing Ellipse
+                   # Parameters: 1) Image 2) Center Point 3) Axes Size 4) Angle 5) Start Angle 6) End Angle 7) Color 8) Thickness
+                   # Negative thickness means that it is filled instead Stroke (OutLine)
+                   CenterPoint = (int(self.image.shape[1]/2), int(self.image.shape[0]/2))
+                   AxesSize = CenterPoint
+                   Angle = 30
+                   StartAngle = 0
+                   EndAngle = 180
+                   Color = 255
+                   Thickness = -1
+                   cv2.ellipse(self.image, CenterPoint, AxesSize, Angle, StartAngle, EndAngle, Color, Thickness)
               case "PolyLines":                   
                    # Define 4 Points
                    Points = np.array( [[10,5], 
@@ -569,7 +600,7 @@ class ImagesAndColors(QObject):
                    # cv2.polylines is a Function for Drawing PolyLines
                    # Parameters: 1) Image 2) Array of Points 3) isClosed Bool 4) Color 5) Thickness
                    cv2.polylines(self.image, [Points], True, (0,0,255), 3)
-
+              
         cv2.imshow(self.imageName,self.image)
         self.WaitKeyCloseWindows()
               

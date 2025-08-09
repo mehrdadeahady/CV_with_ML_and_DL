@@ -31,7 +31,6 @@ from utils.ImagesAndColors import ImagesAndColors
 
 class Ui_MainWindow(QMainWindow,object):
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 1
-    
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1024, 768)
@@ -43,7 +42,6 @@ class Ui_MainWindow(QMainWindow,object):
         MainWindow.setMinimumSize(QtCore.QSize(1024, 768))
         MainWindow.setMaximumSize(QtCore.QSize(1024, 768))
         MainWindow.setBaseSize(QtCore.QSize(1024, 768))
-        self.ImagesAndColorsHandler = ImagesAndColors()
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(".\\icons/eye.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
@@ -107,7 +105,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.comboBox_ColorSpaceConversion.addItem("")
         self.comboBox_ColorSpaceConversion.addItem("")
         self.groupBox_FlipImage = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
-        self.groupBox_FlipImage.setGeometry(QtCore.QRect(10, 410, 481, 81))
+        self.groupBox_FlipImage.setGeometry(QtCore.QRect(10, 350, 481, 81))
         self.groupBox_FlipImage.setObjectName("groupBox_FlipImage")
         self.gridLayoutWidget_6 = QtWidgets.QWidget(parent=self.groupBox_FlipImage)
         self.gridLayoutWidget_6.setGeometry(QtCore.QRect(30, 30, 441, 31))
@@ -125,7 +123,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.checkBox_SwapTranspose.setObjectName("checkBox_SwapTranspose")
         self.gridLayout_FlipImage.addWidget(self.checkBox_SwapTranspose, 0, 2, 1, 1)
         self.groupBox_ImageInfo = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
-        self.groupBox_ImageInfo.setGeometry(QtCore.QRect(10, 60, 981, 51))
+        self.groupBox_ImageInfo.setGeometry(QtCore.QRect(10, 50, 981, 51))
         self.groupBox_ImageInfo.setObjectName("groupBox_ImageInfo")
         self.gridLayoutWidget = QtWidgets.QWidget(parent=self.groupBox_ImageInfo)
         self.gridLayoutWidget.setGeometry(QtCore.QRect(120, 10, 861, 41))
@@ -162,7 +160,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.label_ImageShape.setObjectName("label_ImageShape")
         self.gridLayout_ImageInfo.addWidget(self.label_ImageShape, 0, 0, 1, 1)
         self.groupBox_BGRColorSpace = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
-        self.groupBox_BGRColorSpace.setGeometry(QtCore.QRect(10, 120, 481, 51))
+        self.groupBox_BGRColorSpace.setGeometry(QtCore.QRect(10, 100, 481, 51))
         self.groupBox_BGRColorSpace.setObjectName("groupBox_BGRColorSpace")
         self.gridLayoutWidget_2 = QtWidgets.QWidget(parent=self.groupBox_BGRColorSpace)
         self.gridLayoutWidget_2.setGeometry(QtCore.QRect(200, 10, 281, 41))
@@ -180,7 +178,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.checkBox_BlueChannel.setObjectName("checkBox_BlueChannel")
         self.gridLayout_BGRChannel.addWidget(self.checkBox_BlueChannel, 0, 0, 1, 1)
         self.groupBox_HSVColorSpace = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
-        self.groupBox_HSVColorSpace.setGeometry(QtCore.QRect(500, 120, 491, 51))
+        self.groupBox_HSVColorSpace.setGeometry(QtCore.QRect(500, 100, 491, 51))
         self.groupBox_HSVColorSpace.setObjectName("groupBox_HSVColorSpace")
         self.gridLayoutWidget_3 = QtWidgets.QWidget(parent=self.groupBox_HSVColorSpace)
         self.gridLayoutWidget_3.setGeometry(QtCore.QRect(200, 10, 291, 41))
@@ -201,7 +199,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.checkBox_HSVValue.setObjectName("checkBox_HSVValue")
         self.gridLayout_HSVChannel.addWidget(self.checkBox_HSVValue, 0, 2, 1, 1)
         self.groupBox_ResizeScaleImageByDimention = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
-        self.groupBox_ResizeScaleImageByDimention.setGeometry(QtCore.QRect(500, 180, 491, 91))
+        self.groupBox_ResizeScaleImageByDimention.setGeometry(QtCore.QRect(500, 150, 491, 91))
         self.groupBox_ResizeScaleImageByDimention.setObjectName("groupBox_ResizeScaleImageByDimention")
         self.gridLayoutWidget_4 = QtWidgets.QWidget(parent=self.groupBox_ResizeScaleImageByDimention)
         self.gridLayoutWidget_4.setGeometry(QtCore.QRect(80, 20, 401, 42))
@@ -248,25 +246,23 @@ class Ui_MainWindow(QMainWindow,object):
         self.pushButton_SmallerPyrDown.setFont(font)
         self.pushButton_SmallerPyrDown.setObjectName("pushButton_SmallerPyrDown")
         self.groupBox_RotationScale = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
-        self.groupBox_RotationScale.setGeometry(QtCore.QRect(500, 280, 491, 121))
+        self.groupBox_RotationScale.setGeometry(QtCore.QRect(500, 240, 491, 111))
         self.groupBox_RotationScale.setObjectName("groupBox_RotationScale")
         self.gridLayoutWidget_5 = QtWidgets.QWidget(parent=self.groupBox_RotationScale)
-        self.gridLayoutWidget_5.setGeometry(QtCore.QRect(40, 20, 451, 91))
+        self.gridLayoutWidget_5.setGeometry(QtCore.QRect(40, 10, 451, 91))
         self.gridLayoutWidget_5.setObjectName("gridLayoutWidget_5")
         self.gridLayout_RotationScale = QtWidgets.QGridLayout(self.gridLayoutWidget_5)
         self.gridLayout_RotationScale.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_RotationScale.setObjectName("gridLayout_RotationScale")
         self.dial_RotationDegree = QtWidgets.QDial(parent=self.gridLayoutWidget_5)
+        self.dial_RotationDegree.setMinimum(1)
         self.dial_RotationDegree.setMaximum(360)
         self.dial_RotationDegree.setSingleStep(10)
-        self.dial_RotationDegree.setMinimum(10)
-        self.dial_RotationDegree.setValue(10)
         self.dial_RotationDegree.setObjectName("dial_RotationDegree")
         self.gridLayout_RotationScale.addWidget(self.dial_RotationDegree, 1, 0, 1, 1)
         self.dial_RotationScale = QtWidgets.QDial(parent=self.gridLayoutWidget_5)
-        self.dial_RotationScale.setMaximum(10)
         self.dial_RotationScale.setMinimum(1)
-        self.dial_RotationScale.setValue(1)
+        self.dial_RotationScale.setMaximum(10)
         self.dial_RotationScale.setObjectName("dial_RotationScale")
         self.gridLayout_RotationScale.addWidget(self.dial_RotationScale, 1, 1, 1, 1)
         self.label_RotationDegree = QtWidgets.QLabel(parent=self.gridLayoutWidget_5)
@@ -278,7 +274,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.label_RorationScale.setObjectName("label_RorationScale")
         self.gridLayout_RotationScale.addWidget(self.label_RorationScale, 2, 1, 1, 1)
         self.groupBox_DrawingShape = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
-        self.groupBox_DrawingShape.setGeometry(QtCore.QRect(500, 500, 491, 71))
+        self.groupBox_DrawingShape.setGeometry(QtCore.QRect(500, 430, 491, 71))
         self.groupBox_DrawingShape.setObjectName("groupBox_DrawingShape")
         self.comboBox_DrawShape = QtWidgets.QComboBox(parent=self.groupBox_DrawingShape)
         self.comboBox_DrawShape.setGeometry(QtCore.QRect(80, 20, 391, 41))
@@ -289,11 +285,12 @@ class Ui_MainWindow(QMainWindow,object):
         self.comboBox_DrawShape.addItem("")
         self.comboBox_DrawShape.addItem("")
         self.comboBox_DrawShape.addItem("")
+        self.comboBox_DrawShape.addItem("")
         self.groupBox_Translation = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
-        self.groupBox_Translation.setGeometry(QtCore.QRect(10, 280, 481, 121))
+        self.groupBox_Translation.setGeometry(QtCore.QRect(10, 240, 481, 111))
         self.groupBox_Translation.setObjectName("groupBox_Translation")
         self.gridLayoutWidget_7 = QtWidgets.QWidget(parent=self.groupBox_Translation)
-        self.gridLayoutWidget_7.setGeometry(QtCore.QRect(0, 10, 481, 101))
+        self.gridLayoutWidget_7.setGeometry(QtCore.QRect(0, 10, 481, 91))
         self.gridLayoutWidget_7.setObjectName("gridLayoutWidget_7")
         self.gridLayout_Translation = QtWidgets.QGridLayout(self.gridLayoutWidget_7)
         self.gridLayout_Translation.setContentsMargins(0, 0, 0, 0)
@@ -309,11 +306,13 @@ class Ui_MainWindow(QMainWindow,object):
         self.dial_X1 = QtWidgets.QDial(parent=self.gridLayoutWidget_7)
         self.dial_X1.setMaximum(255)
         self.dial_X1.setSingleStep(5)
+        self.dial_X1.setProperty("value", 10)
         self.dial_X1.setObjectName("dial_X1")
         self.gridLayout_Translation.addWidget(self.dial_X1, 0, 0, 1, 1)
         self.dial_X2 = QtWidgets.QDial(parent=self.gridLayoutWidget_7)
         self.dial_X2.setMaximum(255)
         self.dial_X2.setSingleStep(5)
+        self.dial_X2.setProperty("value", 100)
         self.dial_X2.setObjectName("dial_X2")
         self.gridLayout_Translation.addWidget(self.dial_X2, 0, 1, 1, 1)
         self.label_Z1 = QtWidgets.QLabel(parent=self.gridLayoutWidget_7)
@@ -323,6 +322,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.dial_Y2 = QtWidgets.QDial(parent=self.gridLayoutWidget_7)
         self.dial_Y2.setMaximum(255)
         self.dial_Y2.setSingleStep(5)
+        self.dial_Y2.setProperty("value", 50)
         self.dial_Y2.setObjectName("dial_Y2")
         self.gridLayout_Translation.addWidget(self.dial_Y2, 0, 3, 1, 1)
         self.label_X1 = QtWidgets.QLabel(parent=self.gridLayoutWidget_7)
@@ -332,11 +332,13 @@ class Ui_MainWindow(QMainWindow,object):
         self.dial_Z1 = QtWidgets.QDial(parent=self.gridLayoutWidget_7)
         self.dial_Z1.setMaximum(255)
         self.dial_Z1.setSingleStep(5)
+        self.dial_Z1.setProperty("value", 100)
         self.dial_Z1.setObjectName("dial_Z1")
         self.gridLayout_Translation.addWidget(self.dial_Z1, 0, 4, 1, 1)
         self.dial_Y1 = QtWidgets.QDial(parent=self.gridLayoutWidget_7)
         self.dial_Y1.setMaximum(255)
         self.dial_Y1.setSingleStep(5)
+        self.dial_Y1.setProperty("value", 200)
         self.dial_Y1.setObjectName("dial_Y1")
         self.gridLayout_Translation.addWidget(self.dial_Y1, 0, 2, 1, 1)
         self.label_Y2 = QtWidgets.QLabel(parent=self.gridLayoutWidget_7)
@@ -346,6 +348,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.dial_Z2 = QtWidgets.QDial(parent=self.gridLayoutWidget_7)
         self.dial_Z2.setMaximum(255)
         self.dial_Z2.setSingleStep(5)
+        self.dial_Z2.setProperty("value", 250)
         self.dial_Z2.setObjectName("dial_Z2")
         self.gridLayout_Translation.addWidget(self.dial_Z2, 0, 5, 1, 1)
         self.label_Z2 = QtWidgets.QLabel(parent=self.gridLayoutWidget_7)
@@ -353,7 +356,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.label_Z2.setObjectName("label_Z2")
         self.gridLayout_Translation.addWidget(self.label_Z2, 1, 5, 1, 1)
         self.groupBox_AddText = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
-        self.groupBox_AddText.setGeometry(QtCore.QRect(10, 500, 481, 71))
+        self.groupBox_AddText.setGeometry(QtCore.QRect(10, 430, 481, 71))
         self.groupBox_AddText.setObjectName("groupBox_AddText")
         self.textEdit_AddText = QtWidgets.QTextEdit(parent=self.groupBox_AddText)
         self.textEdit_AddText.setGeometry(QtCore.QRect(10, 20, 391, 41))
@@ -362,7 +365,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.pushButton_AddText.setGeometry(QtCore.QRect(410, 20, 61, 41))
         self.pushButton_AddText.setObjectName("pushButton_AddText")
         self.groupBox_Skew = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
-        self.groupBox_Skew.setGeometry(QtCore.QRect(10, 180, 481, 91))
+        self.groupBox_Skew.setGeometry(QtCore.QRect(10, 150, 481, 91))
         self.groupBox_Skew.setObjectName("groupBox_Skew")
         self.gridLayoutWidget_8 = QtWidgets.QWidget(parent=self.groupBox_Skew)
         self.gridLayoutWidget_8.setGeometry(QtCore.QRect(40, 20, 431, 42))
@@ -393,7 +396,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.label_SkewWidth.setObjectName("label_SkewWidth")
         self.gridLayout_Skew.addWidget(self.label_SkewWidth, 0, 1, 1, 1)
         self.groupBox_Crop = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
-        self.groupBox_Crop.setGeometry(QtCore.QRect(500, 410, 491, 81))
+        self.groupBox_Crop.setGeometry(QtCore.QRect(500, 350, 491, 81))
         self.groupBox_Crop.setObjectName("groupBox_Crop")
         self.gridLayoutWidget_9 = QtWidgets.QWidget(parent=self.groupBox_Crop)
         self.gridLayoutWidget_9.setGeometry(QtCore.QRect(39, 20, 441, 54))
@@ -410,19 +413,53 @@ class Ui_MainWindow(QMainWindow,object):
         self.label_CropBottomRightCoefficient.setObjectName("label_CropBottomRightCoefficient")
         self.gridLayout_Crop.addWidget(self.label_CropBottomRightCoefficient, 1, 1, 1, 1)
         self.horizontalSlider_CropTopLefCoefficien = QtWidgets.QSlider(parent=self.gridLayoutWidget_9)
-        self.horizontalSlider_CropTopLefCoefficien.setMaximum(100)
         self.horizontalSlider_CropTopLefCoefficien.setMinimum(1)
+        self.horizontalSlider_CropTopLefCoefficien.setMaximum(100)
         self.horizontalSlider_CropTopLefCoefficien.setSingleStep(5)
         self.horizontalSlider_CropTopLefCoefficien.setOrientation(QtCore.Qt.Orientation.Horizontal)
         self.horizontalSlider_CropTopLefCoefficien.setObjectName("horizontalSlider_CropTopLefCoefficien")
         self.gridLayout_Crop.addWidget(self.horizontalSlider_CropTopLefCoefficien, 0, 0, 1, 1)
         self.horizontalSlider_CropBottomRightCoefficient = QtWidgets.QSlider(parent=self.gridLayoutWidget_9)
+        self.horizontalSlider_CropBottomRightCoefficient.setMinimum(1)
         self.horizontalSlider_CropBottomRightCoefficient.setMaximum(100)
         self.horizontalSlider_CropBottomRightCoefficient.setSingleStep(5)
-        self.horizontalSlider_CropBottomRightCoefficient.setMinimum(1)
         self.horizontalSlider_CropBottomRightCoefficient.setOrientation(QtCore.Qt.Orientation.Horizontal)
         self.horizontalSlider_CropBottomRightCoefficient.setObjectName("horizontalSlider_CropBottomRightCoefficient")
         self.gridLayout_Crop.addWidget(self.horizontalSlider_CropBottomRightCoefficient, 0, 1, 1, 1)
+        self.groupBox_ArithmeticAndBitwiseOperations = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
+        self.groupBox_ArithmeticAndBitwiseOperations.setGeometry(QtCore.QRect(10, 500, 320, 71))
+        self.groupBox_ArithmeticAndBitwiseOperations.setObjectName("groupBox_ArithmeticAndBitwiseOperations")
+        self.comboBox_ArithmeticAndBitwiseO = QtWidgets.QComboBox(parent=self.groupBox_ArithmeticAndBitwiseOperations)
+        self.comboBox_ArithmeticAndBitwiseO.setGeometry(QtCore.QRect(10, 20, 301, 41))
+        self.comboBox_ArithmeticAndBitwiseO.setObjectName("comboBox_ArithmeticAndBitwiseO")
+        self.comboBox_ArithmeticAndBitwiseO.addItem("")
+        self.comboBox_ArithmeticAndBitwiseO.setItemText(0, "")
+        self.comboBox_ArithmeticAndBitwiseO.addItem("")
+        self.comboBox_ArithmeticAndBitwiseO.addItem("")
+        self.groupBox_Filters = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
+        self.groupBox_Filters.setGeometry(QtCore.QRect(340, 500, 320, 71))
+        self.groupBox_Filters.setObjectName("groupBox_Filters")
+        self.comboBox_Filters = QtWidgets.QComboBox(parent=self.groupBox_Filters)
+        self.comboBox_Filters.setGeometry(QtCore.QRect(9, 20, 301, 41))
+        self.comboBox_Filters.setObjectName("comboBox_Filters")
+        self.comboBox_Filters.addItem("")
+        self.comboBox_Filters.setItemText(0, "")
+        self.comboBox_Filters.addItem("")
+        self.comboBox_Filters.addItem("")
+        self.comboBox_Filters.addItem("")
+        self.comboBox_Filters.addItem("")
+        self.comboBox_Filters.addItem("")
+        self.groupBox_DilationErosionEdgeDetection = QtWidgets.QGroupBox(parent=self.page_ImagesAndColors)
+        self.groupBox_DilationErosionEdgeDetection.setGeometry(QtCore.QRect(670, 500, 320, 71))
+        self.groupBox_DilationErosionEdgeDetection.setObjectName("groupBox_DilationErosionEdgeDetection")
+        self.comboBox_DilationErosionEdgeDe = QtWidgets.QComboBox(parent=self.groupBox_DilationErosionEdgeDetection)
+        self.comboBox_DilationErosionEdgeDe.setGeometry(QtCore.QRect(9, 20, 301, 41))
+        self.comboBox_DilationErosionEdgeDe.setObjectName("comboBox_DilationErosionEdgeDe")
+        self.comboBox_DilationErosionEdgeDe.addItem("")
+        self.comboBox_DilationErosionEdgeDe.setItemText(0, "")
+        self.comboBox_DilationErosionEdgeDe.addItem("")
+        self.comboBox_DilationErosionEdgeDe.addItem("")
+        self.comboBox_DilationErosionEdgeDe.addItem("")
         self.pages.addWidget(self.page_ImagesAndColors)
         self.page_AboutTool = QtWidgets.QWidget()
         self.page_AboutTool.setObjectName("page_AboutTool")
@@ -587,7 +624,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.menuHelp.addSeparator()
         self.menuHelp.addAction(self.action_AboutAuthorDeveloper)
         self.menuHelp.addSeparator()
-        #
+         #
         self.menuLab.addMenu(self.menu_PreRequisites)  #*************************************
         self.menuLab.addSeparator()
         self.menuLab.addMenu(self.menu_Machine_Learning_Model_Fundamentals)#*************************************
@@ -610,6 +647,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.menubar.addAction(self.menuSettings.menuAction())
         self.menubar.addAction(self.menuControls.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
+
         #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 2
         self.manualSetup()     
         #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 2
@@ -661,10 +699,11 @@ class Ui_MainWindow(QMainWindow,object):
         self.comboBox_DrawShape.setItemText(1, _translate("MainWindow", "Line"))
         self.comboBox_DrawShape.setItemText(2, _translate("MainWindow", "Rectangle"))
         self.comboBox_DrawShape.setItemText(3, _translate("MainWindow", "Circle"))
-        self.comboBox_DrawShape.setItemText(4, _translate("MainWindow", "PolyLines"))
+        self.comboBox_DrawShape.setItemText(4, _translate("MainWindow", "Ellipse"))
+        self.comboBox_DrawShape.setItemText(5, _translate("MainWindow", "PolyLines"))
         self.groupBox_Translation.setTitle(_translate("MainWindow", "Translation"))
         self.label_X2.setText(_translate("MainWindow", "X2"))
-        self.label_Y1.setText(_translate("MainWindow", "Y3"))
+        self.label_Y1.setText(_translate("MainWindow", "Y1"))
         self.label_Z1.setText(_translate("MainWindow", "Z1"))
         self.label_X1.setText(_translate("MainWindow", "X1"))
         self.label_Y2.setText(_translate("MainWindow", "Y2"))
@@ -677,6 +716,19 @@ class Ui_MainWindow(QMainWindow,object):
         self.groupBox_Crop.setTitle(_translate("MainWindow", "Crop"))
         self.label_CropTopLefCoefficient.setText(_translate("MainWindow", "Top Left Coefficient"))
         self.label_CropBottomRightCoefficient.setText(_translate("MainWindow", "Bottom Right Coefficient"))
+        self.groupBox_ArithmeticAndBitwiseOperations.setTitle(_translate("MainWindow", "Arithmetic and Bitwise Operations"))
+        self.comboBox_ArithmeticAndBitwiseO.setItemText(1, _translate("MainWindow", "Arithmetic Operations"))
+        self.comboBox_ArithmeticAndBitwiseO.setItemText(2, _translate("MainWindow", "Bitwise Operations"))
+        self.groupBox_Filters.setTitle(_translate("MainWindow", "Filters (Bluring, Sharppening, De-Noising)"))
+        self.comboBox_Filters.setItemText(1, _translate("MainWindow", "Bluring and Sharprning by Kernel"))
+        self.comboBox_Filters.setItemText(2, _translate("MainWindow", "De-Noising by Filter"))
+        self.comboBox_Filters.setItemText(3, _translate("MainWindow", "Bluring by Filter"))
+        self.comboBox_Filters.setItemText(4, _translate("MainWindow", "Segmenting by Threshold - Binarization"))
+        self.comboBox_Filters.setItemText(5, _translate("MainWindow", "Segmenting by Adaptive Threshold - Binarization"))
+        self.groupBox_DilationErosionEdgeDetection.setTitle(_translate("MainWindow", "Dilation, Erosion, Opening, Closing, Edge Detection "))
+        self.comboBox_DilationErosionEdgeDe.setItemText(1, _translate("MainWindow", "Dilation, Erosion, Opening, Closing"))
+        self.comboBox_DilationErosionEdgeDe.setItemText(2, _translate("MainWindow", "Edge Detection by Canny (Normal, Wide, Narrow)"))
+        self.comboBox_DilationErosionEdgeDe.setItemText(3, _translate("MainWindow", "Edge Detection Comparison (Canny, Sobel, Laplacian)"))
         self.menuTopics.setTitle(_translate("MainWindow", "Topics"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
         self.menuControls.setTitle(_translate("MainWindow", "Controls"))
@@ -764,6 +816,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_LinearAlgebraAndCalculus.triggered.connect(self.changePage)
         self.action_ProbabilityAndStatistics.triggered.connect(self.changePage)
         self.action_ImagesAndColors.triggered.connect(self.changePage)
+        self.action_CreateDefaultFolders.triggered.connect(self.CheckCreateDefaultFolders)
 
         self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"https://mml-book.github.io/book/mml-book.pdf",False))
         self.action_PythonProgramming.triggered.connect(partial(self.pdf_in_browser,"https://www.w3schools.com/python/default.asp",False))
@@ -818,7 +871,7 @@ class Ui_MainWindow(QMainWindow,object):
                 
     def PrepareCrop(self):
         # print(value,self.sender().objectName())
-        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if self.label_ImageShapeValue.text().strip() != ""  and self.ImagesAndColorsHandler.image is not None: 
             name = self.sender().objectName().split("_")[1]
             if name == "CropTopLefCoefficien":
                  QMessageBox.warning(None, "Top Lef Coefficient is Set", "Set Bottom Right Coefficient to Continue!") 
@@ -833,20 +886,20 @@ class Ui_MainWindow(QMainWindow,object):
                     self.ImagesAndColorsHandler.Crop(TopLeft/100,BottomRight/100) 
          
     def PrepareTranspose(self):
-        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
             self.lower()
             cv2.destroyAllWindows()
             self.ImagesAndColorsHandler.Transpose()
 
     def PrepareFlip(self,check):
-        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
             self.lower()
             cv2.destroyAllWindows()
             name = self.sender().objectName().split("_")[1]
             self.ImagesAndColorsHandler.Flip(name)
 
     def PrepareRotationByAngle(self,angle):
-          if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+          if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
              if angle == 0:
                 QMessageBox.critical(None, "Value Error", "Angle Must be Greater than 0!") 
              else:
@@ -855,7 +908,7 @@ class Ui_MainWindow(QMainWindow,object):
                 self.ImagesAndColorsHandler.RotationByAngle(angle)
 
     def PrepareScaleByCoefficient(self,coefficient):
-          if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+          if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
              if coefficient == 0:
                 QMessageBox.critical(None, "Value Error", "Coefficient Must be Greater than 0!") 
              else:
@@ -864,7 +917,7 @@ class Ui_MainWindow(QMainWindow,object):
                 self.ImagesAndColorsHandler.ScaleByCoefficient(coefficient)       
 
     def PrepareTranslateImage(self,value):
-        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if  self.ImagesAndColorsHandler.image is not None: 
             self.lower()
             cv2.destroyAllWindows()
             name = self.sender().objectName().split("_")[1]
@@ -877,7 +930,7 @@ class Ui_MainWindow(QMainWindow,object):
 
     def PrepareSkewImage(self,value):
         #print(value,type(value))
-        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
             self.lower()
             cv2.destroyAllWindows()
             name = self.sender().objectName().split("_")[1]
@@ -886,14 +939,14 @@ class Ui_MainWindow(QMainWindow,object):
             self.ImagesAndColorsHandler.SkewImage(name,value)
 
     def PrepareResizeImage(self,value):
-        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
             self.lower()
             cv2.destroyAllWindows()
             name = self.sender().objectName().split("_")[1]
             self.ImagesAndColorsHandler.ResizeImage(name,value)
 
     def PreparePyrUpDown(self):
-        if self.label_ImageShapeValue.text().strip() != "" and self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
             self.lower()
             cv2.destroyAllWindows()
             name = self.sender().objectName().split("_")[1]
@@ -920,6 +973,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.ImagesAndColorsHandler.imageName = None
         self.ImagesAndColorsHandler.imageConversion = None
         self.ImagesAndColorsHandler.tempImage = None
+        self.ImagesAndColorsHandler.tempImageName = None
 
         self.comboBox_DrawShape.blockSignals(True)
         self.comboBox_DrawShape.setCurrentIndex(0)
@@ -936,7 +990,26 @@ class Ui_MainWindow(QMainWindow,object):
         self.horizontalSlider_ResizeHeight.blockSignals(False)
         self.horizontalSlider_ResizeWidth.blockSignals(False)
         self.horizontalSlider_SkewHeight.blockSignals(False)
-        self.horizontalSlider_SkewWidth.blockSignals(False)                         
+        self.horizontalSlider_SkewWidth.blockSignals(False)  
+
+        self.dial_X1.blockSignals(True)
+        self.dial_X2.blockSignals(True)
+        self.dial_Y1.blockSignals(True)
+        self.dial_Y2.blockSignals(True)
+        self.dial_Z1.blockSignals(True)
+        self.dial_Z2.blockSignals(True)    
+        self.dial_X1.setValue(10)
+        self.dial_X2.setValue(100)
+        self.dial_Y1.setValue(200)
+        self.dial_Y2.setValue(50)
+        self.dial_Z1.setValue(100)
+        self.dial_Z2.setValue(250) 
+        self.dial_X1.blockSignals(False)
+        self.dial_X2.blockSignals(False)
+        self.dial_Y1.blockSignals(False)
+        self.dial_Y2.blockSignals(False)
+        self.dial_Z1.blockSignals(False)
+        self.dial_Z2.blockSignals(False)                     
 
     def PrepareColorChannelRemove(self,text,check):
         if self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None:
@@ -979,6 +1052,7 @@ class Ui_MainWindow(QMainWindow,object):
                 option.setEnabled(False)
 
         self.ImagesAndColorsHandler.tempImage = None
+        self.ImagesAndColorsHandler.tempImageName = None
 
         if self.comboBox_SelectImage.currentText().strip() != "":
            self.ImagesAndColorsHandler.ReadShowImage(text)
@@ -1013,7 +1087,7 @@ class Ui_MainWindow(QMainWindow,object):
                 self.label_ImageDepthValue.setText(str(depth))
               
     def SetImageInfo(self,text):
-        if self.comboBox_SelectImage.currentText().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if  self.ImagesAndColorsHandler.image is not None: #self.comboBox_SelectImage.currentText().strip() != "" and
             shape = self.ImagesAndColorsHandler.image.shape
             height = self.ImagesAndColorsHandler.image.shape[0]
             width = self.ImagesAndColorsHandler.image.shape[1]
@@ -1274,7 +1348,7 @@ class Ui_MainWindow(QMainWindow,object):
 
     def FillImagesAndColorsCode(self):
         function_code = inspect.getsource(ImagesAndColors)
-        lines = function_code.splitlines()[12:]
+        lines = function_code.splitlines()[13:]
         ChangedContent = ""
         for line in lines:
             stripedLine = line.strip()
@@ -1298,6 +1372,7 @@ class Ui_MainWindow(QMainWindow,object):
                     file.write(content)
 
     def manualSetup(self):
+        self.ImagesAndColorsHandler = ImagesAndColors()
         self.ColorChannelChangeCheckBoxes = [
             self.checkBox_BlueChannel,
             self.checkBox_GreenChannel,
