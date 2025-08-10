@@ -827,7 +827,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.actionUpload_Images.triggered.connect(self.upload_files)
         self.pushButton_UploadImages.clicked.connect(self.upload_files)
         self.comboBox_SelectImage.currentTextChanged.connect(self.PrepareSelectImageComboBox)
-        self.comboBox_ColorSpaceConversion.currentTextChanged.connect(partial(self.ImagesAndColorsHandler.ConvertColorSpace))
+        self.comboBox_ColorSpaceConversion.currentTextChanged.connect(self.PrepareConvertColorSpace)
         self.ImagesAndColorsHandler.valueChanged.connect(self.SetImageInfo)
         self.pushButton_SaveCode.clicked.connect(self.SaveImagesAndColorsCode)    
         self.pushButton_SaveImage.clicked.connect(self.ImagesAndColorsHandler.SaveImage)
@@ -855,6 +855,21 @@ class Ui_MainWindow(QMainWindow,object):
         self.horizontalSlider_CropBottomRightCoefficient.valueChanged.connect(self.PrepareCrop)
         self.pushButton_AddText.clicked.connect(self.PrepareAddText)
         self.comboBox_DrawShape.currentTextChanged.connect(self.PrepareDrawShape)
+        self.comboBox_ArithmeticAndBitwiseO.currentTextChanged.connect(self.PrepareOperations)
+        self.comboBox_Filters.currentTextChanged.connect(self.PrepareFilters)
+        self.comboBox_DilationErosionEdgeDe.currentTextChanged.connect(self.PrepareDilationErosionEdgeDetection)
+
+    def PrepareOperations(self,operation):
+        if str(operation).strip() != "":
+           self.ImagesAndColorsHandler.Operations(operation.strip())
+
+    def PrepareFilters(self,filter):
+        if str(filter).strip() != "":
+           self.ImagesAndColorsHandler.Filters(filter.strip()) 
+
+    def PrepareDilationErosionEdgeDetection(self,operation):
+        if str(operation).strip() != "":
+           self.ImagesAndColorsHandler.DilationErosionEdgeDetection(operation.strip())     
 
     def PrepareDrawShape(self,shape):
         if str(shape).strip() != "":
@@ -958,6 +973,10 @@ class Ui_MainWindow(QMainWindow,object):
         self.textEdit_AddText.clear()
         self.comboBox_ColorSpaceConversion.setCurrentIndex(0)
         self.comboBox_SelectImage.setCurrentIndex(0)
+        self.comboBox_ArithmeticAndBitwiseO.setCurrentIndex(0)
+        self.comboBox_Filters.setCurrentIndex(0)
+        self.comboBox_DilationErosionEdgeDe.setCurrentIndex(0)
+        self.comboBox_DrawShape.setCurrentIndex(0)
 
         self.label_ImageShapeValue.clear()
         self.label_ImageHeightValue.clear() 
@@ -1030,6 +1049,10 @@ class Ui_MainWindow(QMainWindow,object):
         self.lower()
         cv2.destroyAllWindows()
         self.comboBox_ColorSpaceConversion.setCurrentIndex(0)
+        self.comboBox_ArithmeticAndBitwiseO.setCurrentIndex(0)
+        self.comboBox_Filters.setCurrentIndex(0)
+        self.comboBox_DilationErosionEdgeDe.setCurrentIndex(0)
+        self.comboBox_DrawShape.setCurrentIndex(0)
         self.textEdit_AddText.clear()
 
         self.label_ImageShapeValue.clear()
@@ -1060,6 +1083,16 @@ class Ui_MainWindow(QMainWindow,object):
              self.ImagesAndColorsHandler.image = None
              self.ImagesAndColorsHandler.imageName = None
              self.ImagesAndColorsHandler.imageConversion = None
+
+    def PrepareConvertColorSpace(self,text):
+        if text.strip() != "":
+            self.comboBox_ArithmeticAndBitwiseO.setCurrentIndex(0)
+            self.comboBox_Filters.setCurrentIndex(0)
+            self.comboBox_DilationErosionEdgeDe.setCurrentIndex(0)
+            self.comboBox_DrawShape.setCurrentIndex(0)
+            self.textEdit_AddText.clear()
+
+            self.ImagesAndColorsHandler.ConvertColorSpace(text)       
 
     def ImageSizeChanged(self):
             shape = self.ImagesAndColorsHandler.image.shape
@@ -1349,10 +1382,13 @@ class Ui_MainWindow(QMainWindow,object):
     def FillImagesAndColorsCode(self):
         function_code = inspect.getsource(ImagesAndColors)
         lines = function_code.splitlines()[13:]
+        commentCount = 0
         ChangedContent = ""
-        for line in lines:
+        for index,line in enumerate(lines):
+            #print(index)
             stripedLine = line.strip()
-            if(stripedLine.startswith("#")):
+            if lines[index].strip().startswith("'''"): commentCount += 1
+            if stripedLine.startswith("#") or (commentCount % 2 != 0 or lines[index].strip().startswith("'''")):
                 line = "<span style='color: green'>" + line +"</span>" #.strip()
             ChangedContent += line +"\n"
         self.textBrowser_ImageAndColors.setHtml(("<pre>" + ChangedContent ).strip())
