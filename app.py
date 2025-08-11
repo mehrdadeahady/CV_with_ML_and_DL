@@ -1001,7 +1001,9 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_CoreMLModelFormatSpecification.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/mlmodel/index.html",False))
 
         self.action_UploadImages.triggered.connect(self.upload_files)
+        self.action_UploadVideos.triggered.connect(self.upload_files)
         self.pushButton_UploadImages.clicked.connect(self.upload_files)
+        self.pushButton_UploadVideos.clicked.connect(self.upload_files)
         self.comboBox_SelectImage.currentTextChanged.connect(self.PrepareSelectImageComboBox)
         self.comboBox_ColorSpaceConversion.currentTextChanged.connect(self.PrepareConvertColorSpace)
         self.ImagesAndColorsHandler.valueChanged.connect(self.SetImageInfo)
@@ -1290,13 +1292,17 @@ class Ui_MainWindow(QMainWindow,object):
 
         self.ImagesAndColorsHandler.tempImage = None
         self.ImagesAndColorsHandler.tempImageName = None
-
-        if self.comboBox_SelectImage.currentText().strip() != "":
+        if self.is_valid_extension(text.strip(),"image"):
            self.ImagesAndColorsHandler.ReadShowImage(text)
         else:
+             self.comboBox_SelectImage.blockSignals(True)
+             self.comboBox_SelectImage.setCurrentIndex(0)
              self.ImagesAndColorsHandler.image = None
              self.ImagesAndColorsHandler.imageName = None
              self.ImagesAndColorsHandler.imageConversion = None
+             self.ResetParams()
+             self.comboBox_SelectImage.blockSignals(False)            
+             QMessageBox.critical(None, "Image Extension Error", "Valid Extensions: " + " jpg , jpeg , png , gif , bmp , psd ")
 
     def PrepareConvertColorSpace(self,text):
         if text.strip() != "":
@@ -1469,7 +1475,8 @@ class Ui_MainWindow(QMainWindow,object):
                 os.makedirs(base, exist_ok=True)
             images = os.path.normpath(join("resources","images")) 
             models = os.path.normpath(join("resources","models")) 
-            styles = os.path.normpath(join("resources","styles")) 
+            styles = os.path.normpath(join("resources","styles"))
+            videos = os.path.normpath(join("resources","videos"))  
             if os.path.isdir(images):
                 pass
             else:
@@ -1482,11 +1489,15 @@ class Ui_MainWindow(QMainWindow,object):
                 pass
             else:
                 os.makedirs(styles, exist_ok=True)
+            if os.path.isdir(videos):
+                pass
+            else:
+                os.makedirs(videos, exist_ok=True)
 
     def split_emojis(self,text):
         return regex.sub(r'\p{Emoji}', '', text)
 
-    def upload_files(self):
+    def upload_files(self,type):
           self.CheckCreateDefaultFolders()
           destination_folder = os.path.normpath("resources")
           senderObject = self.sender()
@@ -1494,18 +1505,30 @@ class Ui_MainWindow(QMainWindow,object):
           #print(sender)
           file_paths, _ = QFileDialog.getOpenFileNames(self, "Select File", "", "All Files (*);;Text Files (*.txt)")
           if file_paths:
-               if sender.__contains__("Upload Models"):
-                  destination_folder = os.path.normpath(join("resources","models")) 
-               if sender.__contains__("Upload Images"):
-                  destination_folder = os.path.normpath(join("resources","images")) 
-               if sender.__contains__("Upload Styles"):
-                  destination_folder = os.path.normpath(join("resources","styles")) 
-
                # Copy each file
                for path in file_paths:
                     file_name = os.path.basename(path)
+
+                    if sender.__contains__("Upload Models"):
+                        destination_folder = os.path.normpath(join("resources","models")) 
+                    if sender.__contains__("Upload Images"):
+                        if self.is_valid_extension(file_name.strip(),"image"):
+                           destination_folder = os.path.normpath(join("resources","images")) 
+                        else:
+                            QMessageBox.critical(None, "Image Extension Error: " + file_name, "Valid Extensions: " + " jpg , jpeg , png , gif , bmp , psd ")
+                        
+                    if sender.__contains__("Upload Styles"):
+                        destination_folder = os.path.normpath(join("resources","styles")) 
+
+                    if sender.__contains__("Upload Videos"):
+                        if self.is_valid_extension(file_name.strip(),"video"):
+                           destination_folder = os.path.normpath(join("resources","Videos"))  
+                        else:
+                            QMessageBox.critical(None, "Video Extension Error: " + file_name, "Valid Extensions: " + " avi , mp4 , mpg , mpeg , mov , wmv , mkv , flv ")                   
+                        
                     dest_path = os.path.join(destination_folder, file_name)
-                    shutil.copy2(path, dest_path)
+                    if destination_folder != os.path.normpath("resources"):
+                       shutil.copy2(path, dest_path)                         
 
                self.LoadResources()
                #print(f"Selected file: {file_paths}")
@@ -1570,11 +1593,18 @@ class Ui_MainWindow(QMainWindow,object):
             QDesktopServices.openUrl(QUrl(pdf_path))
 
     def LoadResources(self):
+        Base_Image_Path = os.path.normpath(join("resources","videos"))
+        for f in listdir(Base_Image_Path):
+            if isfile(join(Base_Image_Path, f)) and self.is_valid_extension(f.strip(),"video"):             
+               if self.comboBox_SelectVideo.findText(f) == -1 :
+                  self.comboBox_SelectVideo.addItem(f) 
+                   
         Base_Image_Path = os.path.normpath(join("resources","images"))
         for f in listdir(Base_Image_Path):
-            if isfile(join(Base_Image_Path, f)):             
+            if isfile(join(Base_Image_Path, f)) and self.is_valid_extension(f.strip(),"image"):             
                if self.comboBox_SelectImage.findText(f) == -1 :
                   self.comboBox_SelectImage.addItem(f)   
+
                #    index = self.comboBox_SelectImage.findText(f)                           
                #    self.comboBox_SelectImage.setCurrentIndex(index)
      #    for index in range(self.comboBox_SelectImage.count()):
@@ -1624,6 +1654,14 @@ class Ui_MainWindow(QMainWindow,object):
                 content = self.textBrowser_ImageAndColors.toPlainText()
             with open(file_path, 'w', encoding='utf-8') as file:
                     file.write(content)
+
+    def is_valid_extension(self,file_name,file_type):
+        match file_type:
+             case "image":
+                  valid_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp','.psd'}
+             case "video":
+                  valid_extensions = {'.avi','.mp4','.mpg','.mpeg','.mov','.WMV','.MKV','.FLV'}
+        return any(file_name.lower().endswith(extension) for extension in valid_extensions)
 
     def manualSetup(self):
         self.ImagesAndColorsHandler = ImagesAndColorsManipulationsAndOprations()
