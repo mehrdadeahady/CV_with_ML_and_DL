@@ -1156,9 +1156,11 @@ class Ui_MainWindow(QMainWindow,object):
     def ResetParams(self):
         self.lower()
         cv2.destroyAllWindows()
-        self.textEdit_AddText.clear()
-        self.comboBox_ColorSpaceConversion.setCurrentIndex(0)
+        self.comboBox_SelectImage.blockSignals(True)
         self.comboBox_SelectImage.setCurrentIndex(0)
+        self.comboBox_SelectImage.blockSignals(False)
+        self.textEdit_AddText.clear()
+        self.comboBox_ColorSpaceConversion.setCurrentIndex(0)      
         self.comboBox_ArithmeticAndBitwiseOperations.setCurrentIndex(0)
         self.comboBox_Filters.setCurrentIndex(0)
         self.comboBox_DilationErosionEdgeDetection.setCurrentIndex(0)
