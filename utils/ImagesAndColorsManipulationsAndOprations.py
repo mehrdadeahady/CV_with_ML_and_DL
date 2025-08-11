@@ -8,7 +8,7 @@ from os.path import isfile, join
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QMessageBox, QFileDialog
 
-class ImagesAndColors(QObject):
+class ImagesAndColorsManipulationsAndOprations(QObject):
     ResetParams = pyqtSignal(int)
     valueChanged = pyqtSignal(str)
     ImageSizeChanged = pyqtSignal(str)
@@ -53,7 +53,7 @@ class ImagesAndColors(QObject):
                  # imread is Reading Image Function in OpenCV that takes 1 parameter = Path to Image            
                  self.image = cv2.imread(path)
                  self.imageName = ImageName
-                 self.valueChanged.emit("")
+                 self.valueChanged.emit(ImageName)
                  # imshow is Displaying Image Function in OpenCV that takes 2 parameter:
                  # cv2.imshow(Parameter1 = Desired Name for Image, Parameter2 = Image has obtained from imread Function )
                  cv2.imshow(self.imageName,self.image)
@@ -72,7 +72,7 @@ class ImagesAndColors(QObject):
                # cvtColor is Conversion Function in OpenCV that takes 2 Parameters:
                # cv2.cvtColor(Parameter1 = Image, Parameter2 = Requested Conversion ) 
                match text.strip(): 
-                   case "BGR Channel to Gray Scale Channel":
+                   case "BGR to Gray Scale":
                         if RightImageConversion == "GRAY":
                            QMessageBox.warning(None, "Already Gray:", "Conversion not required. Already Image is Gray!")
                            pass
@@ -89,7 +89,7 @@ class ImagesAndColors(QObject):
                               cv2.imshow(self.imageName, ConvertedImage)
                               self.WaitKeyCloseWindows()
 
-                   case "BGR Channel to RGB Channel":
+                   case "BGR to RGB":
                         if RightImageConversion == "GRAY":
                            QMessageBox.warning(None, "Color Channel is Empty:", "Can't Convert Gray Scale Image to Colored Image!")
                            pass
@@ -106,7 +106,7 @@ class ImagesAndColors(QObject):
                              cv2.imshow(self.imageName,ConvertedImage)                          
                              self.WaitKeyCloseWindows()
                              
-                   case "BGR Channel to HSV Channel":
+                   case "BGR to HSV":
                         if RightImageConversion == "GRAY":
                            QMessageBox.warning(None, "Color Channel is Empty:", "Can't Convert Gray Scale Image to Colored Image!")
                            pass
@@ -123,7 +123,7 @@ class ImagesAndColors(QObject):
                               cv2.imshow(self.imageName,ConvertedImage)                         
                               self.WaitKeyCloseWindows()
 
-                   case "RGB Channel to Gray Scale Channel":
+                   case "RGB to Gray Scale":
                         if RightImageConversion == "GRAY":
                            QMessageBox.warning(None, "Already Gray:", "Conversion not required. Already Image is Gray!")
                            pass
@@ -140,7 +140,7 @@ class ImagesAndColors(QObject):
                               cv2.imshow(self.imageName,ConvertedImage)                          
                               self.WaitKeyCloseWindows()
 
-                   case "RGB Channel to BGR Channel":
+                   case "RGB to BGR":
                         if RightImageConversion == "GRAY":
                            QMessageBox.warning(None, "Color Channel is Empty:", "Can't Convert Gray Scale Image to Colored Image!")
                            pass
@@ -157,7 +157,7 @@ class ImagesAndColors(QObject):
                               cv2.imshow(self.imageName,ConvertedImage)                             
                               self.WaitKeyCloseWindows()
 
-                   case "RGB Channel to HSV Channel":
+                   case "RGB to HSV":
                         if RightImageConversion == "GRAY":
                            QMessageBox.warning(None, "Color Channel is Empty:", "Can't Convert Gray Scale Image to Colored Image!")
                            pass
@@ -174,7 +174,7 @@ class ImagesAndColors(QObject):
                               cv2.imshow(self.imageName,ConvertedImage)
                               self.WaitKeyCloseWindows()
 
-                   case "HSV Channel to BGR Channel":
+                   case "HSV to BGR":
                         if RightImageConversion == "GRAY":
                            QMessageBox.warning(None, "Color Channel is Empty:", "Can't Convert Gray Scale Image to Colored Image!")
                            pass
@@ -191,7 +191,7 @@ class ImagesAndColors(QObject):
                               cv2.imshow(self.imageName,ConvertedImage)
                               self.WaitKeyCloseWindows()
 
-                   case "HSV Channel to RGB Channel":
+                   case "HSV to RGB":
                         if RightImageConversion == "GRAY":
                            QMessageBox.warning(None, "Color Channel is Empty:", "Can't Convert Gray Scale Image to Colored Image!")
                            pass
@@ -552,6 +552,7 @@ class ImagesAndColors(QObject):
             self.tempImage = croppedImage
             self.tempImageName = croppedImageName
             self.imageName = "CropedArea_" + self.imageName
+            self.ImageSizeChanged.emit(str(BottomRight))
             cv2.imshow(self.imageName, self.image)
             cv2.imshow(croppedImageName, croppedImage) 
             self.WaitKeyCloseWindows()
@@ -641,7 +642,6 @@ class ImagesAndColors(QObject):
 
     # Arithmetic and Bitwise Operations
     def Operations(self,operation):  
-        print(operation) 
         match operation:
             case "Arithmetic Operations":
                   if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):  
@@ -764,8 +764,16 @@ class ImagesAndColors(QObject):
                         sharpened = cv2.filter2D(self.image, -1, kernel_sharpening)
                         cv2.imshow('Sharpened Image', sharpened)
                         
-                  case "De-Noising by Filter":
+                  case "De-Noising by Filter": 
                         cv2.destroyAllWindows()
+                        # Bilateral is very effective in Noise Removal while keeping Edges Sharp, Result seems Bluring
+                        # Parameters: 
+                        # d: Diameter of each pixel neighborhood.
+                        # sigmaColor: Value of σ in the color space. The greater the value, the colors farther to each other will start to get mixed.
+                        # sigmaSpace: Value of σ in the coordinate space.
+                        bilateral = cv2.bilateralFilter(self.image, 9, 75, 75)
+                        cv2.imshow('Bilateral Denoising - Blurring', bilateral) 
+
                         # cv2.fastNlMeansDenoisingColored Function in OpenCV is used for Non-Local Means Denoising of colored images.
                         # Parameters: 1) src Image 2) dst 3) 
                         # dst: is The output image, which will have the same size and type as the input src. If None, a new image is allocated.
@@ -778,15 +786,7 @@ class ImagesAndColors(QObject):
                            QMessageBox.critical(None, "Image Shape Error", "For Fast Means Denoising, Select a Colored Image!")
                         else:
                            dst = cv2.fastNlMeansDenoisingColored(self.image, None, 6, 6, 7, 21)
-                           cv2.imshow('Fast Means Denoising', dst)
-
-                        # Bilateral is very effective in Noise Removal while keeping Edges Sharp, Result seems Bluring
-                        # Parameters: 
-                        # d: Diameter of each pixel neighborhood.
-                        # sigmaColor: Value of σ in the color space. The greater the value, the colors farther to each other will start to get mixed.
-                        # sigmaSpace: Value of σ in the coordinate space.
-                        bilateral = cv2.bilateralFilter(self.image, 9, 75, 75)
-                        cv2.imshow('Bilateral Denoising - Blurring', bilateral) 
+                           cv2.imshow('Fast Means Denoising', dst)                   
 
                   case "Bluring by Filter":
                         cv2.destroyAllWindows()

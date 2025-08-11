@@ -51,19 +51,19 @@
    <property name="minimumSize">
     <size>
      <width>1024</width>
-     <height>714</height>
+     <height>734</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>1024</width>
-     <height>714</height>
+     <height>734</height>
     </size>
    </property>
    <property name="baseSize">
     <size>
      <width>1024</width>
-     <height>714</height>
+     <height>734</height>
     </size>
    </property>
    <widget class="QStackedWidget" name="pages">
@@ -72,7 +72,7 @@
       <x>10</x>
       <y>0</y>
       <width>1011</width>
-      <height>711</height>
+      <height>721</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -84,177 +84,38 @@
     <property name="minimumSize">
      <size>
       <width>1011</width>
-      <height>711</height>
+      <height>721</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
       <width>1011</width>
-      <height>711</height>
+      <height>721</height>
      </size>
     </property>
     <property name="baseSize">
      <size>
       <width>1011</width>
-      <height>711</height>
+      <height>721</height>
      </size>
     </property>
     <property name="currentIndex">
      <number>0</number>
     </property>
-    <widget class="QWidget" name="page_ImagesAndColors">
-     <widget class="QTextBrowser" name="textBrowser_ImageAndColors">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>580</y>
-        <width>981</width>
-        <height>81</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_UploadImages">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>10</y>
-        <width>100</width>
-        <height>40</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Upload Images</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_SaveCode">
-      <property name="geometry">
-       <rect>
-        <x>890</x>
-        <y>670</y>
-        <width>100</width>
-        <height>40</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Save Code</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButton_SaveImage">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>670</y>
-        <width>100</width>
-        <height>40</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Save Image</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="comboBox_SelectImage">
-      <property name="geometry">
-       <rect>
-        <x>230</x>
-        <y>10</y>
-        <width>261</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <item>
-       <property name="text">
-        <string/>
-       </property>
-      </item>
-     </widget>
-     <widget class="QLabel" name="label_SelectImage">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>10</y>
-        <width>91</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select an Image:</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_ColorSpace">
-      <property name="geometry">
-       <rect>
-        <x>530</x>
-        <y>10</y>
-        <width>191</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Color Space ( Channel ) Conversion: </string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="comboBox_ColorSpaceConversion">
-      <property name="geometry">
-       <rect>
-        <x>730</x>
-        <y>10</y>
-        <width>261</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <item>
-       <property name="text">
-        <string/>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>BGR Channel to Gray Scale Channel</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>BGR Channel to RGB Channel</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>BGR Channel to HSV Channel</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>RGB Channel to Gray Scale Channel</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>RGB Channel to BGR Channel</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>RGB Channel to HSV Channel</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>HSV Channel to RGB Channel</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>HSV Channel to BGR Channel</string>
-       </property>
-      </item>
-     </widget>
+    <widget class="QWidget" name="page_ImagesAndColorsManipulationsAndOprations">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <widget class="QGroupBox" name="groupBox_FlipImage">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>350</y>
+        <y>290</y>
         <width>481</width>
-        <height>81</height>
+        <height>71</height>
        </rect>
       </property>
       <property name="title">
@@ -264,9 +125,9 @@
        <property name="geometry">
         <rect>
          <x>30</x>
-         <y>30</y>
+         <y>10</y>
          <width>441</width>
-         <height>31</height>
+         <height>61</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_FlipImage">
@@ -294,25 +155,950 @@
        </layout>
       </widget>
      </widget>
+     <widget class="QGroupBox" name="groupBox_BGRColorSpace">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>70</y>
+        <width>241</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>BGR-RGB</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+      <widget class="QWidget" name="gridLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>10</y>
+         <width>181</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_BGRChannel">
+        <item row="0" column="2">
+         <widget class="QCheckBox" name="checkBox_GreenChannel">
+          <property name="text">
+           <string>Green</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QCheckBox" name="checkBox_RedChannel">
+          <property name="text">
+           <string>Red</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="checkBox_BlueChannel">
+          <property name="text">
+           <string>Blue</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_HSVColorSpace">
+      <property name="geometry">
+       <rect>
+        <x>750</x>
+        <y>70</y>
+        <width>241</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>HSV</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+      <widget class="QWidget" name="gridLayoutWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>10</y>
+         <width>211</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_HSVChannel">
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="checkBox_HSVHueChannel">
+          <property name="layoutDirection">
+           <enum>Qt::LayoutDirection::LeftToRight</enum>
+          </property>
+          <property name="text">
+           <string>Hue</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QCheckBox" name="checkBox_HSVSaturation">
+          <property name="layoutDirection">
+           <enum>Qt::LayoutDirection::LeftToRight</enum>
+          </property>
+          <property name="text">
+           <string>Saturation</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QCheckBox" name="checkBox_HSVValue">
+          <property name="layoutDirection">
+           <enum>Qt::LayoutDirection::LeftToRight</enum>
+          </property>
+          <property name="text">
+           <string>Value</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_ResizeScaleImageByDimention">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>481</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Resize </string>
+      </property>
+      <widget class="QWidget" name="gridLayoutWidget_4">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>20</y>
+         <width>391</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_ResizeImage">
+        <item row="1" column="1">
+         <widget class="QSlider" name="horizontalSlider_ResizeWidth">
+          <property name="minimum">
+           <number>50</number>
+          </property>
+          <property name="maximum">
+           <number>2000</number>
+          </property>
+          <property name="singleStep">
+           <number>10</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QSlider" name="horizontalSlider_ResizeHeight">
+          <property name="minimum">
+           <number>50</number>
+          </property>
+          <property name="maximum">
+           <number>2000</number>
+          </property>
+          <property name="singleStep">
+           <number>10</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_ResizeHeight">
+          <property name="layoutDirection">
+           <enum>Qt::LayoutDirection::LeftToRight</enum>
+          </property>
+          <property name="text">
+           <string>Height</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="label_ResizeWidth">
+          <property name="text">
+           <string>Width</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QPushButton" name="pushButton_LargerPyrUp">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <strikeout>false</strikeout>
+         <stylestrategy>PreferDefault</stylestrategy>
+         <kerning>true</kerning>
+         <hintingpreference>PreferDefaultHinting</hintingpreference>
+        </font>
+       </property>
+       <property name="text">
+        <string>✚</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_SmallerPyrDown">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>20</y>
+         <width>31</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>━</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_RotationScale">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>180</y>
+        <width>491</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Rotation | Scale</string>
+      </property>
+      <widget class="QWidget" name="gridLayoutWidget_5">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>10</y>
+         <width>451</width>
+         <height>91</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_RotationScale">
+        <item row="1" column="0">
+         <widget class="QDial" name="dial_RotationDegree">
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>360</number>
+          </property>
+          <property name="singleStep">
+           <number>10</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QDial" name="dial_RotationScale">
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="maximum">
+           <number>10</number>
+          </property>
+          <property name="value">
+           <number>0</number>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <layout class="QGridLayout" name="gridLayout_RotationDegree">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_RotationDegree">
+            <property name="text">
+             <string>Set Rotation Degree</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_RotationDegreeValue">
+            <property name="text">
+             <string>0 degree</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="2" column="1">
+         <layout class="QGridLayout" name="gridLayout_RorationScale">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_RorationScale">
+            <property name="text">
+             <string>Set Scale Coefficient</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_RorationScaleValue">
+            <property name="text">
+             <string>0 times</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_DrawingShape">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>360</y>
+        <width>491</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Draw Shape</string>
+      </property>
+      <widget class="QComboBox" name="comboBox_DrawShape">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>20</y>
+         <width>391</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Line</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rectangle</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Circle</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ellipse</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>PolyLines</string>
+        </property>
+       </item>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_Translation">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>180</y>
+        <width>481</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Translation</string>
+      </property>
+      <widget class="QWidget" name="gridLayoutWidget_7">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>481</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_Translation">
+        <item row="0" column="2">
+         <widget class="QDial" name="dial_Y1">
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>200</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QDial" name="dial_Y2">
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>50</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QDial" name="dial_X1">
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>10</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QDial" name="dial_Z1">
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QDial" name="dial_Z2">
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>250</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QDial" name="dial_X2">
+          <property name="maximum">
+           <number>255</number>
+          </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <layout class="QGridLayout" name="gridLayout_X1">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_X1">
+            <property name="text">
+             <string>X1</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_X1_Value">
+            <property name="text">
+             <string>10</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="1">
+         <layout class="QGridLayout" name="gridLayout_X2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_X2">
+            <property name="text">
+             <string>X2</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_X2_Value">
+            <property name="text">
+             <string>100</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="2">
+         <layout class="QGridLayout" name="gridLayout_Y1">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_Y1">
+            <property name="text">
+             <string>Y1</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_Y1_Value">
+            <property name="text">
+             <string>200</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="3">
+         <layout class="QGridLayout" name="gridLayout_Y2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_Y2">
+            <property name="text">
+             <string>Y2</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_Y2_Value">
+            <property name="text">
+             <string>50</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="4">
+         <layout class="QGridLayout" name="gridLayout_Z1">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_Z1">
+            <property name="text">
+             <string>Z1</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_Z1_Value">
+            <property name="text">
+             <string>100</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="5">
+         <layout class="QGridLayout" name="gridLayout_Z2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_Z2">
+            <property name="text">
+             <string>Z2</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_Z2_Value">
+            <property name="text">
+             <string>250</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_AddText">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>360</y>
+        <width>481</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Add Text</string>
+      </property>
+      <widget class="QTextEdit" name="textEdit_AddText">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>391</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="html">
+        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+hr { height: 1px; border-width: 0; }
+li.unchecked::marker { content: &quot;\2610&quot;; }
+li.checked::marker { content: &quot;\2612&quot;; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushButton_AddText">
+       <property name="geometry">
+        <rect>
+         <x>410</x>
+         <y>20</y>
+         <width>61</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Add</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_Skew">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>120</y>
+        <width>491</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Skew</string>
+      </property>
+      <widget class="QWidget" name="gridLayoutWidget_8">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>20</y>
+         <width>441</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_Skew">
+        <item row="1" column="1">
+         <widget class="QSlider" name="horizontalSlider_SkewWidth">
+          <property name="minimum">
+           <number>50</number>
+          </property>
+          <property name="maximum">
+           <number>2000</number>
+          </property>
+          <property name="singleStep">
+           <number>50</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QSlider" name="horizontalSlider_SkewHeight">
+          <property name="minimum">
+           <number>50</number>
+          </property>
+          <property name="maximum">
+           <number>2000</number>
+          </property>
+          <property name="singleStep">
+           <number>50</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_SkewHeight">
+          <property name="text">
+           <string>Height</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="label_SkewWidth">
+          <property name="text">
+           <string>Width</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_Crop">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>290</y>
+        <width>491</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Crop</string>
+      </property>
+      <widget class="QWidget" name="gridLayoutWidget_9">
+       <property name="geometry">
+        <rect>
+         <x>39</x>
+         <y>20</y>
+         <width>441</width>
+         <height>44</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_Crop">
+        <item row="0" column="0">
+         <widget class="QSlider" name="horizontalSlider_CropTopLefCoefficient">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSlider" name="horizontalSlider_CropBottomRightCoefficient">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <layout class="QGridLayout" name="gridLayout__CropTopLefCoefficient">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_CropTopLefCoefficient">
+            <property name="text">
+             <string>Top Left Coefficient</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_CropTopLefCoefficientValue">
+            <property name="text">
+             <string>0 %</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="1">
+         <layout class="QGridLayout" name="gridLayout_CropBottomRightCoefficient">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_CropBottomRightCoefficient">
+            <property name="text">
+             <string>Bottom Right Coefficient</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_CropBottomRightCoefficientValue">
+            <property name="text">
+             <string>100 %</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_ColorSpaceConversion">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>70</y>
+        <width>481</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Color Space Conversion: </string>
+      </property>
+      <widget class="QComboBox" name="comboBox_ColorSpaceConversion">
+       <property name="geometry">
+        <rect>
+         <x>150</x>
+         <y>14</y>
+         <width>321</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>BGR to Gray Scale</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>BGR to RGB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>BGR to HSV</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>RGB to Gray Scale</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>RGB to BGR</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>RGB to HSV</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>HSV to RGB</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>HSV to BGR</string>
+        </property>
+       </item>
+      </widget>
+     </widget>
      <widget class="QGroupBox" name="groupBox_ImageInfo">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>50</y>
-        <width>981</width>
-        <height>51</height>
+        <y>30</y>
+        <width>481</width>
+        <height>41</height>
        </rect>
       </property>
       <property name="title">
        <string>Image Information:</string>
       </property>
-      <widget class="QWidget" name="gridLayoutWidget">
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+      <widget class="QWidget" name="gridLayoutWidget_21">
        <property name="geometry">
         <rect>
          <x>120</x>
          <y>10</y>
-         <width>861</width>
-         <height>41</height>
+         <width>351</width>
+         <height>31</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_ImageInfo">
@@ -375,730 +1161,156 @@
        </layout>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="groupBox_BGRColorSpace">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>100</y>
-        <width>481</width>
-        <height>51</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>BGR - RGB Color Space ( Channel )</string>
-      </property>
-      <widget class="QWidget" name="gridLayoutWidget_2">
-       <property name="geometry">
-        <rect>
-         <x>200</x>
-         <y>10</y>
-         <width>281</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_BGRChannel">
-        <item row="0" column="2">
-         <widget class="QCheckBox" name="checkBox_GreenChannel">
-          <property name="text">
-           <string>Green</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QCheckBox" name="checkBox_RedChannel">
-          <property name="text">
-           <string>Red</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="checkBox_BlueChannel">
-          <property name="text">
-           <string>Blue</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QGroupBox" name="groupBox_HSVColorSpace">
+     <widget class="QPushButton" name="pushButton_UploadVideos">
       <property name="geometry">
        <rect>
         <x>500</x>
-        <y>100</y>
-        <width>491</width>
-        <height>51</height>
+        <y>0</y>
+        <width>121</width>
+        <height>31</height>
        </rect>
       </property>
-      <property name="title">
-       <string>HSV Color Space ( Channel )</string>
+      <property name="text">
+       <string>Upload Videos</string>
       </property>
-      <widget class="QWidget" name="gridLayoutWidget_3">
-       <property name="geometry">
-        <rect>
-         <x>200</x>
-         <y>10</y>
-         <width>291</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_HSVChannel">
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="checkBox_HSVHueChannel">
-          <property name="layoutDirection">
-           <enum>Qt::LayoutDirection::LeftToRight</enum>
-          </property>
-          <property name="text">
-           <string>Hue</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="checkBox_HSVSaturation">
-          <property name="layoutDirection">
-           <enum>Qt::LayoutDirection::LeftToRight</enum>
-          </property>
-          <property name="text">
-           <string>Saturation</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QCheckBox" name="checkBox_HSVValue">
-          <property name="layoutDirection">
-           <enum>Qt::LayoutDirection::LeftToRight</enum>
-          </property>
-          <property name="text">
-           <string>Value</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
      </widget>
-     <widget class="QGroupBox" name="groupBox_ResizeScaleImageByDimention">
+     <widget class="QLabel" name="label_SelectImage">
       <property name="geometry">
        <rect>
-        <x>500</x>
-        <y>150</y>
-        <width>491</width>
-        <height>91</height>
+        <x>170</x>
+        <y>0</y>
+        <width>71</width>
+        <height>31</height>
        </rect>
       </property>
-      <property name="title">
-       <string>Resize | Scale</string>
+      <property name="text">
+       <string>Select Image:</string>
       </property>
-      <widget class="QWidget" name="gridLayoutWidget_4">
-       <property name="geometry">
-        <rect>
-         <x>80</x>
-         <y>20</y>
-         <width>401</width>
-         <height>42</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_ResizeImage">
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_ResizeHeight">
-          <property name="layoutDirection">
-           <enum>Qt::LayoutDirection::LeftToRight</enum>
-          </property>
-          <property name="text">
-           <string>Height</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="label_ResizeWidth">
-          <property name="text">
-           <string>Width</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QSlider" name="horizontalSlider_ResizeHeight">
-          <property name="minimum">
-           <number>50</number>
-          </property>
-          <property name="maximum">
-           <number>2000</number>
-          </property>
-          <property name="singleStep">
-           <number>10</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QSlider" name="horizontalSlider_ResizeWidth">
-          <property name="minimum">
-           <number>50</number>
-          </property>
-          <property name="maximum">
-           <number>2000</number>
-          </property>
-          <property name="singleStep">
-           <number>10</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QPushButton" name="pushButton_LargerPyrUp">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>20</y>
-         <width>31</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-         <strikeout>false</strikeout>
-         <stylestrategy>PreferDefault</stylestrategy>
-         <kerning>true</kerning>
-         <hintingpreference>PreferDefaultHinting</hintingpreference>
-        </font>
-       </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_SelectVideo">
+      <property name="geometry">
+       <rect>
+        <x>750</x>
+        <y>0</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
        <property name="text">
-        <string>✚</string>
+        <string/>
        </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_SmallerPyrDown">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>50</y>
-         <width>31</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
+      </item>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_VideoInfo">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>30</y>
+        <width>491</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Video Information: </string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_SelectVideo">
+      <property name="geometry">
+       <rect>
+        <x>670</x>
+        <y>5</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Select Video:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_UploadImages">
+      <property name="geometry">
+       <rect>
+        <x>9</x>
+        <y>0</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Upload Images</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_SelectImage">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>0</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <item>
        <property name="text">
-        <string>━</string>
+        <string/>
        </property>
-      </widget>
+      </item>
      </widget>
-     <widget class="QGroupBox" name="groupBox_RotationScale">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>240</y>
-        <width>491</width>
-        <height>111</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Rotation | Scale</string>
-      </property>
-      <widget class="QWidget" name="gridLayoutWidget_5">
-       <property name="geometry">
-        <rect>
-         <x>40</x>
-         <y>10</y>
-         <width>451</width>
-         <height>91</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_RotationScale">
-        <item row="1" column="0">
-         <widget class="QDial" name="dial_RotationDegree">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>360</number>
-          </property>
-          <property name="singleStep">
-           <number>10</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QDial" name="dial_RotationScale">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>10</number>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_RotationDegree">
-          <property name="text">
-           <string>Set Rotation Degree</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="label_RorationScale">
-          <property name="text">
-           <string>Set Scale Coefficient</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QGroupBox" name="groupBox_DrawingShape">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>430</y>
-        <width>491</width>
-        <height>71</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Draw Shape</string>
-      </property>
-      <widget class="QComboBox" name="comboBox_DrawShape">
-       <property name="geometry">
-        <rect>
-         <x>80</x>
-         <y>20</y>
-         <width>391</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <item>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Line</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Rectangle</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Circle</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Ellipse</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>PolyLines</string>
-        </property>
-       </item>
-      </widget>
-     </widget>
-     <widget class="QGroupBox" name="groupBox_Translation">
+     <widget class="QPushButton" name="pushButton_SaveImage">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>240</y>
-        <width>481</width>
-        <height>111</height>
+        <y>680</y>
+        <width>100</width>
+        <height>40</height>
        </rect>
       </property>
-      <property name="title">
-       <string>Translation</string>
+      <property name="text">
+       <string>Save Image</string>
       </property>
-      <widget class="QWidget" name="gridLayoutWidget_7">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>10</y>
-         <width>481</width>
-         <height>91</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_Translation">
-        <item row="1" column="1">
-         <widget class="QLabel" name="label_X2">
-          <property name="text">
-           <string>X2</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QLabel" name="label_Y1">
-          <property name="text">
-           <string>Y1</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QDial" name="dial_X1">
-          <property name="maximum">
-           <number>255</number>
-          </property>
-          <property name="singleStep">
-           <number>5</number>
-          </property>
-          <property name="value">
-           <number>10</number>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QDial" name="dial_X2">
-          <property name="maximum">
-           <number>255</number>
-          </property>
-          <property name="singleStep">
-           <number>5</number>
-          </property>
-          <property name="value">
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="4">
-         <widget class="QLabel" name="label_Z1">
-          <property name="text">
-           <string>Z1</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QDial" name="dial_Y2">
-          <property name="maximum">
-           <number>255</number>
-          </property>
-          <property name="singleStep">
-           <number>5</number>
-          </property>
-          <property name="value">
-           <number>50</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_X1">
-          <property name="text">
-           <string>X1</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="4">
-         <widget class="QDial" name="dial_Z1">
-          <property name="maximum">
-           <number>255</number>
-          </property>
-          <property name="singleStep">
-           <number>5</number>
-          </property>
-          <property name="value">
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QDial" name="dial_Y1">
-          <property name="maximum">
-           <number>255</number>
-          </property>
-          <property name="singleStep">
-           <number>5</number>
-          </property>
-          <property name="value">
-           <number>200</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QLabel" name="label_Y2">
-          <property name="text">
-           <string>Y2</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="5">
-         <widget class="QDial" name="dial_Z2">
-          <property name="maximum">
-           <number>255</number>
-          </property>
-          <property name="singleStep">
-           <number>5</number>
-          </property>
-          <property name="value">
-           <number>250</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="5">
-         <widget class="QLabel" name="label_Z2">
-          <property name="text">
-           <string>Z2</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
      </widget>
-     <widget class="QGroupBox" name="groupBox_AddText">
+     <widget class="QPushButton" name="pushButton_SaveCode">
+      <property name="geometry">
+       <rect>
+        <x>890</x>
+        <y>680</y>
+        <width>100</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save Code</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser_ImageAndColors">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>430</y>
-        <width>481</width>
-        <height>71</height>
+        <y>550</y>
+        <width>981</width>
+        <height>131</height>
        </rect>
       </property>
-      <property name="title">
-       <string>Add Text</string>
-      </property>
-      <widget class="QTextEdit" name="textEdit_AddText">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>20</y>
-         <width>391</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="html">
-        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_AddText">
-       <property name="geometry">
-        <rect>
-         <x>410</x>
-         <y>20</y>
-         <width>61</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Add</string>
-       </property>
-      </widget>
      </widget>
-     <widget class="QGroupBox" name="groupBox_Skew">
+     <widget class="QGroupBox" name="groupBox_DilationErosionEdgeDetection">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>150</y>
-        <width>481</width>
-        <height>91</height>
+        <x>670</x>
+        <y>420</y>
+        <width>321</width>
+        <height>61</height>
        </rect>
       </property>
       <property name="title">
-       <string>Skew</string>
+       <string>Dilation, Erosion, Opening, Closing, Edge Detection </string>
       </property>
-      <widget class="QWidget" name="gridLayoutWidget_8">
-       <property name="geometry">
-        <rect>
-         <x>40</x>
-         <y>20</y>
-         <width>431</width>
-         <height>42</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_Skew">
-        <item row="1" column="0">
-         <widget class="QSlider" name="horizontalSlider_SkewHeight">
-          <property name="minimum">
-           <number>50</number>
-          </property>
-          <property name="maximum">
-           <number>2000</number>
-          </property>
-          <property name="singleStep">
-           <number>50</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QSlider" name="horizontalSlider_SkewWidth">
-          <property name="minimum">
-           <number>50</number>
-          </property>
-          <property name="maximum">
-           <number>2000</number>
-          </property>
-          <property name="singleStep">
-           <number>50</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_SkewHeight">
-          <property name="text">
-           <string>Height</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="label_SkewWidth">
-          <property name="text">
-           <string>Width</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QGroupBox" name="groupBox_Crop">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>350</y>
-        <width>491</width>
-        <height>81</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Crop</string>
-      </property>
-      <widget class="QWidget" name="gridLayoutWidget_9">
-       <property name="geometry">
-        <rect>
-         <x>39</x>
-         <y>20</y>
-         <width>441</width>
-         <height>54</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_Crop">
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_CropTopLefCoefficient">
-          <property name="text">
-           <string>Top Left Coefficient</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="label_CropBottomRightCoefficient">
-          <property name="text">
-           <string>Bottom Right Coefficient</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QSlider" name="horizontalSlider_CropTopLefCoefficien">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>100</number>
-          </property>
-          <property name="singleStep">
-           <number>5</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QSlider" name="horizontalSlider_CropBottomRightCoefficient">
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>100</number>
-          </property>
-          <property name="singleStep">
-           <number>5</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QGroupBox" name="groupBox_ArithmeticAndBitwiseOperations">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>500</y>
-        <width>320</width>
-        <height>71</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Arithmetic and Bitwise Operations</string>
-      </property>
-      <widget class="QComboBox" name="comboBox_ArithmeticAndBitwiseO">
+      <widget class="QComboBox" name="comboBox_DilationErosionEdgeDetection">
        <property name="geometry">
         <rect>
          <x>10</x>
          <y>20</y>
          <width>301</width>
-         <height>41</height>
+         <height>31</height>
         </rect>
        </property>
        <item>
@@ -1108,12 +1320,85 @@ li.checked::marker { content: &quot;\2612&quot;; }
        </item>
        <item>
         <property name="text">
-         <string>Arithmetic Operations</string>
+         <string>Dilation, Erosion, Opening, Closing</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Bitwise Operations</string>
+         <string>Edge Detection by Canny (Normal, Wide, Narrow)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Edge Detection Comparison (Canny, Sobel, Laplacian)</string>
+        </property>
+       </item>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_ObjectDetection">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>480</y>
+        <width>321</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Object Detection </string>
+      </property>
+      <widget class="QComboBox" name="comboBox_ObjectDetection">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>301</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Line Detection using HoughLines</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Line Detection using Probablistic HoughLines</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Circle Detection using HoughCircles</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Blob Detection</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Face and Eye Detection with HAAR Cascade Classifiers</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Live Face and Eye Detection with HAAR Cascade Classifiers</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Live People Detection with HAAR Cascade Classifiers</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Live Car Detection with HAAR Cascade Classifiers</string>
         </property>
        </item>
       </widget>
@@ -1122,9 +1407,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <property name="geometry">
        <rect>
         <x>340</x>
-        <y>500</y>
-        <width>320</width>
-        <height>71</height>
+        <y>420</y>
+        <width>321</width>
+        <height>61</height>
        </rect>
       </property>
       <property name="title">
@@ -1133,10 +1418,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <widget class="QComboBox" name="comboBox_Filters">
        <property name="geometry">
         <rect>
-         <x>9</x>
+         <x>10</x>
          <y>20</y>
          <width>301</width>
-         <height>41</height>
+         <height>31</height>
         </rect>
        </property>
        <item>
@@ -1171,25 +1456,25 @@ li.checked::marker { content: &quot;\2612&quot;; }
        </item>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="groupBox_DilationErosionEdgeDetection">
+     <widget class="QGroupBox" name="groupBox_ArithmeticAndBitwiseOperations">
       <property name="geometry">
        <rect>
-        <x>670</x>
-        <y>500</y>
-        <width>320</width>
-        <height>71</height>
+        <x>10</x>
+        <y>420</y>
+        <width>321</width>
+        <height>61</height>
        </rect>
       </property>
       <property name="title">
-       <string>Dilation, Erosion, Opening, Closing, Edge Detection </string>
+       <string>Arithmetic and Bitwise Operations</string>
       </property>
-      <widget class="QComboBox" name="comboBox_DilationErosionEdgeDe">
+      <widget class="QComboBox" name="comboBox_ArithmeticAndBitwiseOperations">
        <property name="geometry">
         <rect>
-         <x>9</x>
+         <x>10</x>
          <y>20</y>
          <width>301</width>
-         <height>41</height>
+         <height>31</height>
         </rect>
        </property>
        <item>
@@ -1199,40 +1484,126 @@ li.checked::marker { content: &quot;\2612&quot;; }
        </item>
        <item>
         <property name="text">
-         <string>Dilation, Erosion, Opening, Closing</string>
+         <string>Arithmetic Operations</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Edge Detection by Canny (Normal, Wide, Narrow)</string>
+         <string>Bitwise Operations</string>
+        </property>
+       </item>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_OCR">
+      <property name="geometry">
+       <rect>
+        <x>670</x>
+        <y>480</y>
+        <width>321</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Optical Character Recognition (OCR) </string>
+      </property>
+      <widget class="QComboBox" name="comboBox_OCR">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>301</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string/>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Edge Detection Comparison (Canny, Sobel, Laplacian)</string>
+         <string>OCR by Tesseract</string>
+        </property>
+       </item>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_SegmentationAndContours">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>480</y>
+        <width>321</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string> Segmentation and Contours </string>
+      </property>
+      <widget class="QComboBox" name="comboBox_SegmentationAndContours">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>301</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string/>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Find Contours</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Sort Contours</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Sort Contours by Area</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Sort Contours Left to Right</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Approximate Contours by ApproxPolyDP</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Approximate Contours by ConvexHull</string>
         </property>
        </item>
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="page_AboutTool">
-     <widget class="QTextBrowser" name="text_AboutTool">
+    <widget class="QWidget" name="page_AboutAuthorDeveloper">
+     <widget class="QTextBrowser" name="textBrowser_AboutAuthorDeveloper">
       <property name="geometry">
        <rect>
         <x>5</x>
-        <y>1</y>
+        <y>0</y>
         <width>991</width>
         <height>711</height>
        </rect>
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="page_AboutAuthorDeveloper">
-     <widget class="QTextBrowser" name="text_AboutAuthorDeveloper">
+    <widget class="QWidget" name="page_AboutTool">
+     <widget class="QTextBrowser" name="textBrowser_AboutTool">
       <property name="geometry">
        <rect>
         <x>5</x>
-        <y>1</y>
+        <y>0</y>
         <width>991</width>
         <height>711</height>
        </rect>
@@ -1289,9 +1660,16 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="action_CreateDefaultFolders"/>
-    <addaction name="actionUpload_Images"/>
-    <addaction name="actionUlpoad_Models"/>
-    <addaction name="actionUpload_Styles"/>
+    <addaction name="separator"/>
+    <addaction name="action_UploadVideos"/>
+    <addaction name="separator"/>
+    <addaction name="action_UploadClassifiers"/>
+    <addaction name="separator"/>
+    <addaction name="action_UlpoadModels"/>
+    <addaction name="separator"/>
+    <addaction name="action_UploadImages"/>
+    <addaction name="separator"/>
+    <addaction name="action_UploadStyles"/>
    </widget>
    <widget class="QMenu" name="menuControls">
     <property name="font">
@@ -1515,19 +1893,29 @@ Portfolios</string>
     <string>📁 Create Default Folders</string>
    </property>
   </action>
-  <action name="actionUpload_Images">
+  <action name="action_UploadImages">
    <property name="text">
     <string>⤴️ Upload Images</string>
    </property>
   </action>
-  <action name="actionUlpoad_Models">
+  <action name="action_UlpoadModels">
    <property name="text">
     <string>🔼 Ulpoad Models</string>
    </property>
   </action>
-  <action name="actionUpload_Styles">
+  <action name="action_UploadStyles">
    <property name="text">
     <string>⏫ Upload Styles</string>
+   </property>
+  </action>
+  <action name="action_UploadVideos">
+   <property name="text">
+    <string>📤Upload Videos</string>
+   </property>
+  </action>
+  <action name="action_UploadClassifiers">
+   <property name="text">
+    <string>⏏️Upload Classifiers</string>
    </property>
   </action>
  </widget>
