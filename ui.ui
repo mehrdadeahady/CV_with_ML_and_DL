@@ -280,7 +280,7 @@
          <x>80</x>
          <y>20</y>
          <width>391</width>
-         <height>31</height>
+         <height>42</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_ResizeImage">
@@ -842,7 +842,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
          <x>40</x>
          <y>20</y>
          <width>441</width>
-         <height>31</height>
+         <height>42</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_Skew">
@@ -1556,11 +1556,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
        <item>
         <property name="text">
          <string>Find Contours</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Sort Contours</string>
         </property>
        </item>
        <item>

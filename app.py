@@ -591,7 +591,6 @@ class Ui_MainWindow(QMainWindow,object):
         self.comboBox_SegmentationAndContours.addItem("")
         self.comboBox_SegmentationAndContours.addItem("")
         self.comboBox_SegmentationAndContours.addItem("")
-        self.comboBox_SegmentationAndContours.addItem("")
         self.pages.addWidget(self.page_ImagesAndColorsManipulationsAndOprations)
         self.page_AboutAuthorDeveloper = QtWidgets.QWidget()
         self.page_AboutAuthorDeveloper.setObjectName("page_AboutAuthorDeveloper")
@@ -898,11 +897,10 @@ class Ui_MainWindow(QMainWindow,object):
         self.comboBox_OCR.setItemText(1, _translate("MainWindow", "OCR by Tesseract"))
         self.groupBox_SegmentationAndContours.setTitle(_translate("MainWindow", " Segmentation and Contours "))
         self.comboBox_SegmentationAndContours.setItemText(1, _translate("MainWindow", "Find Contours"))
-        self.comboBox_SegmentationAndContours.setItemText(2, _translate("MainWindow", "Sort Contours"))
-        self.comboBox_SegmentationAndContours.setItemText(3, _translate("MainWindow", "Sort Contours by Area"))
-        self.comboBox_SegmentationAndContours.setItemText(4, _translate("MainWindow", "Sort Contours Left to Right"))
-        self.comboBox_SegmentationAndContours.setItemText(5, _translate("MainWindow", "Approximate Contours by ApproxPolyDP"))
-        self.comboBox_SegmentationAndContours.setItemText(6, _translate("MainWindow", "Approximate Contours by ConvexHull"))
+        self.comboBox_SegmentationAndContours.setItemText(2, _translate("MainWindow", "Sort Contours by Area"))
+        self.comboBox_SegmentationAndContours.setItemText(3, _translate("MainWindow", "Sort Contours Left to Right"))
+        self.comboBox_SegmentationAndContours.setItemText(4, _translate("MainWindow", "Approximate Contours by ApproxPolyDP"))
+        self.comboBox_SegmentationAndContours.setItemText(5, _translate("MainWindow", "Approximate Contours by ConvexHull"))
         self.menuTopics.setTitle(_translate("MainWindow", "Topics"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
         self.menuControls.setTitle(_translate("MainWindow", "Controls"))
@@ -1036,7 +1034,22 @@ class Ui_MainWindow(QMainWindow,object):
         self.comboBox_ArithmeticAndBitwiseOperations.currentTextChanged.connect(self.PrepareOperations)
         self.comboBox_Filters.currentTextChanged.connect(self.PrepareFilters)
         self.comboBox_DilationErosionEdgeDetection.currentTextChanged.connect(self.PrepareDilationErosionEdgeDetection)
+        self.comboBox_SegmentationAndContours.currentTextChanged.connect(self.PrepareSegmentationAndContours)
+        self.comboBox_ObjectDetection.currentTextChanged.connect(self.PrepareObjectDetection)
+        self.comboBox_OCR.currentTextChanged.connect(self.PrepareOpticalCharacterRecognition)
 
+    def PrepareOpticalCharacterRecognition(self,text):
+        if str(text).strip() != "":
+           self.ImagesAndColorsHandler.OpticalCharacterRecognition(text.strip())
+
+    def PrepareObjectDetection(self,text):
+        if str(text).strip() != "":
+           self.ImagesAndColorsHandler.ObjectDetection(text.strip())
+
+    def PrepareSegmentationAndContours(self,text):
+        if str(text).strip() != "":
+           self.ImagesAndColorsHandler.SegmentationAndContours(text.strip())
+         
     def PrepareOperations(self,operation):
         if str(operation).strip() != "":
            self.ImagesAndColorsHandler.Operations(operation.strip())
@@ -1518,6 +1531,7 @@ class Ui_MainWindow(QMainWindow,object):
                            destination_folder = os.path.normpath(join("resources","images")) 
                         else:
                             QMessageBox.critical(None, "Image Extension Error: " + file_name, "Valid Extensions: " + " jpg , jpeg , png , gif , bmp , psd ")
+                            continue
                         
                     if sender.__contains__("Upload Styles"):
                         destination_folder = os.path.normpath(join("resources","styles")) 
@@ -1526,7 +1540,8 @@ class Ui_MainWindow(QMainWindow,object):
                         if self.is_valid_extension(file_name.strip(),"video"):
                            destination_folder = os.path.normpath(join("resources","Videos"))  
                         else:
-                            QMessageBox.critical(None, "Video Extension Error: " + file_name, "Valid Extensions: " + " avi , mp4 , mpg , mpeg , mov , wmv , mkv , flv ")                   
+                            QMessageBox.critical(None, "Video Extension Error: " + file_name, "Valid Extensions: " + " avi , mp4 , mpg , mpeg , mov , wmv , mkv , flv ") 
+                            continue                  
                         
                     dest_path = os.path.join(destination_folder, file_name)
                     if destination_folder != os.path.normpath("resources"):
