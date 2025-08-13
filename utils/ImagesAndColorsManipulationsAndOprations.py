@@ -39,10 +39,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
         self.tempImage = None
         self.tempImageName = None
         self.ResetParams.emit("")
-      #   if cv2.getWindowProperty(self.imageName, cv2.WND_PROP_VISIBLE) == -1:
-      #      self.ResetParams.emit("")
-      #      self.tempImage = None
-      #      self.tempImageName = None
+      # if cv2.getWindowProperty(self.imageName, cv2.WND_PROP_VISIBLE) == -1:
 
     # Reading and Showing an Image from the Path
     def ReadShowImage(self,ImageName):
@@ -1992,7 +1989,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                         It acts as sensitivity setting, low values will sometimes detect multiples faces over a single face. 
                         High values will ensure less false positives, but you may miss some faces.  
                         '''
-                        # When no faces detected, face_classifier returns and empty tuple
+                        # When no faces detected, face_classifier returns an empty tuple
                         if len(faces) < 1:
                            QMessageBox.information(None, "Empty", "No Face Detected!")
                         else:
@@ -2039,19 +2036,16 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                         ret, frame = self.videoCapturer.read()
                         if not ret:
                               self.videoCapturer.release()
-                              #self.videoCapturer = None
                               break
                               #QMessageBox.warning(None, "No Frame Detected", "Error: Could not capture frame!")
                         else:
                            cv2.imshow('Face Extractor', self.face_detector(frame))
                            if cv2.waitKey(1) in range(0,255):
                               self.videoCapturer.release()
-                              #self.videoCapturer = None
                               break
                            
                      self.videoCapturer.release()
-                     #self.videoCapturer = None
-                     self.ResetParams.emit("ResetParams")
+                     self.ResetParams.emit("")
                      cv2.destroyAllWindows()
 
                   else:
@@ -2106,13 +2100,12 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                      cv2.waitKey(0)
                      cv2.destroyAllWindows()
                      '''
-                     # Create our body classifier
+                     # Create body classifier
                      body_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, fullbody_classifier_Path))
                      
                      if self.check_camera_availability(self.video):
-                        # Initiate video capture for video file or Camera                   
-                        self.videoCapturer = cv2.VideoCapture(self.video)  # cv2.VideoCapture(0) |
-                        # while True:                                              
+                        # Initiate video capture for video file                 
+                        self.videoCapturer = cv2.VideoCapture(self.video) 
                         # Loop once video is successfully loaded
                         while self.videoCapturer is not None: #.isOpened():
                            # Read first frame
@@ -2136,7 +2129,6 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                            # If the frame was not read successfully, break the loop
                            if not ret:
                               self.videoCapturer.release()
-                              #self.videoCapturer = None
                               break
                               #QMessageBox.warning(None, "No Frame Detected", "Error: Could not capture frame!")
                            else:
@@ -2152,11 +2144,9 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
 
                               if cv2.waitKey(1) in range(0,255):
                                  self.videoCapturer.release()
-                                 #self.videoCapturer = None
                                  break
 
                         self.videoCapturer.release()
-                        #self.videoCapturer = None
                         self.ResetParams.emit("ResetParams")
                         cv2.destroyAllWindows()
 
@@ -2171,7 +2161,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                   Base_haarcascades_Path = os.path.normpath(join("resources","haarcascades"))
                   car_classifier_Path = 'haarcascade_car.xml'
                   if isfile(join(Base_haarcascades_Path, car_classifier_Path)) and str(car_classifier_Path).strip().endswith(".xml"):
-                      # Create our body classifier
+                     # Create car classifier
                      car_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, car_classifier_Path))
                      
                      if self.check_camera_availability(self.video):   
@@ -2180,16 +2170,13 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                 
                         # Loop once video is successfully loaded
                         while self.videoCapturer is not None: #.isOpened():   
-                           #time.sleep(0.05)
                            # Read first frame
                            ret, frame = self.videoCapturer.read()
                            # If the frame was not read successfully, break the loop
                            if not ret:
                               self.videoCapturer.release()
-                              #self.videoCapturer = None
                               break
-                              #QMessageBox.warning(None, "No Frame Detected", "Error: Could not capture frame!")
-                              
+                              #QMessageBox.warning(None, "No Frame Detected", "Error: Could not capture frame!")                          
                            else:
                               gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                               
@@ -2204,11 +2191,9 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
 
                               if cv2.waitKey(1) in range(0,255):
                                  self.videoCapturer.release()
-                                 #self.videoCapturer = None
                                  break
 
                         self.videoCapturer.release()
-                        #self.videoCapturer = None
                         self.ResetParams.emit("ResetParams")
                         cv2.destroyAllWindows()
 
