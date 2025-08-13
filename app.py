@@ -1002,7 +1002,8 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_UploadVideos.triggered.connect(self.upload_files)
         self.pushButton_UploadImages.clicked.connect(self.upload_files)
         self.pushButton_UploadVideos.clicked.connect(self.upload_files)
-        self.comboBox_SelectImage.currentTextChanged.connect(self.PrepareSelectImageComboBox)
+        self.comboBox_SelectImage.currentTextChanged.connect(self.PrepareSelectImage)
+        self.comboBox_SelectVideo.currentTextChanged.connect(self.PrepareSelectVideo)
         self.comboBox_ColorSpaceConversion.currentTextChanged.connect(self.PrepareConvertColorSpace)
         self.ImagesAndColorsHandler.valueChanged.connect(self.SetImageInfo)
         self.pushButton_SaveCode.clicked.connect(self.SaveImagesAndColorsCode)    
@@ -1044,7 +1045,7 @@ class Ui_MainWindow(QMainWindow,object):
 
     def PrepareObjectDetection(self,text):
         if str(text).strip() != "":
-           self.ImagesAndColorsHandler.ObjectDetection(text.strip())
+               self.ImagesAndColorsHandler.ObjectDetection(text.strip())
 
     def PrepareSegmentationAndContours(self,text):
         if str(text).strip() != "":
@@ -1166,38 +1167,68 @@ class Ui_MainWindow(QMainWindow,object):
             name = self.sender().objectName().split("_")[1]
             self.ImagesAndColorsHandler.PyrUpDown(name)    
 
-    def ResetParams(self):
+    def ResetParams(self,text):
         self.lower()
         cv2.destroyAllWindows()
-        self.comboBox_SelectImage.blockSignals(True)
-        self.comboBox_SelectImage.setCurrentIndex(0)
-        self.comboBox_SelectImage.blockSignals(False)
-        self.textEdit_AddText.clear()
-        self.comboBox_ColorSpaceConversion.setCurrentIndex(0)      
-        self.comboBox_ArithmeticAndBitwiseOperations.setCurrentIndex(0)
-        self.comboBox_Filters.setCurrentIndex(0)
-        self.comboBox_DilationErosionEdgeDetection.setCurrentIndex(0)
-        self.comboBox_DrawShape.setCurrentIndex(0)
-        
-        self.comboBox_SegmentationAndContours.setCurrentIndex(0)
-        self.comboBox_ObjectDetection.setCurrentIndex(0)
-        self.comboBox_OCR.setCurrentIndex(0)
+            
+        if text != "SelectImage":
+            self.comboBox_SelectImage.blockSignals(True)
+            self.comboBox_SelectImage.setCurrentIndex(0)
+            self.comboBox_SelectImage.blockSignals(False)
 
+        if text != "SelectVideo" and self.ImagesAndColorsHandler.image is not None:
+           self.comboBox_SelectVideo.blockSignals(True)
+           self.comboBox_SelectVideo.setCurrentIndex(0)
+           self.comboBox_SelectVideo.blockSignals(False)
+
+        self.ImagesAndColorsHandler.image = None
+        self.ImagesAndColorsHandler.imageName = None
+        self.ImagesAndColorsHandler.imageConversion = None
+        self.ImagesAndColorsHandler.tempImage = None
+        self.ImagesAndColorsHandler.tempImageName = None
+        # if text == "ResetParams":
+        #    self.ImagesAndColorsHandler.video = None
+        if self.ImagesAndColorsHandler.videoCapturer is not None:
+           self.ImagesAndColorsHandler.videoCapturer.release()       
+           #self.ImagesAndColorsHandler.videoCapturer = None
+
+        self.comboBox_ColorSpaceConversion.blockSignals(True)
+        self.comboBox_ColorSpaceConversion.setCurrentIndex(0)  
+        self.comboBox_ColorSpaceConversion.blockSignals(False)
+        self.comboBox_ArithmeticAndBitwiseOperations.blockSignals(True)    
+        self.comboBox_ArithmeticAndBitwiseOperations.setCurrentIndex(0)
+        self.comboBox_ArithmeticAndBitwiseOperations.blockSignals(False)
+        self.comboBox_Filters.blockSignals(True)    
+        self.comboBox_Filters.setCurrentIndex(0)
+        self.comboBox_Filters.blockSignals(False)
+        self.comboBox_DilationErosionEdgeDetection.blockSignals(True)    
+        self.comboBox_DilationErosionEdgeDetection.setCurrentIndex(0)
+        self.comboBox_DilationErosionEdgeDetection.blockSignals(False)
+        self.comboBox_DrawShape.blockSignals(True)    
+        self.comboBox_DrawShape.setCurrentIndex(0)
+        self.comboBox_DrawShape.blockSignals(False)
+        self.comboBox_SegmentationAndContours.blockSignals(True)    
+        self.comboBox_SegmentationAndContours.setCurrentIndex(0)
+        self.comboBox_SegmentationAndContours.blockSignals(False)
+        self.comboBox_ObjectDetection.blockSignals(True)    
+        self.comboBox_ObjectDetection.setCurrentIndex(0)
+        self.comboBox_ObjectDetection.blockSignals(False)
+        self.comboBox_OCR.blockSignals(True)    
+        self.comboBox_OCR.setCurrentIndex(0)
+        self.comboBox_OCR.blockSignals(False)
+
+        self.textEdit_AddText.clear()
         self.label_ImageShapeValue.clear()
         self.label_ImageHeightValue.clear() 
         self.label_ImageWidthValue.clear()
         self.label_ImageDepthValue.clear() 
 
         for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
+                option.blockSignals(True)
                 option.setChecked(False)
                 option.setDisabled(True)
                 option.setEnabled(False)
-        
-        self.ImagesAndColorsHandler.image = None
-        self.ImagesAndColorsHandler.imageName = None
-        self.ImagesAndColorsHandler.imageConversion = None
-        self.ImagesAndColorsHandler.tempImage = None
-        self.ImagesAndColorsHandler.tempImageName = None
+                option.blockSignals(False)
 
         self.label_X1_Value.setText("10")
         self.label_X2_Value.setText("100")
@@ -1273,51 +1304,24 @@ class Ui_MainWindow(QMainWindow,object):
         else:
              QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
    
-    def PrepareSelectImageComboBox(self,text):
-        self.lower()
-        cv2.destroyAllWindows()
-        self.comboBox_ColorSpaceConversion.setCurrentIndex(0)
-        self.comboBox_ArithmeticAndBitwiseOperations.setCurrentIndex(0)
-        self.comboBox_Filters.setCurrentIndex(0)
-        self.comboBox_DilationErosionEdgeDetection.setCurrentIndex(0)
-        self.comboBox_DrawShape.setCurrentIndex(0)
-        self.comboBox_SegmentationAndContours.setCurrentIndex(0)
-        self.comboBox_ObjectDetection.setCurrentIndex(0)
-        self.comboBox_OCR.setCurrentIndex(0)
-        self.textEdit_AddText.clear()
+    def PrepareSelectVideo(self,VideoName):
+        self.ResetParams("SelectVideo")     
+        if self.is_valid_extension(VideoName.strip(),"video"):
+           self.ImagesAndColorsHandler.ReadVideo(VideoName)
+        else:
+             if VideoName.strip() != "":       
+                QMessageBox.critical(None, "Video Extension Error", "Valid Extensions: " + " avi , mp4 , mpg , mpeg , mov , WMV , MKV , FLV ")
 
-        self.label_ImageShapeValue.clear()
-        self.label_ImageHeightValue.clear() 
-        self.label_ImageWidthValue.clear()
-        self.label_ImageDepthValue.clear() 
-
-        self.comboBox_DrawShape.blockSignals(True)
-        self.comboBox_DrawShape.setCurrentIndex(0)
-        self.comboBox_DrawShape.blockSignals(False)
-
-        self.horizontalSlider_ResizeHeight.setValue(50)   
-        self.horizontalSlider_ResizeWidth.setValue(50)   
-        self.horizontalSlider_SkewHeight.setValue(50)                          
-        self.horizontalSlider_SkewWidth.setValue(50) 
-       
-        for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
-                option.setChecked(False)
-                option.setDisabled(True)
-                option.setEnabled(False)
-
-        self.ImagesAndColorsHandler.tempImage = None
-        self.ImagesAndColorsHandler.tempImageName = None
+    def PrepareSelectImage(self,text):
+        self.ResetParams("SelectImage") 
+        self.comboBox_SelectVideo.blockSignals(True)
+        self.comboBox_SelectVideo.setCurrentIndex(0)
+        self.comboBox_SelectVideo.blockSignals(False)
         if self.is_valid_extension(text.strip(),"image"):
            self.ImagesAndColorsHandler.ReadShowImage(text)
         else:
-             self.comboBox_SelectImage.blockSignals(True)
-             self.comboBox_SelectImage.setCurrentIndex(0)
-             self.ImagesAndColorsHandler.image = None
-             self.ImagesAndColorsHandler.imageName = None
-             self.ImagesAndColorsHandler.imageConversion = None
-             self.ResetParams()
-             self.comboBox_SelectImage.blockSignals(False)            
-             QMessageBox.critical(None, "Image Extension Error", "Valid Extensions: " + " jpg , jpeg , png , gif , bmp , psd ")
+             if text.strip() != "":      
+                QMessageBox.critical(None, "Image Extension Error", "Valid Extensions: " + " jpg , jpeg , png , gif , bmp , psd ")
 
     def PrepareConvertColorSpace(self,text):
         if text.strip() != "":
@@ -1492,6 +1496,7 @@ class Ui_MainWindow(QMainWindow,object):
             models = os.path.normpath(join("resources","models")) 
             styles = os.path.normpath(join("resources","styles"))
             videos = os.path.normpath(join("resources","videos"))  
+            haarcascades = os.path.normpath(join("resources","haarcascades")) 
             if os.path.isdir(images):
                 pass
             else:
@@ -1508,6 +1513,10 @@ class Ui_MainWindow(QMainWindow,object):
                 pass
             else:
                 os.makedirs(videos, exist_ok=True)
+            if os.path.isdir(haarcascades):
+                pass
+            else:
+                os.makedirs(haarcascades, exist_ok=True)
 
     def split_emojis(self,text):
         return regex.sub(r'\p{Emoji}', '', text)
@@ -1646,7 +1655,7 @@ class Ui_MainWindow(QMainWindow,object):
 
     def FillImagesAndColorsCode(self):
         function_code = inspect.getsource(ImagesAndColorsManipulationsAndOprations)
-        lines = function_code.splitlines()[13:]
+        lines = function_code.splitlines()[15:]
         commentCount = 0
         ChangedContent = ""
         for index,line in enumerate(lines):
@@ -1678,6 +1687,8 @@ class Ui_MainWindow(QMainWindow,object):
                   valid_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp','.psd'}
              case "video":
                   valid_extensions = {'.avi','.mp4','.mpg','.mpeg','.mov','.WMV','.MKV','.FLV'}
+             case "haarcascades":
+                  valid_extensions = {'.xml'}
         return any(file_name.lower().endswith(extension) for extension in valid_extensions)
 
     def manualSetup(self):

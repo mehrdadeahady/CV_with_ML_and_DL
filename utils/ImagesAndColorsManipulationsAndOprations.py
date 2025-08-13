@@ -9,23 +9,26 @@ from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QMessageBox, QFileDialog
 
 class ImagesAndColorsManipulationsAndOprations(QObject):
-    ResetParams = pyqtSignal(int)
+    ResetParams = pyqtSignal(str)
     valueChanged = pyqtSignal(str)
     ImageSizeChanged = pyqtSignal(str)
     def __init__(self,parent=None):
         super().__init__()
-        # Internal Variable to Access Image inside All Functions in the Class 
+        # Internal Variable to Access Images and Videos inside All Functions in the Class 
         self.image = None
         self.imageName = None
         self.imageConversion = None
         self.tempImage = None
         self.tempImageName = None
+        self.video = None
+        self.videoCapturer = None
 
     # Consider|Attention: 
-    # Here all parameters Assigned have relation to Image Dimensions for Visibility of Changes > image.shape = (height,width,depth)
+    # All parameters Assigned have relation to Image Dimensions for Visibility of Changes in the Screen > image.shape = (height,width,depth)
     # OpenCV Functions have several Overloads (Same Method Names with different Parameters some of them Mandatory and some Optional):
     # Here Mandatory Parameters with some Optional Parameters filled, in Practical RealWorld Projects use IDE IntelliJ IDEA by pressing Ctrl + Space:
-    # This offers a broad range of suggestions relevant to the current context, including parameters, variables, methods, classes, and even closing braces.
+    # This offers a broad range of suggestions relevant to the current context, including Optional and Mandatory Parameters.
+    # For Operations at first time select the Default Image with the same name to understand the Concept.
 
     # Wait for Clicking a Key on Keyboard to Close All cv2 Windows
     def WaitKeyCloseWindows(self):
@@ -35,11 +38,11 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
         cv2.destroyAllWindows()
         self.tempImage = None
         self.tempImageName = None
-        self.ResetParams.emit(0)
-        if cv2.getWindowProperty(self.imageName, cv2.WND_PROP_VISIBLE) == -1:
-           self.ResetParams.emit(0)
-           self.tempImage = None
-           self.tempImageName = None
+        self.ResetParams.emit("")
+      #   if cv2.getWindowProperty(self.imageName, cv2.WND_PROP_VISIBLE) == -1:
+      #      self.ResetParams.emit("")
+      #      self.tempImage = None
+      #      self.tempImageName = None
 
     # Reading and Showing an Image from the Path
     def ReadShowImage(self,ImageName):
@@ -59,6 +62,18 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                  cv2.imshow(self.imageName,self.image)
                  self.WaitKeyCloseWindows()
 
+    # Reading a Video File
+    def ReadVideo(self, VideoName):
+        if self.videoCapturer is not None:
+           self.videoCapturer.release()
+        cv2.destroyAllWindows()
+        path = "resources/videos/" + VideoName
+        # Check if the path exist and it is a file
+        if isfile(path): 
+            self.video = path
+        else:
+            QMessageBox.warning(None, "No Video", "Video does not exist!")
+                
     # Conversion of Color Channels to each other
     def ConvertColorSpace(self,text):
         if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
@@ -694,7 +709,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                cv2.destroyAllWindows()
                self.tempImage = None
                self.tempImageName = None
-               self.ResetParams.emit(0)
+               self.ResetParams.emit("")
                # First Create 2 GrayScale Images:
                # Black Areas are where are Empty (Part or Whole of Images or Screen are not Purpose of Show)
                # White Areas are where are Exist (Part or Whole of Images or Screen are Purpose of Show)
@@ -734,10 +749,10 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
     # Filters (Bluring, De-Noising, Segmentation)
     def Filters(self,filter): 
         if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):  
+            cv2.destroyAllWindows()
+            cv2.imshow("Original", self.image) 
             match filter.strip():
                   case "Bluring and Sharprning by Kernel":       
-                        cv2.destroyAllWindows() 
-                        cv2.imshow("Original", self.image)             
                         # Creating our 3 x 3 kernel
                         kernel_3x3 = np.ones((3, 3), np.float32) / 9
                         # Creating our 7 x 7 kernel
@@ -768,8 +783,6 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                         cv2.imshow('Sharpened Image', sharpened)
                         
                   case "De-Noising by Filter": 
-                        cv2.destroyAllWindows()
-                        cv2.imshow("Original", self.image) 
                         # Bilateral is very effective in Noise Removal while keeping Edges Sharp, Result seems Bluring
                         # Parameters: 
                         # d: Diameter of each pixel neighborhood.
@@ -793,15 +806,13 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                            cv2.imshow('Fast Means Denoising', dst)                   
 
                   case "Bluring by Filter":
-                        cv2.destroyAllWindows()
-                        cv2.imshow("Original", self.image) 
                         # cv2.blur() is a function within the OpenCV library used for image blurring.
                         # It applies a normalized box filter to smooth an image. This type of blurring is also known as averaging blur.
                         # Averaging done by convolving the image with a normalized box filter. 
                         # This takes the pixels under the box and replaces the central element
                         # Box size needs to be odd and positive 
                         blur = cv2.blur(self.image, (3,3))
-                        cv2.imshow('Averaging', blur)
+                        cv2.imshow('Average Bluring', blur)
 
                         # Instead of box filter, gaussian kernel
                         Gaussian = cv2.GaussianBlur(self.image, (3,3), 0)
@@ -813,30 +824,28 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                         cv2.imshow('Median Blurring', median) 
 
                   case "Segmenting by Threshold - Binarization":
-                        cv2.destroyAllWindows()
-                        cv2.imshow("Original", self.image) 
                         # The cv2.threshold() function in OpenCV is used for image thresholding
                         # A technique that converts a Grayscale image into a Binary image based on a specified Threshold value. 
                         # Pixels are categorized into two groups: those above the threshold and those below the threshold.
-                        # '''                      
-                        # Parameters:
-                        #    src: The input grayscale image.
-                        #    thresh: The threshold value. Pixels with intensity values above or below this value will be processed according to the type.
-                        #    maxval: The maximum value to be assigned to pixels exceeding the threshold (or falling below it, depending on the type). 
-                        #            Typically, this is 255 for an 8-bit image.
-                        #    type: The type of thresholding to be applied. Common types include:
-                        #       cv2.THRESH_BINARY: If a pixel's intensity is greater than thresh, it's set to maxval; otherwise, it's set to 0.
-                        #       cv2.THRESH_BINARY_INV: If a pixel's intensity is greater than thresh, it's set to 0; otherwise, it's set to maxval.
-                        #       cv2.THRESH_TRUNC: If a pixel's intensity is greater than thresh, it's set to thresh; otherwise, it remains unchanged.
-                        #       cv2.THRESH_TOZERO: If a pixel's intensity is greater than thresh, it remains unchanged; otherwise, it's set to 0.
-                        #       cv2.THRESH_TOZERO_INV: If a pixel's intensity is greater than thresh, it's set to 0; otherwise, it remains unchanged.
-                        # 
-                        # Return Values:
-                        #    retval: In simple thresholding, this is the thresh value provided. 
-                        #            In methods like Otsu's thresholding (which can be combined with cv2.threshold), 
-                        #            it returns the optimal threshold value calculated by the algorithm.
-                        #    dst: The thresholded output image.
-                        # '''
+                        '''                      
+                        Parameters:
+                           src: The input grayscale image.
+                           thresh: The threshold value. Pixels with intensity values above or below this value will be processed according to the type.
+                           maxval: The maximum value to be assigned to pixels exceeding the threshold (or falling below it, depending on the type). 
+                                   Typically, this is 255 for an 8-bit image.
+                           type: The type of thresholding to be applied. Common types include:
+                              cv2.THRESH_BINARY: If a pixel's intensity is greater than thresh, it's set to maxval; otherwise, it's set to 0.
+                              cv2.THRESH_BINARY_INV: If a pixel's intensity is greater than thresh, it's set to 0; otherwise, it's set to maxval.
+                              cv2.THRESH_TRUNC: If a pixel's intensity is greater than thresh, it's set to thresh; otherwise, it remains unchanged.
+                              cv2.THRESH_TOZERO: If a pixel's intensity is greater than thresh, it remains unchanged; otherwise, it's set to 0.
+                              cv2.THRESH_TOZERO_INV: If a pixel's intensity is greater than thresh, it's set to 0; otherwise, it remains unchanged.
+                        
+                        Return Values:
+                           retval: In simple thresholding, this is the thresh value provided. 
+                                   In methods like Otsu's thresholding (which can be combined with cv2.threshold), 
+                                   it returns the optimal threshold value calculated by the algorithm.
+                           dst: The thresholded output image.
+                        '''
 
                         # Values below 127 goes to 0 (black, everything above goes to 255 (white)
                         ReturnValues,thresh1 = cv2.threshold(self.image, 200, 255, cv2.THRESH_BINARY)
@@ -856,7 +865,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
 
                         # Reverse of the above, below 127 is unchanged, above 127 goes to 0
                         ReturnValues,thresh5 = cv2.threshold(self.image, 127, 255, cv2.THRESH_TOZERO_INV)
-                        cv2.imshow('5 THRESH TOZERO INV', thresh5)
+                        cv2.imshow('5 THRESH TOZERO INVERSE', thresh5)
 
                   case "Segmenting by Adaptive Threshold - Binarization":
                         # cv2.adaptiveThreshold Parameters:
@@ -900,10 +909,10 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
     # Dilation, Erosion, Edge Detection            
     def DilationErosionEdgeDetection(self,operation):
         if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+            cv2.destroyAllWindows()
+            cv2.imshow("Original", self.image)    
             match operation:
-                  case "Dilation, Erosion, Opening, Closing":
-                        cv2.destroyAllWindows()
-                        cv2.imshow("Original", self.image)              
+                  case "Dilation, Erosion, Opening, Closing":          
                         # Define a kernel Matrix (Default is 3*3)
                         kernel = np.ones((5,5), np.uint8)
                         '''                      
@@ -1018,8 +1027,6 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                         cv2.imshow('Closing', closing) 
                         
                   case "Edge Detection by Canny (Normal, Wide, Narrow)":
-                        cv2.destroyAllWindows()
-                        cv2.imshow("Original", self.image) 
                         '''                        
                         cv2.Canny is a function in the OpenCV library used to perform Canny edge detection on an image. 
                         The Canny edge detection algorithm is a multi-stage process designed to detect:
@@ -1070,8 +1077,6 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                         cv2.imshow('Canny Narrow', canny)
 
                   case "Edge Detection Comparison (Canny, Sobel, Laplacian)":
-                        cv2.destroyAllWindows()
-                        cv2.imshow("Original", self.image) 
                         '''                     
                         cv2.Sobel is a function in the OpenCV library used to compute image derivatives, specifically focusing on edge detection. 
                         It approximates the gradient of the image intensity function, highlighting areas of significant change in pixel values.
@@ -1484,29 +1489,736 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
 
         else:
             QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
-        
-    #
+   
+    # Check Camera or Video availability at the given index or Path
+    def check_camera_availability(self,camera_index_or_Video_path):
+         """Checks if a camera at the given index is available or a Video File exist in the given Path"""
+         if camera_index_or_Video_path == "" or camera_index_or_Video_path == None:
+             return False
+         else:
+            self.videoCapturer = cv2.VideoCapture(camera_index_or_Video_path)
+            if self.videoCapturer is None or not self.videoCapturer.isOpened():
+               return False
+            else:
+               self.videoCapturer.release()
+               self.videoCapturer = None
+               return True
+    
+    # Detecting Faces at Images Comming from a Camera
+    def face_detector(self,img, size=0.5):
+      Base_haarcascades_Path = os.path.normpath(join("resources","haarcascades"))
+      face_classifier_Path = 'haarcascade_frontalface_default.xml'
+      eye_classifier_Path = 'haarcascade_eye.xml'                  
+      if (isfile(join(Base_haarcascades_Path, face_classifier_Path)) and str(face_classifier_Path).strip().endswith(".xml") and 
+            isfile(join(Base_haarcascades_Path, eye_classifier_Path)) and str(eye_classifier_Path).strip().endswith(".xml")):
+         '''                     
+         cv2.CascadeClassifier in OpenCV (Open Source Computer Vision Library) is a class used for object detection, particularly for implementing Haar Cascade classifiers. 
+         This machine learning-based approach is widely used for real-time object detection, with face detection being a prominent example.
+         Here's a breakdown of its key aspects:
+         Functionality:
+         It loads and utilizes pre-trained cascade classifier models (typically in .xml format) to detect specific objects within an image or video frame. 
+         These models are trained using a large dataset of positive (containing the object) and negative (not containing the object) images.
+         Haar-like Features:
+         The underlying mechanism relies on Haar-like features, which are simple rectangular features that capture intensity differences in an image, 
+         similar to how human eyes perceive edges and lines.
+         Cascade Structure:
+         The "cascade" in the name refers to a series of increasingly complex classifiers. 
+         A region of interest in an image must pass through all stages of this cascade to be classified as containing the target object. 
+         This cascading structure significantly improves efficiency by quickly discarding non-object regions.
+         Usage:
+            Initialization: An instance of cv2.CascadeClassifier is created, and the path to the pre-trained .xml file 
+            (e.g., haarcascade_frontalface_alt.xml for face detection) is provided to its load() method or directly in the constructor.
+            Detection: The detectMultiScale() method is then used to perform the object detection. It takes the input image (usually grayscale), 
+            along with parameters like scaleFactor, minNeighbors, and minSize, which control the detection sensitivity and minimum object size.
+         Output: 
+               The method returns a list of rectangles, where each rectangle represents a detected object and contains its (x, y, width, height) coordinates. 
+         Example (Face Detection) in Python:
+
+         import cv2
+
+         # Load the pre-trained face cascade classifier
+         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt.xml')
+
+         # Read an image
+         img = cv2.imread('your_image.jpg')
+         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+         # Detect faces
+         faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+
+         # Draw rectangles around the detected faces
+         for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+
+         # Display the image
+         cv2.imshow('Detected Faces', img)
+         cv2.waitKey(0)
+         cv2.destroyAllWindows()
+         '''
+         face_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, face_classifier_Path))
+         eye_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, eye_classifier_Path))
+         # Convert image to grayscale
+         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+         faces = face_classifier.detectMultiScale(gray, 1.3, 5)
+         if len(faces) <1:
+            return img
+         
+         for (x,y,w,h) in faces:
+            x = x - 50
+            w = w + 50
+            y = y - 50
+            h = h + 50
+            cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+            roi_gray = gray[y:y+h, x:x+w]
+            roi_color = img[y:y+h, x:x+w]
+            eyes = eye_classifier.detectMultiScale(roi_gray)
+            time.sleep(.05)
+            for (ex,ey,ew,eh) in eyes:
+                  cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,0,255),2) 
+                  
+         img = cv2.flip(img,1)
+         return img
+      
+      else:
+          QMessageBox.warning(None, "No Haarcascades Classifier", "No Eye or Face Haarcascades Classifier found!")
+
+    # Detecting Specific Object
     def ObjectDetection(self,text):
-         print(text)
          match text:
                case "Line Detection using HoughLines":
-                  print("")
-               case "Line Detection using Probablistic HoughLines":
-                  print("")
-               case "Circle Detection using HoughCircles":
-                  print("")
-               case "Blob Detection":
-                  print("")
-               case "Face and Eye Detection with HAAR Cascade Classifiers":
-                  print("")
-               case "Live Face and Eye Detection with HAAR Cascade Classifiers":
-                  print("")
-               case "Live People Detection with HAAR Cascade Classifiers":
-                  print("")
-               case "Live Car Detection with HAAR Cascade Classifiers":
-                  print("")
+                  if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+                     cv2.destroyAllWindows()
+                     cv2.imshow("Original", self.image) 
+                     # Grayscale and Canny Edges extracted
+                     gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+                     edges = cv2.Canny(gray, 100, 170, apertureSize = 3)
 
-    #
+                     # Run HoughLines using a rho accuracy of 1 pixel
+                     # theta accuracy of np.pi / 180 which is 1 degree
+                     # Our line threshold is set to 240 (number of points on line)
+                     lines = cv2.HoughLines(edges, 1, np.pi / 180, 240)
+                     '''           
+                     cv2.HoughLines is an OpenCV function used to detect lines in an image using the Standard Hough Line Transform. 
+                     This method works by transforming points in the image space into a parameter space (Hough space), 
+                     where lines are represented by their parameters (rho and theta).
+                     Parameters:
+                        image:
+                              The input image, which should be a binary image (e.g., edge-detected using Canny).
+                        rho:
+                           The distance resolution of the accumulator in pixels. Typically set to 1.
+                        theta:
+                              The angle resolution of the accumulator in radians. Commonly set to np.pi / 180 for 1-degree increments.
+                        threshold:
+                                 The minimum number of votes (intersections in the accumulator) a line needs to be considered a valid line. 
+                                 Lines with fewer votes than this threshold are discarded.
+                     Output:
+                           The function returns an array of (rho, theta) pairs, representing the detected lines in polar coordinates. 
+                           rho is the distance from the origin (top-left corner of the image) to the line, 
+                           and theta is the angle of the normal to the line with respect to the horizontal axis.
+                     How it works:
+                                 The Hough Line Transform operates on the principle that every point on a line in the image space corresponds to 
+                                 a sinusoidal curve in the Hough parameter space. Conversely, a point in the Hough space corresponds to 
+                                 a line in the image space. When multiple sinusoidal curves in the Hough space intersect at a single point, 
+                                 it indicates that the corresponding points in the image space lie on a common line. 
+                                 The threshold parameter determines the minimum number of such intersections required to consider a line as detected.
+                     '''
+                     # We iterate through each line and convert it to the format
+                     # required by cv2.lines (i.e. requiring end points)
+                     if lines is not None:
+                        for line in lines:
+                           rho, theta = line[0]
+                           a = np.cos(theta)
+                           b = np.sin(theta)
+                           x0 = a * rho
+                           y0 = b * rho
+                           x1 = int(x0 + 1000 * (-b))
+                           y1 = int(y0 + 1000 * (a))
+                           x2 = int(x0 - 1000 * (-b))
+                           y2 = int(y0 - 1000 * (a))
+                           cv2.line(self.image, (x1, y1), (x2, y2), (255, 0, 0), 2)
+
+                        cv2.imshow('Hough Lines', self.image)
+                        # Number of Lines Found 
+                        QMessageBox.information(None, "Number of Lines", "Number of Lines found = " + str(len(lines))) 
+
+                     else:
+                        QMessageBox.warning(None, "Empty", "No Lines Found") 
+
+                  else:
+                       QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
+
+               case "Line Detection using Probablistic HoughLines":
+                  if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+                     cv2.destroyAllWindows()
+                     cv2.imshow("Original", self.image) 
+                     # Grayscale and Canny Edges extracted
+                     gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+                     edges = cv2.Canny(gray, 100, 170, apertureSize = 3)
+
+                     # Again we use the same rho and theta accuracies
+                     # However, we specific a minimum vote (pts along line) of 100
+                     # and Min line length of 5 pixels and max gap between lines of 10 pixels
+                     lines = cv2.HoughLinesP(edges, 1, np.pi / 180, 200, 5, 10)
+                     '''               
+                     cv2.HoughLinesP is a function in the OpenCV library used for probabilistic Hough Line Transform. 
+                     It is a more efficient and practical version of the standard cv2.HoughLines function for line detection in images.
+                     How it works:
+                        Edge Detection:
+                        Typically, the input image is first processed using an edge detection algorithm, such as Canny, to identify potential line candidates.
+                        Probabilistic Approach:
+                        Instead of considering every point on the edge, cv2.HoughLinesP randomly selects a subset of edge points.
+                        Accumulator Space:
+                        For each selected point, it calculates the parameters (rho and theta) of all possible lines passing through that point and 
+                        increments corresponding cells in an accumulator array.
+                        Thresholding:
+                        Lines with a vote count (number of intersections in the accumulator space) exceeding a specified threshold are considered valid lines.
+                        Line Segment Extraction:
+                        Unlike cv2.HoughLines which returns parameters (rho, theta) of infinite lines, cv2.HoughLinesP directly returns the endpoints (x1, y1, x2, y2) of the detected line segments. 
+                        This is achieved by considering additional parameters like minLineLength and maxLineGap to merge or filter line segments.
+                     Parameters:
+                        image: 
+                           8-bit, single-channel binary source image (typically an edge-detected image).
+                        rho: 
+                           Distance resolution of the accumulator in pixels.
+                        theta: 
+                           Angle resolution of the accumulator in radians (e.g., np.pi/180 for 1-degree resolution).
+                        threshold: 
+                                 Minimum number of votes (intersections) a line needs to be considered valid.
+                        minLineLength: 
+                                    Minimum length of a line segment to be considered valid. Line segments shorter than this are rejected. 
+                        maxLineGap: 
+                                 Maximum allowed gap between line segments to treat them as a single line. If the gap is larger, they are considered separate lines. 
+
+                     Output:
+                           The function returns an array of lines, where each line is represented by its two endpoints [x1, y1, x2, y2]. 
+                           These coordinates can then be used with functions like cv2.line to draw the detected lines on an image.
+                     '''
+                     if lines is not None:
+                        for x in range(0, len(lines)):
+                           for x1,y1,x2,y2 in lines[x]:
+                              cv2.line(self.image,(x1,y1),(x2,y2),(0,255,0),5)
+
+                        cv2.imshow('Probabilistic Hough Lines', self.image)
+                        # Number of Lines Found 
+                        QMessageBox.information(None, "Number of Lines", "Number of Lines found = " + str(len(lines)))  
+
+                     else:
+                        QMessageBox.warning(None, "Empty", "No Lines Found") 
+
+                  else:
+                       QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
+
+               case "Circle Detection using HoughCircles":
+                  if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+                     cv2.destroyAllWindows()
+                     cv2.imshow("Original", self.image) 
+                     gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+                     blur = cv2.medianBlur(gray, 5)
+                     '''                  
+                     The cv2.HoughCircles() function in OpenCV is used to detect circles in a grayscale image using the Hough Transform. 
+                     This function is particularly useful for identifying circular shapes in images, even when they are partially obscured or imperfect.
+                     Function Signature IN Python:
+                              cv2.HoughCircles(image, method, dp, minDist, param1=None, param2=None, minRadius=None, maxRadius=None)
+                     Parameters:
+                        image: 
+                           The 8-bit, single-channel grayscale input image.
+                        method: 
+                              The detection method to use. Currently, cv2.HOUGH_GRADIENT is the only implemented method. 
+                              This method utilizes the gradient information of edges for more efficient circle detection.
+                        dp: 
+                        The inverse ratio of the accumulator resolution to the image resolution. 
+                        A value of 1 means the accumulator has the same resolution as the input image. A value of 2 means the accumulator has half the resolution. 
+                        minDist: 
+                              The minimum distance between the centers of detected circles. This parameter helps to avoid detecting multiple circles for the same physical circle.
+                        param1: 
+                              The higher threshold for the Canny edge detector used internally.
+                        param2: 
+                              The accumulator threshold for the circle centers. The smaller this value, the more false positives may be detected.
+                        minRadius: 
+                                 The minimum radius of circles to be detected.
+                        maxRadius: 
+                                 The maximum radius of circles to be detected. If set to a negative value, only the centers of the circles are returned. 
+                     Output:
+                           The function returns a NumPy array of circles, where each circle is represented by a 3-element array [x_center, y_center, radius].
+                     Usage Considerations:
+                        Preprocessing:
+                           It is common practice to apply a blur (e.g., Gaussian blur or median blur) to the input image before applying cv2.HoughCircles() to
+                           reduce noise and improve detection accuracy.
+                        Parameter Tuning:
+                           The effectiveness of cv2.HoughCircles() heavily depends on the correct configuration of its parameters, especially 
+                           param1, param2, minDist, minRadius, and maxRadius. Tuning these parameters often requires experimentation based 
+                           on the specific image and desired results.
+                        Hough Gradient Method:
+                           The HOUGH_GRADIENT method leverages edge information, making it more robust and 
+                           efficient than a traditional 3D Hough space for circle detection.
+                     '''
+                     circles = cv2.HoughCircles(blur, cv2.HOUGH_GRADIENT, 1.5, 20)
+                     # Ensure some circles were found
+                     if circles is not None:
+                        # Convert the (x, y) coordinates and radius of the circles to integers
+                        circles = np.uint16(np.around(circles))
+                        # Iterate through the detected circles and draw them on the original image
+                        for circle in circles[0, :]:
+                           # Draw the outer circle
+                           cv2.circle(self.image, (circle[0], circle[1]), circle[2], (0, 255, 0), 2)
+                           # Draw the center of the circle
+                           cv2.circle(self.image, (circle[0], circle[1]), 2, (0, 0, 255), 3)
+
+                        # Display the image with detected circles
+                        cv2.imshow('Detected Circles', self.image)
+                        # Number of Circles Found 
+                        QMessageBox.information(None, "Number of Circles", "Number of Circles found = " + str(len(circles[0])))  
+
+                     else:
+                        QMessageBox.warning(None, "Empty", "No Circles Found") 
+
+                  else:
+                       QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
+                
+               case "Blob Detection":
+                  if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+                     cv2.destroyAllWindows()
+                     cv2.imshow("Original", self.image) 
+                     '''                  
+                     cv2.SimpleBlobDetector_create() is a function in the OpenCV library used to create an instance of the SimpleBlobDetector class. 
+                     This class is designed to detect "blobs" in an image, which are essentially connected regions of pixels that share similar characteristics 
+                     (e.g., color, intensity).
+                     Purpose:
+                     The primary purpose of cv2.SimpleBlobDetector_create() is to provide a convenient way to initialize the blob detector, 
+                     optionally with custom parameters, before using it to find blobs in an image.
+                     Usage in Python:
+                                    import cv2
+                                    # Create a SimpleBlobDetector object with default parameters
+                                    detector = cv2.SimpleBlobDetector_create()
+                                    # Or, create with custom parameters
+                                    params = cv2.SimpleBlobDetector_Params()
+                                    params.filterByArea = True
+                                    params.minArea = 100
+                                    params.maxArea = 1000
+                                    params.filterByCircularity = True
+                                    params.minCircularity = 0.8
+                                    detector_custom = cv2.SimpleBlobDetector_create(params)
+                     Parameters:
+                              The function can be called with an optional parameters argument, which is an instance of cv2.SimpleBlobDetector_Params. 
+                              This params object allows you to configure various filtering options for blob detection, including:
+
+                        filterByColor: Filters blobs based on their color (0 for dark, 255 for light).
+                        filterByArea: Filters blobs based on their area, using minArea and maxArea.
+                        filterByCircularity: Filters blobs based on their circularity (how close they are to a perfect circle), using minCircularity and maxCircularity.
+                        filterByInertia: Filters blobs based on their inertia ratio (ratio of minimum to maximum inertia), using minInertiaRatio and maxInertiaRatio.
+                        filterByConvexity: Filters blobs based on their convexity (area / area of convex hull), using minConvexity and maxConvexity. 
+
+                     Return Value:
+                     The function returns an instance of cv2.SimpleBlobDetector, which can then be used to detect blobs in an image using its detect() method.
+                     '''
+                     # Set up the detector with default parameters.
+                     detector =cv2.SimpleBlobDetector_create()
+                     
+                     # Detect blobs.
+                     keypoints = detector.detect(self.image)
+                     
+                     # Draw detected blobs as red circles.
+                     # cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS ensures the size of
+                     # the circle corresponds to the size of blob
+                     blank = np.zeros((1,1)) 
+                     '''                  
+                     The cv2.drawKeypoints() function in OpenCV is used to visualize detected keypoints on an image. 
+                     It takes the original image, a list of keypoints, and an output image as arguments, along with optional parameters for color and drawing flags.
+                     Syntax in Python:
+                                    cv2.drawKeypoints(image, keypoints, outImage, color=None, flags=None)
+                     The function cv2.drawKeypoints takes the following arguments:
+                                       cv2.drawKeypoints(input image, keypoints, blank_output_array, color, flags)
+                                       flags:
+                                       - cv2.DRAW_MATCHES_FLAGS_DEFAULT
+                                       - cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
+                                       - cv2.DRAW_MATCHES_FLAGS_DRAW_OVER_OUTIMG
+                                       - cv2.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS
+                     Parameters:
+                        image: 
+                           The source image on which the keypoints were detected.
+                        keypoints: 
+                                 A list of cv2.KeyPoint objects, typically obtained from a feature detector like SIFT, SURF, ORB, etc.
+                        outImage: 
+                              The output image where the keypoints will be drawn. This can be the same as the image or a new image.
+                        color (optional): 
+                                       A Scalar representing the color to draw the keypoints. If None, a default color is used.
+                        flags (optional): 
+                           Flags that control how the keypoints are drawn. These flags are bitwise combinations from cv2.DrawMatchesFlags, such as:
+                              cv2.DRAW_MATCHES_FLAGS_DEFAULT: Draws only the keypoint circles.
+                              cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS: Draws circles with size and orientation (if available) of the keypoints.
+                              cv2.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS: Only draws keypoints that are part of a match (when used with drawMatches).
+                     Example Usage in Python:
+
+                     import cv2
+
+                     # Load an image
+                     img = cv2.imread('your_image.jpg')
+
+                     # Convert to grayscale (feature detectors often work on grayscale)
+                     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+                     # Initialize a feature detector (e.g., SIFT)
+                     sift = cv2.SIFT_create()
+
+                     # Detect keypoints
+                     keypoints, descriptors = sift.detectAndCompute(gray, None)
+
+                     # Draw keypoints on the image
+                     img_with_keypoints = cv2.drawKeypoints(img, keypoints, None, color=(0, 255, 0), flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+                     # Display the image with keypoints
+                     cv2.imshow('Keypoints', img_with_keypoints)
+                     cv2.waitKey(0)
+                     cv2.destroyAllWindows()
+                     '''
+                     blobs = cv2.drawKeypoints(self.image, keypoints, blank, (255,0,0),cv2.DRAW_MATCHES_FLAGS_DEFAULT)
+                     # Ensure some blobs were found
+                     if blobs is not None:                     
+                        # Show keypoints
+                        cv2.imshow("Blobs", blobs)
+                        # Number of Blobs Found 
+                        QMessageBox.information(None, "Number of Blobs", "Number of Blobs found = " + str(len(blobs))) 
+
+                     else:
+                        QMessageBox.warning(None, "Empty", "No Blobs Found") 
+
+                  else:
+                      QMessageBox.warning(None, "No Image Selected", "First, Select an Image!") 
+
+               case "Face and Eye Detection with HAAR Cascade Classifiers":
+                  if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+                     cv2.destroyAllWindows()
+                     cv2.imshow("Original", self.image) 
+                     Base_haarcascades_Path = os.path.normpath(join("resources","haarcascades"))
+                     face_classifier_Path = 'haarcascade_frontalface_default.xml'
+                     eye_classifier_Path = 'haarcascade_eye.xml'                  
+                     if (isfile(join(Base_haarcascades_Path, face_classifier_Path)) and str(face_classifier_Path).strip().endswith(".xml") and 
+                        isfile(join(Base_haarcascades_Path, eye_classifier_Path)) and str(eye_classifier_Path).strip().endswith(".xml")):
+                        '''                     
+                        cv2.CascadeClassifier in OpenCV (Open Source Computer Vision Library) is a class used for object detection, particularly for implementing Haar Cascade classifiers. 
+                        This machine learning-based approach is widely used for real-time object detection, with face detection being a prominent example.
+                        Here's a breakdown of its key aspects:
+                        Functionality:
+                        It loads and utilizes pre-trained cascade classifier models (typically in .xml format) to detect specific objects within an image or video frame. 
+                        These models are trained using a large dataset of positive (containing the object) and negative (not containing the object) images.
+                        Haar-like Features:
+                        The underlying mechanism relies on Haar-like features, which are simple rectangular features that capture intensity differences in an image, 
+                        similar to how human eyes perceive edges and lines.
+                        Cascade Structure:
+                        The "cascade" in the name refers to a series of increasingly complex classifiers. 
+                        A region of interest in an image must pass through all stages of this cascade to be classified as containing the target object. 
+                        This cascading structure significantly improves efficiency by quickly discarding non-object regions.
+                        Usage:
+                           Initialization: An instance of cv2.CascadeClassifier is created, and the path to the pre-trained .xml file 
+                           (e.g., haarcascade_frontalface_alt.xml for face detection) is provided to its load() method or directly in the constructor.
+                           Detection: The detectMultiScale() method is then used to perform the object detection. It takes the input image (usually grayscale), 
+                           along with parameters like scaleFactor, minNeighbors, and minSize, which control the detection sensitivity and minimum object size.
+                        Output: 
+                              The method returns a list of rectangles, where each rectangle represents a detected object and contains its (x, y, width, height) coordinates. 
+                        Example (Face Detection) in Python:
+
+                        import cv2
+
+                        # Load the pre-trained face cascade classifier
+                        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt.xml')
+
+                        # Read an image
+                        img = cv2.imread('your_image.jpg')
+                        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+                        # Detect faces
+                        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+
+                        # Draw rectangles around the detected faces
+                        for (x, y, w, h) in faces:
+                           cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+
+                        # Display the image
+                        cv2.imshow('Detected Faces', img)
+                        cv2.waitKey(0)
+                        cv2.destroyAllWindows()
+                        '''
+                        face_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, face_classifier_Path))
+                        eye_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, eye_classifier_Path))
+                        
+                        gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+                        numberOfEyes = 0
+                        '''                     
+                        The detectMultiScale method, typically associated with the cv2.CascadeClassifier class in OpenCV, is used for object detection, 
+                        most commonly for face detection. 
+                        This method identifies rectangular regions in an image that are likely to contain the objects for which the cascade classifier was trained.
+                        Functionality:
+                                    The detectMultiScale function works by scanning the input image multiple times at different scales.
+                                    At each scale, it considers overlapping regions within the image and applies the trained cascade classifier to determine if 
+                                    an object is present. It may also use heuristics, such as Canny pruning, to reduce the number of regions analyzed. 
+                                    After collecting candidate rectangles (regions that passed the classifier cascade), 
+                                    it groups them and returns a sequence of average rectangles for each sufficiently large group. 
+                        Parameters:
+                                 The detectMultiScale method takes several parameters, with the most common being:
+                                 image:
+                                 The input image in which objects are to be detected. This image is typically converted to grayscale for more efficient processing.
+                                 scaleFactor:
+                                 Specifies how much the image size is reduced at each image scale. A value greater than 1.0 is used, 
+                                 for example, 1.05 means reducing the size by 5%. 
+                                 minNeighbors:
+                                 Specifies how many neighbors each candidate rectangle should have to be considered a valid detection. 
+                                 This parameter helps to filter out false positives.
+                                 minSize:
+                                 The minimum possible object size. Objects smaller than this size are ignored.
+                                 maxSize:
+                                 The maximum possible object size. Objects larger than this size are ignored. 
+                                 If maxSize is equal to minSize, the model is evaluated on a single scale.
+
+                        Return Value:
+                                    The method returns a list of rectangles, where each rectangle represents the coordinates and dimensions of a detected object. 
+                                    Each rectangle is typically in the format (x, y, w, h), where: 
+
+                                    x: The X-coordinate of the top-left corner of the detected object.
+                                    y: The Y-coordinate of the top-left corner of the detected object.
+                                    w: The width of the detected object.
+                                    h: The height of the detected object.
+                        '''
+                        faces = face_classifier.detectMultiScale(gray, 1.3, 5)
+                        '''
+                        Tuning Cascade Classifiers
+                        detectMultiScale(input image, Scale Factor, Min Neighbors)
+                        - Scale Factor
+                        Specifies how much we reduce the image size each time we scale. E.g. in face detection we typically use 1.3. 
+                        This means we reduce the image by 30% each time it is scaled. Smaller values, like 1.05 will take longer to compute, 
+                        but will increase the rate of detection.
+                        - Min Neighbors
+                        Specifies the number of neighbors each potential window should have in order to consider it a positive detection. 
+                        Typically set between 3-6. 
+                        It acts as sensitivity setting, low values will sometimes detect multiples faces over a single face. 
+                        High values will ensure less false positives, but you may miss some faces.  
+                        '''
+                        # When no faces detected, face_classifier returns and empty tuple
+                        if len(faces) < 1:
+                           QMessageBox.information(None, "Empty", "No Face Detected!")
+                        else:
+                           for (x,y,w,h) in faces:
+                              cv2.rectangle(self.image,(x,y),(x+w,y+h),(127,0,255),2)
+                              cv2.imshow('Face and Eye Image',self.image)
+                              roi_gray = gray[y:y+h, x:x+w]
+                              roi_color = self.image[y:y+h, x:x+w]
+                              eyes = eye_classifier.detectMultiScale(roi_gray)
+                              numberOfEyes += len(eyes)
+                              for (ex,ey,ew,eh) in eyes:
+                                 cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(255,255,0),2)
+                                 cv2.imshow('Face and Eye Image',self.image)
+                        
+                           QMessageBox.information(None, "Number of Faces and Eyes", "Number of Faces found = " + str(len(faces)) + "\nNumber of Eyes found = " + str(numberOfEyes)) 
+
+                     else:
+                        QMessageBox.warning(None, "No Haarcascades Classifier", "No Eye or Face Haarcascades Classifier found!")
+
+                  else:
+                      QMessageBox.warning(None, "No Image Selected", "First, Select an Image!") 
+
+               case "Live Face and Eye Detection with HAAR Cascade Classifiers":
+                  cv2.destroyAllWindows()
+                  if self.check_camera_availability(0):                  
+                     self.videoCapturer = cv2.VideoCapture(0)
+                     while True:
+                        '''                  
+                        In OpenCV, cap.read() is a method of the cv2.VideoCapture object used to capture a single frame from a video source or camera.
+                        Functionality:
+                           Grabs and Decodes:
+                           The read() method attempts to grab the next frame from the video stream (either a file or a live camera feed) and 
+                           then decodes it into an image format that OpenCV can use.
+                           Returns a Tuple:
+                           It returns a tuple containing two values:
+                              ret (boolean): A boolean flag indicating whether the frame was successfully read. 
+                              True means the frame was successfully captured and decoded; False indicates an error or that the end of the video stream has been reached.
+                              frame (numpy.ndarray): The actual image frame as a NumPy array if ret is True. If ret is False, this frame will be an empty or invalid array.
+
+                        Typical Usage:
+                        The cap.read() method is commonly used within a loop to continuously read frames from a video source, such as a webcam or a video file. 
+                        This allows for real-time video processing or playing back a video.
+                        '''
+                        ret, frame = self.videoCapturer.read()
+                        if not ret:
+                              self.videoCapturer.release()
+                              #self.videoCapturer = None
+                              break
+                              #QMessageBox.warning(None, "No Frame Detected", "Error: Could not capture frame!")
+                        else:
+                           cv2.imshow('Face Extractor', self.face_detector(frame))
+                           if cv2.waitKey(1) in range(0,255):
+                              self.videoCapturer.release()
+                              #self.videoCapturer = None
+                              break
+                           
+                     self.videoCapturer.release()
+                     #self.videoCapturer = None
+                     self.ResetParams.emit("ResetParams")
+                     cv2.destroyAllWindows()
+
+                  else:
+                      QMessageBox.warning(None, "No Camera Detected", "First, Turn On your Camera!")
+
+               case "Live People Detection with HAAR Cascade Classifiers":
+                  cv2.destroyAllWindows()
+                  Base_haarcascades_Path = os.path.normpath(join("resources","haarcascades"))
+                  fullbody_classifier_Path = 'haarcascade_fullbody.xml'
+                  if isfile(join(Base_haarcascades_Path, fullbody_classifier_Path)) and str(fullbody_classifier_Path).strip().endswith(".xml"):
+                     '''                     
+                     cv2.CascadeClassifier in OpenCV (Open Source Computer Vision Library) is a class used for object detection, particularly for implementing Haar Cascade classifiers. 
+                     This machine learning-based approach is widely used for real-time object detection, with face detection being a prominent example.
+                     Here's a breakdown of its key aspects:
+                     Functionality:
+                     It loads and utilizes pre-trained cascade classifier models (typically in .xml format) to detect specific objects within an image or video frame. 
+                     These models are trained using a large dataset of positive (containing the object) and negative (not containing the object) images.
+                     Haar-like Features:
+                     The underlying mechanism relies on Haar-like features, which are simple rectangular features that capture intensity differences in an image, 
+                     similar to how human eyes perceive edges and lines.
+                     Cascade Structure:
+                     The "cascade" in the name refers to a series of increasingly complex classifiers. 
+                     A region of interest in an image must pass through all stages of this cascade to be classified as containing the target object. 
+                     This cascading structure significantly improves efficiency by quickly discarding non-object regions.
+                     Usage:
+                        Initialization: An instance of cv2.CascadeClassifier is created, and the path to the pre-trained .xml file 
+                        (e.g., haarcascade_frontalface_alt.xml for face detection) is provided to its load() method or directly in the constructor.
+                        Detection: The detectMultiScale() method is then used to perform the object detection. It takes the input image (usually grayscale), 
+                        along with parameters like scaleFactor, minNeighbors, and minSize, which control the detection sensitivity and minimum object size.
+                     Output: 
+                           The method returns a list of rectangles, where each rectangle represents a detected object and contains its (x, y, width, height) coordinates. 
+                     Example (Face Detection) in Python:
+
+                     import cv2
+
+                     # Load the pre-trained face cascade classifier
+                     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt.xml')
+
+                     # Read an image
+                     img = cv2.imread('your_image.jpg')
+                     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+                     # Detect faces
+                     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+
+                     # Draw rectangles around the detected faces
+                     for (x, y, w, h) in faces:
+                        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+
+                     # Display the image
+                     cv2.imshow('Detected Faces', img)
+                     cv2.waitKey(0)
+                     cv2.destroyAllWindows()
+                     '''
+                     # Create our body classifier
+                     body_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, fullbody_classifier_Path))
+                     
+                     if self.check_camera_availability(self.video):
+                        # Initiate video capture for video file or Camera                   
+                        self.videoCapturer = cv2.VideoCapture(self.video)  # cv2.VideoCapture(0) |
+                        # while True:                                              
+                        # Loop once video is successfully loaded
+                        while self.videoCapturer is not None: #.isOpened():
+                           # Read first frame
+                           ret, frame = self.videoCapturer.read()
+                           '''                  
+                           In OpenCV, cap.read() is a method of the cv2.VideoCapture object used to capture a single frame from a video source or camera.
+                           Functionality:
+                              Grabs and Decodes:
+                              The read() method attempts to grab the next frame from the video stream (either a file or a live camera feed) and 
+                              then decodes it into an image format that OpenCV can use.
+                              Returns a Tuple:
+                              It returns a tuple containing two values:
+                                 ret (boolean): A boolean flag indicating whether the frame was successfully read. 
+                                 True means the frame was successfully captured and decoded; False indicates an error or that the end of the video stream has been reached.
+                                 frame (numpy.ndarray): The actual image frame as a NumPy array if ret is True. If ret is False, this frame will be an empty or invalid array.
+
+                           Typical Usage:
+                           The cap.read() method is commonly used within a loop to continuously read frames from a video source, such as a webcam or a video file. 
+                           This allows for real-time video processing or playing back a video.
+                           '''
+                           # If the frame was not read successfully, break the loop
+                           if not ret:
+                              self.videoCapturer.release()
+                              #self.videoCapturer = None
+                              break
+                              #QMessageBox.warning(None, "No Frame Detected", "Error: Could not capture frame!")
+                           else:
+                              gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                              # Pass frame to our body classifier
+                              bodies = body_classifier.detectMultiScale(gray, 1.2, 3)
+                              if len(bodies) > 1:
+                                 # Extract bounding boxes for any bodies identified
+                                 for (x,y,w,h) in bodies:
+                                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
+                              
+                              cv2.imshow('People', frame)
+
+                              if cv2.waitKey(1) in range(0,255):
+                                 self.videoCapturer.release()
+                                 #self.videoCapturer = None
+                                 break
+
+                        self.videoCapturer.release()
+                        #self.videoCapturer = None
+                        self.ResetParams.emit("ResetParams")
+                        cv2.destroyAllWindows()
+
+                     else:
+                        QMessageBox.warning(None, "No Video Detected", "First, Select a Video!")
+
+                  else:
+                        QMessageBox.warning(None, "No Haarcascades Classifier", "No Body Haarcascades Classifier found!")
+
+               case "Live Car Detection with HAAR Cascade Classifiers":
+                  cv2.destroyAllWindows()
+                  Base_haarcascades_Path = os.path.normpath(join("resources","haarcascades"))
+                  car_classifier_Path = 'haarcascade_car.xml'
+                  if isfile(join(Base_haarcascades_Path, car_classifier_Path)) and str(car_classifier_Path).strip().endswith(".xml"):
+                      # Create our body classifier
+                     car_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, car_classifier_Path))
+                     
+                     if self.check_camera_availability(self.video):   
+                        # Initiate video capture for video file            
+                        self.videoCapturer = cv2.VideoCapture(self.video) 
+                
+                        # Loop once video is successfully loaded
+                        while self.videoCapturer is not None: #.isOpened():   
+                           #time.sleep(0.05)
+                           # Read first frame
+                           ret, frame = self.videoCapturer.read()
+                           # If the frame was not read successfully, break the loop
+                           if not ret:
+                              self.videoCapturer.release()
+                              #self.videoCapturer = None
+                              break
+                              #QMessageBox.warning(None, "No Frame Detected", "Error: Could not capture frame!")
+                              
+                           else:
+                              gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                              
+                              # Pass frame to our car classifier
+                              cars = car_classifier.detectMultiScale(gray, 1.4, 2)
+                              if len(cars) > 1:                 
+                                 # Extract bounding boxes for any bodies identified
+                                 for (x,y,w,h) in cars:
+                                    cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 255), 2)
+                              
+                              cv2.imshow('Cars', frame)
+
+                              if cv2.waitKey(1) in range(0,255):
+                                 self.videoCapturer.release()
+                                 #self.videoCapturer = None
+                                 break
+
+                        self.videoCapturer.release()
+                        #self.videoCapturer = None
+                        self.ResetParams.emit("ResetParams")
+                        cv2.destroyAllWindows()
+
+                     else:
+                           QMessageBox.warning(None, "No Video Detected", "First, Select a Video!")
+
+                  else:
+                        QMessageBox.warning(None, "No Haarcascades Classifier", "No Body Haarcascades Classifier found!")
+
+    # Optical Character Recognition (OCR)
     def OpticalCharacterRecognition(self,text):
          print(text)
          match text:
