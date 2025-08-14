@@ -1535,6 +1535,7 @@ class Ui_MainWindow(QMainWindow,object):
 
                     if sender.__contains__("Upload Models"):
                         destination_folder = os.path.normpath(join("resources","models")) 
+
                     if sender.__contains__("Upload Images"):
                         if self.is_valid_extension(file_name.strip(),"image"):
                            destination_folder = os.path.normpath(join("resources","images")) 

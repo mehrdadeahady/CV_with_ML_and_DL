@@ -1,12 +1,14 @@
 # Import Essential Libraries
 import time
-import cv2 # Import Main Computer Vision Library in Python
+import cv2
 import numpy as np
 import os
 from os import path, listdir
 from os.path import isfile, join
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QMessageBox, QFileDialog
+from PIL import Image
+import re
 
 class ImagesAndColorsManipulationsAndOprations(QObject):
     ResetParams = pyqtSignal(str)
@@ -57,6 +59,8 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                  # imshow is Displaying Image Function in OpenCV that takes 2 parameter:
                  # cv2.imshow(Parameter1 = Desired Name for Image, Parameter2 = Image has obtained from imread Function )
                  cv2.imshow(self.imageName,self.image)
+                  # api is automatically finalized when used in a with-statement (context manager).
+                  # otherwise api.End() should be explicitly called when it's no longer needed.
                  self.WaitKeyCloseWindows()
 
     # Reading a Video File
@@ -2205,7 +2209,26 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
 
     # Optical Character Recognition (OCR)
     def OpticalCharacterRecognition(self,text):
-         print(text)
+         # Download and Install Tesseract compatible to your OS (Platform) to use pytesseract Wrapper for converting Image to Text
+         import pytesseract  
          match text:
                case "OCR by Tesseract":
-                  print("")
+                   if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+                     cv2.destroyAllWindows()
+                     cv2.imshow("Original", self.image) 
+                     # tesseract.exe path on Windows
+                     pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+                     # For macOS and Linux, the installation path may vary. 
+                     # You can typically find Tesseract installed in /usr/bin/tesseract or /usr/local/bin/tesseract                    
+                                          
+                     # pass the image to tesseract to do OCR
+                     text_extracted = pytesseract.image_to_string(self.image)
+                     
+                     # replace unrecognizable characters
+                     text_extracted = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\xff]', '', text_extracted)
+                     
+                     QMessageBox.warning(None, "Extracted Text:", text_extracted)
+                     
+                   else:
+                       QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
+                 
