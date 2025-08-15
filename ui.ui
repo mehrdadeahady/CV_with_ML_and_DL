@@ -1522,7 +1522,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
        </item>
        <item>
         <property name="text">
-         <string>OCR by Tesseract</string>
+         <string>Image to Text by Tesseract</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Image to Number by CNN (Convolutional Neural Network)</string>
         </property>
        </item>
       </widget>

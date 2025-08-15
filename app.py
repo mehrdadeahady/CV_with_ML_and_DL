@@ -3,6 +3,7 @@
 """
 @Author | Developer: Mehrdad Ahady
 """
+from utils.ImagesAndColorsManipulationsAndOprations import ImagesAndColorsManipulationsAndOprations
 import os
 from os import path, listdir
 from os.path import isfile, join
@@ -27,7 +28,6 @@ from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
 from PyQt6.QtCore import QUrl, Qt
 from PyQt6.QtWebEngineCore import QWebEngineProfile
 from utils.CustomPDFView import CustomPdfView
-from utils.ImagesAndColorsManipulationsAndOprations import ImagesAndColorsManipulationsAndOprations
 
 class Ui_MainWindow(QMainWindow,object):
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 1
@@ -578,6 +578,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.comboBox_OCR.addItem("")
         self.comboBox_OCR.setItemText(0, "")
         self.comboBox_OCR.addItem("")
+        self.comboBox_OCR.addItem("")
         self.groupBox_SegmentationAndContours = QtWidgets.QGroupBox(parent=self.page_ImagesAndColorsManipulationsAndOprations)
         self.groupBox_SegmentationAndContours.setGeometry(QtCore.QRect(10, 480, 321, 61))
         self.groupBox_SegmentationAndContours.setObjectName("groupBox_SegmentationAndContours")
@@ -894,7 +895,8 @@ class Ui_MainWindow(QMainWindow,object):
         self.comboBox_ArithmeticAndBitwiseOperations.setItemText(1, _translate("MainWindow", "Arithmetic Operations"))
         self.comboBox_ArithmeticAndBitwiseOperations.setItemText(2, _translate("MainWindow", "Bitwise Operations"))
         self.groupBox_OCR.setTitle(_translate("MainWindow", "Optical Character Recognition (OCR) "))
-        self.comboBox_OCR.setItemText(1, _translate("MainWindow", "OCR by Tesseract"))
+        self.comboBox_OCR.setItemText(1, _translate("MainWindow", "Image to Text by Tesseract"))
+        self.comboBox_OCR.setItemText(2, _translate("MainWindow", "Image to Number by CNN (Convolutional Neural Network)"))
         self.groupBox_SegmentationAndContours.setTitle(_translate("MainWindow", " Segmentation and Contours "))
         self.comboBox_SegmentationAndContours.setItemText(1, _translate("MainWindow", "Find Contours"))
         self.comboBox_SegmentationAndContours.setItemText(2, _translate("MainWindow", "Sort Contours by Area"))

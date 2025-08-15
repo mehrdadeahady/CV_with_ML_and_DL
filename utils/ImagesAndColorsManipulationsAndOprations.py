@@ -1,8 +1,15 @@
 # Import Essential Libraries
+import os
+try:
+   os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+   import tensorflow as tf
+   from keras.models import load_model
+   # print(tf.config.list_physical_devices('GPU'))
+except:
+    print("Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
 import time
 import cv2
 import numpy as np
-import os
 from os import path, listdir
 from os.path import isfile, join
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -1165,7 +1172,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
             all_areas.append(area)
          return all_areas
       
-    # Functions for Sorting by Position
+    # Function take a contour from findContours then outputs the x centroid coordinates
     def x_cord_contour(self,contours):
          """Returns the X cordinate for the contour"""
          Moment = cv2.moments(contours)  
@@ -2207,28 +2214,150 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                   else:
                         QMessageBox.warning(None, "No Haarcascades Classifier", "No Body Haarcascades Classifier found!")
 
+    # Makes Image Dimenions Square, Adds Black Pixels as padding where needed
+    def makeSquare(self,image): 
+         BLACK = [0,0,0]
+         height, width = image.shape[0:2]
+         if (height == width):
+            return image
+         else:
+            doublesize = cv2.resize(image,(2*width, 2*height), interpolation = cv2.INTER_CUBIC)
+            height, width = doublesize.shape[0:2]
+            '''
+            The cv2.copyMakeBorder() function in OpenCV allows us to add a border around an image. 
+            This can be useful for various image processing tasks such as image padding, creating frames or preparing images for machine learning.
+            Syntax:    cv2.copyMakeBorder(src, top, bottom, left, right, borderType, value)
+            Parameters:
+
+               src: Source image that we want to add the border to.
+               top: Border width at the top of the image, in pixels.
+               bottom: Border width at the bottom of the image, in pixels.
+               left: Border width on the left side, in pixels.
+               right: Border width on the right side, in pixels.
+               borderType: Defines what kind of border to add (e.g cv2.BORDER_CONSTANT, cv2.BORDER_REFLECT).
+               value: Color of the border (used only with cv2.BORDER_CONSTANT).
+
+            Return Value: It returns an image. 
+            Different Border Types:
+            The borderType parameter controls the style of the border we add to the image. Let's see some common options:
+               cv2.BORDER_CONSTANT: Adds a border with a constant color. We can set the color using the value parameter. For example, we can set value=(0, 0, 255) for a red border.
+               cv2.BORDER_REFLECT: Border is a mirror reflection of the edge pixels. For example, if the image contains the sequence "abcdef", the border would be reflected as "gfedcba|abcdef|gfedcba".
+               cv2.BORDER_REFLECT_101 (or cv2.BORDER_DEFAULT): Similar to BORDER_REFLECT but with a slight difference. If the image is "abcdefgh", the output will be "gfedcb|abcdefgh|gfedcba".
+               cv2.BORDER_REPLICATE: Border is filled by replicating the outermost pixels of the image. For example, if the image is "abcdefgh", the output will be "aaaaa|abcdefgh|hhhhh". 
+            '''
+            if (height > width):
+                  pad = int((height - width)/2)
+                  doublesize_square = cv2.copyMakeBorder(doublesize,0,0,pad,pad,cv2.BORDER_CONSTANT,value=BLACK)
+            else:
+                  pad = int((width - height)/2)
+                  doublesize_square = cv2.copyMakeBorder(doublesize,pad,pad,0,0,cv2.BORDER_CONSTANT,value=BLACK)
+         return doublesize_square
+
+    # Resizing Image to Specificied Width
+    def resize_to_pixel(self,newWidth, image):  
+         height, width = image.shape[0:2]
+         newWidth  = newWidth - 4 # buffer_pixel
+         newHeight = int((newWidth / width) * height)
+         resized = cv2.resize(image, (newWidth, newHeight) , interpolation = cv2.INTER_AREA)
+         resized_height,resized_width = resized.shape[0:2]
+         BLACK = [0,0,0]
+         if (resized_height > resized_width):
+            resized = cv2.copyMakeBorder(resized,0,0,0,1,cv2.BORDER_CONSTANT,value=BLACK)
+         if (resized_height < resized_width):
+            resized = cv2.copyMakeBorder(resized,1,0,0,0,cv2.BORDER_CONSTANT,value=BLACK)
+         ReSizedImg = cv2.copyMakeBorder(resized,2,2,2,2,cv2.BORDER_CONSTANT,value=BLACK)
+         return ReSizedImg
+
     # Optical Character Recognition (OCR)
     def OpticalCharacterRecognition(self,text):
-         # Download and Install Tesseract compatible to your OS (Platform) to use pytesseract Wrapper for converting Image to Text
-         import pytesseract  
          match text:
-               case "OCR by Tesseract":
+               case "Image to Text by Tesseract":
                    if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
                      cv2.destroyAllWindows()
-                     cv2.imshow("Original", self.image) 
-                     # tesseract.exe path on Windows
-                     pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
-                     # For macOS and Linux, the installation path may vary. 
-                     # You can typically find Tesseract installed in /usr/bin/tesseract or /usr/local/bin/tesseract                    
-                                          
-                     # pass the image to tesseract to do OCR
-                     text_extracted = pytesseract.image_to_string(self.image)
-                     
-                     # replace unrecognizable characters
-                     text_extracted = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\xff]', '', text_extracted)
-                     
-                     QMessageBox.warning(None, "Extracted Text:", text_extracted)
+                     cv2.imshow("Original", self.image)
+                     try: 
+                        # Download and Install Tesseract compatible to your OS (Platform) to use pytesseract Wrapper for converting Image to Text
+                        import pytesseract  
+                        # tesseract.exe path on Windows
+                        pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+                        # For macOS and Linux, the installation path may vary. 
+                        # You can typically find Tesseract installed in /usr/bin/tesseract or /usr/local/bin/tesseract                    
+                                             
+                        # pass the image to tesseract to do OCR
+                        text_extracted = pytesseract.image_to_string(self.image)
+                        
+                        # replace unrecognizable characters
+                        text_extracted = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\xff]', '', text_extracted)
+                        
+                        QMessageBox.information(None, "Extracted Text:", text_extracted)
+
+                     except:
+                            QMessageBox.critical(None, "Instalation Error", "Download and Install Tesseract compatible to your OS, Check instalation of pytesseract Package!")
+
                      
                    else:
                        QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
-                 
+               
+               case "Image to Number by CNN (Convolutional Neural Network)":
+                   if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+                     cv2.destroyAllWindows()
+                     cv2.imshow("Original", self.image) 
+                     try:
+                        # In complex apps importing tensorflow and keras must be on the top of other imports to avoid confilicts:
+                        # from keras.models import load_model
+
+                        # Load Trained CNN (Convolutional Neural Network) Model. In next section: Create and Train this Simple  Model.
+                        classifier = load_model('resources/models/mnist_simple_cnn_10_Epochs.keras', custom_objects=None, compile=True)
+
+                        # Convert to Gray Scale
+                        gray = cv2.cvtColor(self.image,cv2.COLOR_BGR2GRAY)
+                        # Blur image to decreese unwanted details
+                        blurred = cv2.GaussianBlur(gray, (5,5), 0)
+                        # Find edges using Canny
+                        edged = cv2.Canny(blurred, 50,150)                   
+                        # Find Contours (here external boundaries detected)
+                        contours, _ = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                        #Sort contours left to right by using their x cordinates
+                        contours = sorted(contours, key = self.x_cord_contour, reverse = False)
+
+                        # Empty array to Store Detected Numbers
+                        detected_number_list = ["List of Detected Numbers:\n"]
+
+                        # loop over the contours
+                        for i,c in enumerate(contours):
+                           # Compute the bounding box for the rectangle
+                           (x, y, w, h) = cv2.boundingRect(c) 
+                           # Filter Size of the Text to detect
+                           if w >= 9 and h >= 12:
+                              roi = gray[y:y + h, x:x + w]
+                              ret, roi = cv2.threshold(roi, 127, 255,cv2.THRESH_BINARY_INV)
+                              roi = self.makeSquare(roi)
+                              roi = self.resize_to_pixel(28, roi)
+                              # cv2.imshow("ROI", roi)
+                              roi = roi / 255.0
+                              roi = roi.reshape(1,28,28,1) 
+                              ## Get Prediction
+                              predictions = np.argmax(classifier.predict(roi, 1, verbose = 0),axis=1)[0]
+                              res = str(predictions)
+                              if i < len(contours) - 1:
+                                 detected_number_list.append(res + " , ")
+                              else:
+                                  detected_number_list.append(res)
+                              cv2.rectangle(self.image, (x-5, y-5), (x + w + 5, y + h + 5), (0, 0, 255), 2)
+                              cv2.putText(self.image, res, (x + w + 8, y + h + 8), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 2)
+                              cv2.imshow("Detected Numbers Marked", self.image)   
+
+                        if len(detected_number_list) < 2 and len(contours) > 1:
+                              QMessageBox.warning(None, "Font Size Setting", "Model Configured to recognize texts with font-size greater than 20 Pixel!")                           
+                        
+                        elif len(detected_number_list) > 1:
+                             QMessageBox.information(None, "Detected Numbers", ''.join(detected_number_list))
+                        
+                        else:
+                            QMessageBox.information(None, "Detected Numbers", "No Number Detected!")
+
+                     except:
+                            QMessageBox.critical(None, "Instalation Error", "Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
+
+                   else:
+                         QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
