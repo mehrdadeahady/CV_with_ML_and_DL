@@ -1,5 +1,7 @@
 # Import Essential Libraries
 import os
+import numpy as np
+import cv2
 try:
    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
    import tensorflow as tf
@@ -8,8 +10,6 @@ try:
 except:
     print("Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
 import time
-import cv2
-import numpy as np
 from os import path, listdir
 from os.path import isfile, join
 from PyQt6.QtCore import QObject, pyqtSignal
@@ -33,6 +33,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
         self.videoCapturer = None
 
     # Consider|Attention: 
+    # Check List of Libraries to Install and Import at the End pf the Page
     # All parameters Assigned have relation to Image Dimensions for Visibility of Changes in the Screen > image.shape = (height,width,depth)
     # OpenCV Functions have several Overloads (Same Method Names with different Parameters some of them Mandatory and some Optional):
     # Here Mandatory Parameters with some Optional Parameters filled, in Practical RealWorld Projects use IDE IntelliJ IDEA by pressing Ctrl + Space:
@@ -2328,7 +2329,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                            # Compute the bounding box for the rectangle
                            (x, y, w, h) = cv2.boundingRect(c) 
                            # Filter Size of the Text to detect
-                           if w >= 9 and h >= 12:
+                           if w >= 6 and h >= 12:
                               roi = gray[y:y + h, x:x + w]
                               ret, roi = cv2.threshold(roi, 127, 255,cv2.THRESH_BINARY_INV)
                               roi = self.makeSquare(roi)
@@ -2336,8 +2337,65 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                               # cv2.imshow("ROI", roi)
                               roi = roi / 255.0
                               roi = roi.reshape(1,28,28,1) 
+                              '''
+                              np.argmax() is a function within the NumPy library in Python used to 
+                              find the indices of the maximum values along a specified axis in an array. 
+                              Functionality:
+                                 It takes a NumPy array as input.
+                                 By default, if no axis is specified, it returns the index of the maximum value in the flattened array 
+                                 (as if the array were a single, one-dimensional sequence).
+                                 When an axis is specified (e.g., axis=0 for columns, axis=1 for rows in a 2D array), 
+                                 it returns an array of indices corresponding to the maximum values along that specific axis.
+                                 If multiple occurrences of the maximum value exist, np.argmax() returns the index of the first occurrence.
+                              Syntax in Python:
+                                               numpy.argmax(array, axis=None, out=None, keepdims=False)
+                              Parameters:
+                                 array: The input array.
+                                 axis: (Optional) The axis along which to find the maximum values.
+                                 out: (Optional) An array in which to place the result.
+                                 keepdims: (Optional) If True, the axes which are reduced are left in the result as dimensions with size one. 
+                              '''
                               ## Get Prediction
                               predictions = np.argmax(classifier.predict(roi, 1, verbose = 0),axis=1)[0]
+                              '''                          
+                              classifier.predict() is a method commonly found in machine learning libraries, particularly within the context of classification models. 
+                              Its purpose is to generate class predictions for new, unseen data instances using a trained classification model.
+                              Functionality:
+                                 Input:
+                                 It takes as input one or more data instances (samples) for which class labels need to be predicted. 
+                                 This input typically comes in the form of a numerical array, where each row represents a data instance and each column represents a feature.
+                                 Prediction:
+                                 The trained classifier applies its learned patterns and decision rules to the input data.
+                                 Output:
+                                 It returns the predicted class label(s) for the input data instances. For a single input instance, it returns a single class label. 
+                                 For multiple instances, it returns an array of predicted class labels, one for each instance.
+                              Example in Scikit-learn (Python):
+
+                                                               from sklearn.linear_model import LogisticRegression
+                                                               import numpy as np
+
+                                                               # Assume X_train and y_train are your training data and labels
+                                                               # Assume X_new is your new data for prediction
+
+                                                               # Train a classifier (e.g., Logistic Regression)
+                                                               model = LogisticRegression()
+                                                               model.fit(X_train, y_train)
+
+                                                               # Make predictions on new data
+                                                               ynew = model.predict(X_new)
+
+                                                               print(f"Predicted classes for new data: {ynew}")
+
+                              Key Considerations:
+                                 Input Shape:
+                                 The predict() method expects the input data to have the same number of features (columns) as the data used during training.
+                                 Data Preprocessing:
+                                 The new data should undergo the same preprocessing steps (e.g., scaling, encoding) as the training data to ensure consistent feature representation.
+                                 Class Predictions vs. Probabilities:
+                                 While predict() returns the most likely class, many classifiers also offer a predict_proba() method to 
+                                 return the probability distribution over all classes for each instance. 
+                                 This can be useful for understanding the model's confidence in its predictions or for setting custom decision thresholds.
+                              '''
                               res = str(predictions)
                               if i < len(contours) - 1:
                                  detected_number_list.append(res + " , ")
@@ -2361,3 +2419,31 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
 
                    else:
                          QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
+
+    # List of Libraries and Packages required to Install for running above Functions:
+    '''
+    1) Tensorflow: compatible with your Operation System (OS)(Software) and Your Computer System (Hardware).
+                   (check cpu gpu support of the System and OS, check Python version)
+    2) Keras:      when installing tensorflow, it installs keras and tensorboard automatically.
+    3) OpenCV:     compatible with Tensorflow and Keras.
+    4) Numpy:      It will be installed During Tensorflow or OpenCV installation, compatible with both.
+    '''
+    '''
+      import os
+      # Put import of Tensorflow and Keras in Try Block to check Correct Instalation
+      try:
+         # Below to bypass unnecessary log info
+         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+         import tensorflow as tf
+         import keras
+         from keras.models import load_model
+         print(tf.__version__)
+         print(keras.__version__)
+      except:
+         print("Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
+      import time
+      import cv2
+      import numpy as np
+      import re
+    '''
+    
