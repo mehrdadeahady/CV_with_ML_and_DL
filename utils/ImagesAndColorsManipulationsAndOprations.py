@@ -1,14 +1,12 @@
 # Import Essential Libraries
 import os
 import numpy as np
-import cv2
 try:
    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-   import tensorflow as tf
    from keras.models import load_model
-   # print(tf.config.list_physical_devices('GPU'))
 except:
     print("Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
+import cv2
 import time
 from os import path, listdir
 from os.path import isfile, join
