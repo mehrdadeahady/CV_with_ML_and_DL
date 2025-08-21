@@ -455,11 +455,11 @@ class CreateSimpleCNN(QObject):
             self.batch_size = 32
             self.steps_per_epoch = int(len(self.x_train) / self.batch_size)
             self._is_running = True         
-            self.TrainingLogPopup = TrainingLogPopupClass(self.total_epochs)   
-            self.TrainingLogPopup.show()   
             try:
                 # Running the Training Model in a seperate Thread to ba able cancel long running process and Inversion of Control (IOC)
                 self.training_thread = TrainingThread(self._is_running,self.signal_emitter, self.total_epochs, self.steps_per_epoch, self.batch_size,self.model,self.x_train,self.y_train,self.x_test,self.y_test)
+                self.TrainingLogPopup = TrainingLogPopupClass(self.total_epochs,self.training_thread)   
+                self.TrainingLogPopup.show()   
                 self.training_thread.start()
             except:
                    QMessageBox.critical(None, "Instalation Error", "Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
@@ -640,8 +640,9 @@ class ConsoleCallback(keras.callbacks.Callback):
 
 # Popup window for training log
 class TrainingLogPopupClass(QDialog):
-    def __init__(self, total_epochs):
+    def __init__(self, total_epochs, training_thread):
         super().__init__()
+        self.training_thread = training_thread
         self.setWindowTitle("Training Log")
         self.setFixedSize(800, 600)
         # Create a scroll area
@@ -685,6 +686,11 @@ class TrainingLogPopupClass(QDialog):
         messagePlus = textEdit.toPlainText() + message 
         textEdit.setText(messagePlus)
         self.scroll_area.verticalScrollBar().setValue(textEdit.y())#(epoch + 1) * 60)
+
+    # Stop Training On Close Popup
+    def closeEvent(self, evnt):
+        self.training_thread.stop()
+
 
 
 
