@@ -473,7 +473,7 @@ class CreateSimpleCNN(QObject):
         else:
             QMessageBox.warning(None,"No Training Process","No Model Training Process Running now.")
            
-# Training thread
+# Training Thread
 class TrainingThread(QThread):
     def __init__(self,_is_running, signal_emitter, total_epochs,steps_per_epoch, batch_size, model,x_train,y_train,x_test,y_test):
         super().__init__()
@@ -562,7 +562,7 @@ class TrainingThread(QThread):
             self.quit()
             self.exit()
                
-# Signal emitter for GUI updates
+# Signal emitter for GUI Updates
 class SignalEmitter(QObject):
     # Update Realtime Progress of Training - Content Message - Epoch
     batch_signal = pyqtSignal(str, int) 
@@ -573,7 +573,7 @@ class SignalEmitter(QObject):
     # Assigning results of Training including: History Log - Trained Model      
     modelTrainedSignal = pyqtSignal(object,object) 
 
-# Custom callback to simulate Keras console output
+# Custom callback to Simulating Keras Console Output Log
 class ConsoleCallback(keras.callbacks.Callback):
     def __init__(self, _is_running,signal_emitter, steps_per_epoch, total_epochs):
         super().__init__()
@@ -638,7 +638,7 @@ class ConsoleCallback(keras.callbacks.Callback):
             self.model.stop_training = True
             raise RuntimeError("Training Canceled!")
 
-# Popup window for training log
+# Popup window for Training log
 class TrainingLogPopupClass(QDialog):
     def __init__(self, total_epochs, training_thread):
         super().__init__()

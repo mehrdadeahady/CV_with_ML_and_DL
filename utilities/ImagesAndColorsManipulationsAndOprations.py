@@ -36,16 +36,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
     # This offers a broad range of suggestions relevant to the current context, including Optional and Mandatory Parameters.
     # For Operations at first time select the Default Image with the same name to understand the Concept.
 
-    # Wait for Clicking a Key on Keyboard to Close All cv2 Windows
-    def WaitKeyCloseWindows(self):
-        # Wait until Clicking a Key on Keyboard
-        cv2.waitKey(0)
-        # Close All cv2 Windows
-        cv2.destroyAllWindows()
-        self.tempImage = None
-        self.tempImageName = None
-        self.ResetParams.emit("")
-      # if cv2.getWindowProperty(self.imageName, cv2.WND_PROP_VISIBLE) == -1:
+# *** Processor Functions: ***
 
     # Reading and Showing an Image from the Path
     def ReadShowImage(self,ImageName):
@@ -1160,73 +1151,6 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
         else:
             QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
 
-    # Function to Display Contour Area
-    def get_contour_areas(self,contours):
-         """returns the areas of all contours as list"""
-         all_areas = []
-         for contour in contours:
-            area = cv2.contourArea(contour)
-            all_areas.append(area)
-         return all_areas
-      
-    # Function take a contour from findContours then outputs the x centroid coordinates
-    def x_cord_contour(self,contours):
-         """Returns the X cordinate for the contour"""
-         Moment = cv2.moments(contours)  
-         '''
-         The cv2.moments() function in OpenCV is used to calculate all the moments (up to the third order) of a binary image or a contour. 
-         These moments provide valuable information about the shape, size, and orientation of an object within an image. 
-         Function Signature IN Python:
-                                       M = cv2.moments(array, binaryImage=False)
-         Parameters:
-            array:
-            This can be either a single-channel image (e.g., a grayscale image) or a NumPy array representing the contour points of an object. 
-            If it is an image, it should be of type np.uint8, np.int32, or np.float32.
-            binaryImage:
-            This is an optional boolean parameter, used only if the input array is an image. 
-            If set to True, all non-zero pixels in the image are treated as 1s, effectively binarizing the image for moment calculation. 
-            If False (default), pixel intensities are used as weights.
-
-         Return Value:
-            The function returns a dictionary (M) containing various moment values. Some of the key moments include:
-            m00:
-                  This represents the area of the object (or the sum of pixel intensities if binaryImage is False).
-            m10, m01:
-                     These are used to calculate the centroid (center of mass) of the object.
-                        Centroid X-coordinate: cX = M['m10'] / M['m00']
-                        Centroid Y-coordinate: cY = M['m01'] / M['m00'] 
-            mu20, mu02, mu11:
-                              These are central moments, which are translation-invariant and provide information about the object's orientation and shape.
-            nu20, nu02, nu11:
-                              These are central normalized moments (Hu moments), which are both translation and scale-invariant, 
-                              making them useful for shape description and recognition. 
-
-         Applications:
-                     cv2.moments() is widely used in computer vision for tasks such as:
-                     Calculating the area of a detected object.
-                     Finding the centroid (center of mass) of an object.
-                     Analyzing the shape and orientation of objects.
-                     Object recognition and classification based on shape features.
-         '''
-         # To avoid divided by zero error
-         if Moment['m00'] != 0:
-            return (int(Moment['m10']/Moment['m00']))
-         else:
-             return int(Moment['m10'])
-          
-    def label_contour_center(self,image, contour):
-      """Places a red circle on the center of contours"""
-      Moment = cv2.moments(contour)
-      # To avoid divided by zero error
-      cx = int(Moment['m10'])
-      cy = int(Moment['m01']) 
-      if Moment['m00'] != 0:
-         cx = int(Moment['m10'] / Moment['m00'])
-         cy = int(Moment['m01'] / Moment['m00'])
-      # Draw the contour number on the image
-      cv2.circle(image,(cx,cy), 10, (0,0,255), -1)
-      return image
-    
     # Find contours in Binary Image
     def SegmentationAndContours(self,text):
         if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
@@ -1495,98 +1419,6 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
         else:
             QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
    
-    # Check Camera or Video availability at the given index or Path
-    def check_camera_availability(self,camera_index_or_Video_path):
-         """Checks if a camera at the given index is available or a Video File exist in the given Path"""
-         if camera_index_or_Video_path == "" or camera_index_or_Video_path == None:
-             return False
-         else:
-            self.videoCapturer = cv2.VideoCapture(camera_index_or_Video_path)
-            if self.videoCapturer is None or not self.videoCapturer.isOpened():
-               return False
-            else:
-               self.videoCapturer.release()
-               self.videoCapturer = None
-               return True
-    
-    # Detecting Faces at Images Comming from a Camera
-    def face_detector(self,img, size=0.5):
-      Base_haarcascades_Path = os.path.normpath(join("resources","haarcascades"))
-      face_classifier_Path = 'haarcascade_frontalface_default.xml'
-      eye_classifier_Path = 'haarcascade_eye.xml'                  
-      if (isfile(join(Base_haarcascades_Path, face_classifier_Path)) and str(face_classifier_Path).strip().endswith(".xml") and 
-            isfile(join(Base_haarcascades_Path, eye_classifier_Path)) and str(eye_classifier_Path).strip().endswith(".xml")):
-         '''                     
-         cv2.CascadeClassifier in OpenCV (Open Source Computer Vision Library) is a class used for object detection, particularly for implementing Haar Cascade classifiers. 
-         This machine learning-based approach is widely used for real-time object detection, with face detection being a prominent example.
-         Here's a breakdown of its key aspects:
-         Functionality:
-         It loads and utilizes pre-trained cascade classifier models (typically in .xml format) to detect specific objects within an image or video frame. 
-         These models are trained using a large dataset of positive (containing the object) and negative (not containing the object) images.
-         Haar-like Features:
-         The underlying mechanism relies on Haar-like features, which are simple rectangular features that capture intensity differences in an image, 
-         similar to how human eyes perceive edges and lines.
-         Cascade Structure:
-         The "cascade" in the name refers to a series of increasingly complex classifiers. 
-         A region of interest in an image must pass through all stages of this cascade to be classified as containing the target object. 
-         This cascading structure significantly improves efficiency by quickly discarding non-object regions.
-         Usage:
-            Initialization: An instance of cv2.CascadeClassifier is created, and the path to the pre-trained .xml file 
-            (e.g., haarcascade_frontalface_alt.xml for face detection) is provided to its load() method or directly in the constructor.
-            Detection: The detectMultiScale() method is then used to perform the object detection. It takes the input image (usually grayscale), 
-            along with parameters like scaleFactor, minNeighbors, and minSize, which control the detection sensitivity and minimum object size.
-         Output: 
-               The method returns a list of rectangles, where each rectangle represents a detected object and contains its (x, y, width, height) coordinates. 
-         Example (Face Detection) in Python:
-
-         import cv2
-
-         # Load the pre-trained face cascade classifier
-         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt.xml')
-
-         # Read an image
-         img = cv2.imread('your_image.jpg')
-         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-         # Detect faces
-         faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-
-         # Draw rectangles around the detected faces
-         for (x, y, w, h) in faces:
-            cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
-
-         # Display the image
-         cv2.imshow('Detected Faces', img)
-         cv2.waitKey(0)
-         cv2.destroyAllWindows()
-         '''
-         face_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, face_classifier_Path))
-         eye_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, eye_classifier_Path))
-         # Convert image to grayscale
-         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-         faces = face_classifier.detectMultiScale(gray, 1.3, 5)
-         if len(faces) <1:
-            return img
-         
-         for (x,y,w,h) in faces:
-            x = x - 50
-            w = w + 50
-            y = y - 50
-            h = h + 50
-            cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
-            roi_gray = gray[y:y+h, x:x+w]
-            roi_color = img[y:y+h, x:x+w]
-            eyes = eye_classifier.detectMultiScale(roi_gray)
-            time.sleep(.05)
-            for (ex,ey,ew,eh) in eyes:
-                  cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,0,255),2) 
-                  
-         img = cv2.flip(img,1)
-         return img
-      
-      else:
-          QMessageBox.warning(None, "No Haarcascades Classifier", "No Eye or Face Haarcascades Classifier found!")
-
     # Detecting Specific Object
     def ObjectDetection(self,text):
          match text:
@@ -2211,60 +2043,6 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                   else:
                         QMessageBox.warning(None, "No Haarcascades Classifier", "No Body Haarcascades Classifier found!")
 
-    # Makes Image Dimenions Square, Adds Black Pixels as padding where needed
-    def makeSquare(self,image): 
-         BLACK = [0,0,0]
-         height, width = image.shape[0:2]
-         if (height == width):
-            return image
-         else:
-            doublesize = cv2.resize(image,(2*width, 2*height), interpolation = cv2.INTER_CUBIC)
-            height, width = doublesize.shape[0:2]
-            '''
-            The cv2.copyMakeBorder() function in OpenCV allows us to add a border around an image. 
-            This can be useful for various image processing tasks such as image padding, creating frames or preparing images for machine learning.
-            Syntax:    cv2.copyMakeBorder(src, top, bottom, left, right, borderType, value)
-            Parameters:
-
-               src: Source image that we want to add the border to.
-               top: Border width at the top of the image, in pixels.
-               bottom: Border width at the bottom of the image, in pixels.
-               left: Border width on the left side, in pixels.
-               right: Border width on the right side, in pixels.
-               borderType: Defines what kind of border to add (e.g cv2.BORDER_CONSTANT, cv2.BORDER_REFLECT).
-               value: Color of the border (used only with cv2.BORDER_CONSTANT).
-
-            Return Value: It returns an image. 
-            Different Border Types:
-            The borderType parameter controls the style of the border we add to the image. Let's see some common options:
-               cv2.BORDER_CONSTANT: Adds a border with a constant color. We can set the color using the value parameter. For example, we can set value=(0, 0, 255) for a red border.
-               cv2.BORDER_REFLECT: Border is a mirror reflection of the edge pixels. For example, if the image contains the sequence "abcdef", the border would be reflected as "gfedcba|abcdef|gfedcba".
-               cv2.BORDER_REFLECT_101 (or cv2.BORDER_DEFAULT): Similar to BORDER_REFLECT but with a slight difference. If the image is "abcdefgh", the output will be "gfedcb|abcdefgh|gfedcba".
-               cv2.BORDER_REPLICATE: Border is filled by replicating the outermost pixels of the image. For example, if the image is "abcdefgh", the output will be "aaaaa|abcdefgh|hhhhh". 
-            '''
-            if (height > width):
-                  pad = int((height - width)/2)
-                  doublesize_square = cv2.copyMakeBorder(doublesize,0,0,pad,pad,cv2.BORDER_CONSTANT,value=BLACK)
-            else:
-                  pad = int((width - height)/2)
-                  doublesize_square = cv2.copyMakeBorder(doublesize,pad,pad,0,0,cv2.BORDER_CONSTANT,value=BLACK)
-         return doublesize_square
-
-    # Resizing Image to Specificied Width
-    def resize_to_pixel(self,newWidth, image):  
-         height, width = image.shape[0:2]
-         newWidth  = newWidth - 4 # buffer_pixel
-         newHeight = int((newWidth / width) * height)
-         resized = cv2.resize(image, (newWidth, newHeight) , interpolation = cv2.INTER_AREA)
-         resized_height,resized_width = resized.shape[0:2]
-         BLACK = [0,0,0]
-         if (resized_height > resized_width):
-            resized = cv2.copyMakeBorder(resized,0,0,0,1,cv2.BORDER_CONSTANT,value=BLACK)
-         if (resized_height < resized_width):
-            resized = cv2.copyMakeBorder(resized,1,0,0,0,cv2.BORDER_CONSTANT,value=BLACK)
-         ReSizedImg = cv2.copyMakeBorder(resized,2,2,2,2,cv2.BORDER_CONSTANT,value=BLACK)
-         return ReSizedImg
-
     # Optical Character Recognition (OCR)
     def OpticalCharacterRecognition(self,text):
          match text:
@@ -2277,7 +2055,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                         import pytesseract  
                         # tesseract.exe path on Windows
                         pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
-                        # For macOS and Linux, the installation path may vary. 
+                        # For macOS and Linux, the installation path may vary:
                         # You can typically find Tesseract installed in /usr/bin/tesseract or /usr/local/bin/tesseract                    
                                              
                         # pass the image to tesseract to do OCR
@@ -2416,6 +2194,234 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                    else:
                          QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
 
+# *** PreProcessor Functions as Helpers to Processor Functions: ***
+
+    # Check Camera or Video availability at the given index or Path
+    def check_camera_availability(self,camera_index_or_Video_path):
+         """Checks if a camera at the given index is available or a Video File exist in the given Path"""
+         if camera_index_or_Video_path == "" or camera_index_or_Video_path == None:
+             return False
+         else:
+            self.videoCapturer = cv2.VideoCapture(camera_index_or_Video_path)
+            if self.videoCapturer is None or not self.videoCapturer.isOpened():
+               return False
+            else:
+               self.videoCapturer.release()
+               self.videoCapturer = None
+               return True
+    
+    # Detecting Faces at Images Comming from a Camera
+    def face_detector(self,img, size=0.5):
+      Base_haarcascades_Path = os.path.normpath(join("resources","haarcascades"))
+      face_classifier_Path = 'haarcascade_frontalface_default.xml'
+      eye_classifier_Path = 'haarcascade_eye.xml'                  
+      if (isfile(join(Base_haarcascades_Path, face_classifier_Path)) and str(face_classifier_Path).strip().endswith(".xml") and 
+            isfile(join(Base_haarcascades_Path, eye_classifier_Path)) and str(eye_classifier_Path).strip().endswith(".xml")):
+         '''                     
+         cv2.CascadeClassifier in OpenCV (Open Source Computer Vision Library) is a class used for object detection, particularly for implementing Haar Cascade classifiers. 
+         This machine learning-based approach is widely used for real-time object detection, with face detection being a prominent example.
+         Here's a breakdown of its key aspects:
+         Functionality:
+         It loads and utilizes pre-trained cascade classifier models (typically in .xml format) to detect specific objects within an image or video frame. 
+         These models are trained using a large dataset of positive (containing the object) and negative (not containing the object) images.
+         Haar-like Features:
+         The underlying mechanism relies on Haar-like features, which are simple rectangular features that capture intensity differences in an image, 
+         similar to how human eyes perceive edges and lines.
+         Cascade Structure:
+         The "cascade" in the name refers to a series of increasingly complex classifiers. 
+         A region of interest in an image must pass through all stages of this cascade to be classified as containing the target object. 
+         This cascading structure significantly improves efficiency by quickly discarding non-object regions.
+         Usage:
+            Initialization: An instance of cv2.CascadeClassifier is created, and the path to the pre-trained .xml file 
+            (e.g., haarcascade_frontalface_alt.xml for face detection) is provided to its load() method or directly in the constructor.
+            Detection: The detectMultiScale() method is then used to perform the object detection. It takes the input image (usually grayscale), 
+            along with parameters like scaleFactor, minNeighbors, and minSize, which control the detection sensitivity and minimum object size.
+         Output: 
+               The method returns a list of rectangles, where each rectangle represents a detected object and contains its (x, y, width, height) coordinates. 
+         Example (Face Detection) in Python:
+
+         import cv2
+
+         # Load the pre-trained face cascade classifier
+         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_alt.xml')
+
+         # Read an image
+         img = cv2.imread('your_image.jpg')
+         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+         # Detect faces
+         faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+
+         # Draw rectangles around the detected faces
+         for (x, y, w, h) in faces:
+            cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+
+         # Display the image
+         cv2.imshow('Detected Faces', img)
+         cv2.waitKey(0)
+         cv2.destroyAllWindows()
+         '''
+         face_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, face_classifier_Path))
+         eye_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, eye_classifier_Path))
+         # Convert image to grayscale
+         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+         faces = face_classifier.detectMultiScale(gray, 1.3, 5)
+         if len(faces) <1:
+            return img
+         
+         for (x,y,w,h) in faces:
+            x = x - 50
+            w = w + 50
+            y = y - 50
+            h = h + 50
+            cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+            roi_gray = gray[y:y+h, x:x+w]
+            roi_color = img[y:y+h, x:x+w]
+            eyes = eye_classifier.detectMultiScale(roi_gray)
+            time.sleep(.05)
+            for (ex,ey,ew,eh) in eyes:
+                  cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,0,255),2) 
+                  
+         img = cv2.flip(img,1)
+         return img
+      
+      else:
+          QMessageBox.warning(None, "No Haarcascades Classifier", "No Eye or Face Haarcascades Classifier found!")
+
+    # Makes Image Dimenions Square, Adds Black Pixels as padding where needed
+    def makeSquare(self,image): 
+         BLACK = [0,0,0]
+         height, width = image.shape[0:2]
+         if (height == width):
+            return image
+         else:
+            doublesize = cv2.resize(image,(2*width, 2*height), interpolation = cv2.INTER_CUBIC)
+            height, width = doublesize.shape[0:2]
+            '''
+            The cv2.copyMakeBorder() function in OpenCV allows us to add a border around an image. 
+            This can be useful for various image processing tasks such as image padding, creating frames or preparing images for machine learning.
+            Syntax:    cv2.copyMakeBorder(src, top, bottom, left, right, borderType, value)
+            Parameters:
+
+               src: Source image that we want to add the border to.
+               top: Border width at the top of the image, in pixels.
+               bottom: Border width at the bottom of the image, in pixels.
+               left: Border width on the left side, in pixels.
+               right: Border width on the right side, in pixels.
+               borderType: Defines what kind of border to add (e.g cv2.BORDER_CONSTANT, cv2.BORDER_REFLECT).
+               value: Color of the border (used only with cv2.BORDER_CONSTANT).
+
+            Return Value: It returns an image. 
+            Different Border Types:
+            The borderType parameter controls the style of the border we add to the image. Let's see some common options:
+               cv2.BORDER_CONSTANT: Adds a border with a constant color. We can set the color using the value parameter. For example, we can set value=(0, 0, 255) for a red border.
+               cv2.BORDER_REFLECT: Border is a mirror reflection of the edge pixels. For example, if the image contains the sequence "abcdef", the border would be reflected as "gfedcba|abcdef|gfedcba".
+               cv2.BORDER_REFLECT_101 (or cv2.BORDER_DEFAULT): Similar to BORDER_REFLECT but with a slight difference. If the image is "abcdefgh", the output will be "gfedcb|abcdefgh|gfedcba".
+               cv2.BORDER_REPLICATE: Border is filled by replicating the outermost pixels of the image. For example, if the image is "abcdefgh", the output will be "aaaaa|abcdefgh|hhhhh". 
+            '''
+            if (height > width):
+                  pad = int((height - width)/2)
+                  doublesize_square = cv2.copyMakeBorder(doublesize,0,0,pad,pad,cv2.BORDER_CONSTANT,value=BLACK)
+            else:
+                  pad = int((width - height)/2)
+                  doublesize_square = cv2.copyMakeBorder(doublesize,pad,pad,0,0,cv2.BORDER_CONSTANT,value=BLACK)
+         return doublesize_square
+
+    # Resizing Image to Specificied Width
+    def resize_to_pixel(self,newWidth, image):  
+         height, width = image.shape[0:2]
+         newWidth  = newWidth - 4 # buffer_pixel
+         newHeight = int((newWidth / width) * height)
+         resized = cv2.resize(image, (newWidth, newHeight) , interpolation = cv2.INTER_AREA)
+         resized_height,resized_width = resized.shape[0:2]
+         BLACK = [0,0,0]
+         if (resized_height > resized_width):
+            resized = cv2.copyMakeBorder(resized,0,0,0,1,cv2.BORDER_CONSTANT,value=BLACK)
+         if (resized_height < resized_width):
+            resized = cv2.copyMakeBorder(resized,1,0,0,0,cv2.BORDER_CONSTANT,value=BLACK)
+         ReSizedImg = cv2.copyMakeBorder(resized,2,2,2,2,cv2.BORDER_CONSTANT,value=BLACK)
+         return ReSizedImg
+
+    # Function to Display Contour Area
+    def get_contour_areas(self,contours):
+         """returns the areas of all contours as list"""
+         all_areas = []
+         for contour in contours:
+            area = cv2.contourArea(contour)
+            all_areas.append(area)
+         return all_areas
+      
+    # Function take a contour from findContours then outputs the x centroid coordinates
+    def x_cord_contour(self,contours):
+         """Returns the X cordinate for the contour"""
+         Moment = cv2.moments(contours)  
+         '''
+         The cv2.moments() function in OpenCV is used to calculate all the moments (up to the third order) of a binary image or a contour. 
+         These moments provide valuable information about the shape, size, and orientation of an object within an image. 
+         Function Signature IN Python:
+                                       M = cv2.moments(array, binaryImage=False)
+         Parameters:
+            array:
+            This can be either a single-channel image (e.g., a grayscale image) or a NumPy array representing the contour points of an object. 
+            If it is an image, it should be of type np.uint8, np.int32, or np.float32.
+            binaryImage:
+            This is an optional boolean parameter, used only if the input array is an image. 
+            If set to True, all non-zero pixels in the image are treated as 1s, effectively binarizing the image for moment calculation. 
+            If False (default), pixel intensities are used as weights.
+
+         Return Value:
+            The function returns a dictionary (M) containing various moment values. Some of the key moments include:
+            m00:
+                  This represents the area of the object (or the sum of pixel intensities if binaryImage is False).
+            m10, m01:
+                     These are used to calculate the centroid (center of mass) of the object.
+                        Centroid X-coordinate: cX = M['m10'] / M['m00']
+                        Centroid Y-coordinate: cY = M['m01'] / M['m00'] 
+            mu20, mu02, mu11:
+                              These are central moments, which are translation-invariant and provide information about the object's orientation and shape.
+            nu20, nu02, nu11:
+                              These are central normalized moments (Hu moments), which are both translation and scale-invariant, 
+                              making them useful for shape description and recognition. 
+
+         Applications:
+                     cv2.moments() is widely used in computer vision for tasks such as:
+                     Calculating the area of a detected object.
+                     Finding the centroid (center of mass) of an object.
+                     Analyzing the shape and orientation of objects.
+                     Object recognition and classification based on shape features.
+         '''
+         # To avoid divided by zero error
+         if Moment['m00'] != 0:
+            return (int(Moment['m10']/Moment['m00']))
+         else:
+             return int(Moment['m10'])
+          
+    def label_contour_center(self,image, contour):
+      """Places a red circle on the center of contours"""
+      Moment = cv2.moments(contour)
+      # To avoid divided by zero error
+      cx = int(Moment['m10'])
+      cy = int(Moment['m01']) 
+      if Moment['m00'] != 0:
+         cx = int(Moment['m10'] / Moment['m00'])
+         cy = int(Moment['m01'] / Moment['m00'])
+      # Draw the contour number on the image
+      cv2.circle(image,(cx,cy), 10, (0,0,255), -1)
+      return image
+    
+# UI Helper Functions:
+
+    # Wait for Clicking a Key on Keyboard to Close All cv2 Windows
+    def WaitKeyCloseWindows(self):
+        # Wait until Clicking a Key on Keyboard
+        cv2.waitKey(0)
+        # Close All cv2 Windows
+        cv2.destroyAllWindows()
+        self.tempImage = None
+        self.tempImageName = None
+        self.ResetParams.emit("")
+      # if cv2.getWindowProperty(self.imageName, cv2.WND_PROP_VISIBLE) == -1:
+ 
     # List of Libraries and Packages required to Install for running above Functions:
     '''
     1) Tensorflow: compatible with your Operation System (OS)(Software) and Your Computer System (Hardware).
