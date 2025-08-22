@@ -1043,11 +1043,11 @@ class Ui_MainWindow(QMainWindow,object):
         icon9.addPixmap(QtGui.QPixmap(".\\icons/n2.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.menu_Machine_Learning_Model_Fundamentals.setIcon(icon9)
         self.menu_Machine_Learning_Model_Fundamentals.setObjectName("menu_Machine_Learning_Model_Fundamentals")
-        self.menu_Deep_Learning_Foundations = QMenu(parent=MainWindow)  #**********************************
+        self.menu_DeepLearningFoundations = QMenu(parent=MainWindow)  #**********************************
         icon10 = QtGui.QIcon()
         icon10.addPixmap(QtGui.QPixmap(".\\icons/n4.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.menu_Deep_Learning_Foundations.setIcon(icon10)
-        self.menu_Deep_Learning_Foundations.setObjectName("menu_Deep_Learning_Foundations")
+        self.menu_DeepLearningFoundations.setIcon(icon10)
+        self.menu_DeepLearningFoundations.setObjectName("menu_DeepLearningFoundations")
         self.menu_Core_CV_Computer_Vision_Tasks = QMenu(parent=MainWindow)  #**********************************
         icon11 = QtGui.QIcon()
         icon11.addPixmap(QtGui.QPixmap(".\\icons/n5.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
@@ -1123,7 +1123,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.menuLab.addSeparator()
         self.menuLab.addMenu(self.menu_FundamentalOfComputerVision) #*************************************
         self.menuLab.addSeparator()
-        self.menuLab.addMenu(self.menu_Deep_Learning_Foundations) #*************************************
+        self.menuLab.addMenu(self.menu_DeepLearningFoundations) #*************************************
         self.menuLab.addSeparator()
         self.menuLab.addMenu(self.menu_Core_CV_Computer_Vision_Tasks) #*************************************
         self.menuLab.addSeparator()
@@ -1342,7 +1342,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.menu_PreRequisites.setTitle(_translate("MainWindow", "Pre Requisites"))  #*******************************
         self.menu_FundamentalOfComputerVision.setTitle(_translate("MainWindow", "Fundamental of Computer Vision"))  #****************************
         self.menu_Machine_Learning_Model_Fundamentals.setTitle(_translate("MainWindow", "Machine Learning Model Fundamentals"))  #*******************************
-        self.menu_Deep_Learning_Foundations.setTitle(_translate("MainWindow", "Deep Learning Foundations"))  #*******************************
+        self.menu_DeepLearningFoundations.setTitle(_translate("MainWindow", "Deep Learning Foundations"))  #*******************************
         self.menu_Core_CV_Computer_Vision_Tasks.setTitle(_translate("MainWindow", "Core CV (Computer Vision) Tasks"))  #*******************************
         self.menu_Advanced_Generative_Models_Architectures.setTitle(_translate("MainWindow", "Advanced & Generative Models & Architectures"))  #*******************************
         self.menu_Applications_Deployment_Optimization.setTitle(_translate("MainWindow", "Applications Deployment & Optimization"))  #*******************************
@@ -1364,7 +1364,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_Pandas.setText(_translate("MainWindow", "🥨 Pandas Library Sheet"))
         self.action_MatPlotLib.setText(_translate("MainWindow", "📊 MatPlotLib Library Sheet"))
         self.action_SeaBorn.setText(_translate("MainWindow", "📊 SeaBorn Library Sheet"))
-        self.action_CoreMachineLearningPrinciples.setTitle(_translate("MainWindow", "🧠 Core Machine Learning Principles"))
+        self.menu_CoreMachineLearningPrinciples.setTitle(_translate("MainWindow", "🧠 Core Machine Learning Principles"))
         self.action_MLBigPicture.setText(_translate("MainWindow", "🖼️ ML Big Picture"))
         self.action_CategorizingByLearningParadigm.setText(_translate("MainWindow", "🗂️ Categorizing by Learning Paradigm"))
         self.action_FromFundamentalsToAdvanced.setText(_translate("MainWindow", "🔥 From Fundamentals to Advanced"))
@@ -1374,9 +1374,11 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_CodeSamplesByLearningParadigm.setText(_translate("MainWindow", "📜 Code Samples by Learning Paradigm"))
         self.action_DeeperCodeSamplesWithDefinitions.setText(_translate("MainWindow", "🔍 Deeper Code Samples with Definitions"))
         self.action_TheoreticalFoundationsOfComputerVision.setText(_translate("MainWindow", "👀 Theoretical"))
-        self.action_PracticalFoundationsOfComputerVision.setTitle(_translate("MainWindow", "🛠 Practical"))
+        self.menu_PracticalFoundationsOfComputerVision.setTitle(_translate("MainWindow", "🛠 Practical"))
         self.action_ImagesAndColorsManipulationsAndOprations.setText(_translate("MainWindow", "🎨 Images and Colors Manipulations And Oprations"))
         self.action_CreateSimpleCNNConvolutionalNeuralNetwork.setText(_translate("MainWindow", "🕸️ Create Simple CNN(ConvolutionalNeuralNetwork)"))
+        self.action_TheoreticalDeepLearningFoundation.setText(_translate("MainWindow", "֎ Theoretical"))
+        self.menu_PracticalDeepLearningFoundations.setTitle(_translate("MainWindow","🛠 Practical"))
         #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 3
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 4
@@ -1399,6 +1401,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_MatPlotLib.triggered.connect(partial(self.changePDFPage,14))
         self.action_SeaBorn.triggered.connect(partial(self.changePDFPage,15))
         self.action_SupervisedMLProcess.triggered.connect(partial(self.changePDFPage,16))
+        self.action_TheoreticalDeepLearningFoundation.triggered.connect(partial(self.changePDFPage,17))
 
         self.action_AboutTool.triggered.connect(self.changePage)
         self.action_AboutAuthorDeveloper.triggered.connect(self.changePage)
@@ -2103,6 +2106,8 @@ class Ui_MainWindow(QMainWindow,object):
                   self.pdf_path = os.path.relpath("pages/SeaBorn_Sheet.pdf")
              case 16:
                   self.pdf_path = os.path.relpath("pages/SupervisedML_Process.pdf")
+             case 17:
+                  self.pdf_path = os.path.relpath("pages/TheoreticalDeepLearningFoundation.pdf")
                   
         self.pdf_document.load(self.pdf_path)
         self.pdf_view.pdf_path = self.pdf_path
@@ -2269,18 +2274,18 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_ProbabilityAndStatistics.setObjectName("action_ProbabilityAndStatistics")    
         self.menu_Mathematics.addAction(self.action_ProbabilityAndStatistics)
         
-        self.action_CoreMachineLearningPrinciples = QMenu(parent=MainWindow)  
-        self.action_CoreMachineLearningPrinciples.setObjectName("action_CoreMachineLearningPrinciples")
-        self.menu_PreRequisites.addMenu(self.action_CoreMachineLearningPrinciples)
+        self.menu_CoreMachineLearningPrinciples = QMenu(parent=MainWindow)  
+        self.menu_CoreMachineLearningPrinciples.setObjectName("menu_CoreMachineLearningPrinciples")
+        self.menu_PreRequisites.addMenu(self.menu_CoreMachineLearningPrinciples)
         self.action_MLBigPicture = QtGui.QAction(parent=MainWindow)
         self.action_MLBigPicture.setObjectName("action_MLBigPicture")    
-        self.action_CoreMachineLearningPrinciples.addAction(self.action_MLBigPicture)
+        self.menu_CoreMachineLearningPrinciples.addAction(self.action_MLBigPicture)
         self.action_CategorizingByLearningParadigm = QtGui.QAction(parent=MainWindow)
         self.action_CategorizingByLearningParadigm.setObjectName("action_CategorizingByLearningParadigm")    
-        self.action_CoreMachineLearningPrinciples.addAction(self.action_CategorizingByLearningParadigm)
+        self.menu_CoreMachineLearningPrinciples.addAction(self.action_CategorizingByLearningParadigm)
         self.action_FromFundamentalsToAdvanced = QtGui.QAction(parent=MainWindow)
         self.action_FromFundamentalsToAdvanced.setObjectName("action_FromFundamentalsToAdvanced")    
-        self.action_CoreMachineLearningPrinciples.addAction(self.action_FromFundamentalsToAdvanced)
+        self.menu_CoreMachineLearningPrinciples.addAction(self.action_FromFundamentalsToAdvanced)
         
         self.action_MLModelOverview = QtGui.QAction(parent=MainWindow)  
         self.action_MLModelOverview.setObjectName("action_MLModelOverview")
@@ -2301,15 +2306,22 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_TheoreticalFoundationsOfComputerVision = QtGui.QAction(parent=MainWindow)  
         self.action_TheoreticalFoundationsOfComputerVision.setObjectName("action_TheoreticalFoundationsOfComputerVision")
         self.menu_FundamentalOfComputerVision.addAction(self.action_TheoreticalFoundationsOfComputerVision)
-        self.action_PracticalFoundationsOfComputerVision = QMenu(parent=MainWindow)  
-        self.action_PracticalFoundationsOfComputerVision.setObjectName("action_PracticalFoundationsOfComputerVision")
-        self.menu_FundamentalOfComputerVision.addMenu(self.action_PracticalFoundationsOfComputerVision)
+        self.menu_PracticalFoundationsOfComputerVision = QMenu(parent=MainWindow)  
+        self.menu_PracticalFoundationsOfComputerVision.setObjectName("menu_PracticalFoundationsOfComputerVision")
+        self.menu_FundamentalOfComputerVision.addMenu(self.menu_PracticalFoundationsOfComputerVision)
         self.action_ImagesAndColorsManipulationsAndOprations = QtGui.QAction(parent=MainWindow)  
         self.action_ImagesAndColorsManipulationsAndOprations.setObjectName("action_ImagesAndColorsManipulationsAndOprations")
-        self.action_PracticalFoundationsOfComputerVision.addAction(self.action_ImagesAndColorsManipulationsAndOprations)
+        self.menu_PracticalFoundationsOfComputerVision.addAction(self.action_ImagesAndColorsManipulationsAndOprations)
         self.action_CreateSimpleCNNConvolutionalNeuralNetwork = QtGui.QAction(parent=MainWindow)  
         self.action_CreateSimpleCNNConvolutionalNeuralNetwork.setObjectName("action_CreateSimpleCNNConvolutionalNeuralNetwork")
-        self.action_PracticalFoundationsOfComputerVision.addAction(self.action_CreateSimpleCNNConvolutionalNeuralNetwork)
+        self.menu_PracticalFoundationsOfComputerVision.addAction(self.action_CreateSimpleCNNConvolutionalNeuralNetwork)
+        
+        self.action_TheoreticalDeepLearningFoundation = QtGui.QAction(parent=MainWindow)  
+        self.action_TheoreticalDeepLearningFoundation.setObjectName("action_TheoreticalDeepLearningFoundation")
+        self.menu_DeepLearningFoundations.addAction(self.action_TheoreticalDeepLearningFoundation)
+        self.menu_PracticalDeepLearningFoundations = QMenu(parent=MainWindow)  
+        self.menu_PracticalDeepLearningFoundations.setObjectName("menu_PracticalDeepLearningFoundations")
+        self.menu_DeepLearningFoundations.addMenu(self.menu_PracticalDeepLearningFoundations)
 
         self.pdf_view = CustomPdfView(self.pages)
         self.pdf_document = QPdfDocument(self.pdf_view)
