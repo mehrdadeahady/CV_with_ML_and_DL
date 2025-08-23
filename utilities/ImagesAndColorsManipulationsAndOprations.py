@@ -1858,10 +1858,10 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                      self.videoCapturer = cv2.VideoCapture(0)
                      while True:
                         '''                  
-                        In OpenCV, cap.read() is a method of the cv2.VideoCapture object used to capture a single frame from a video source or camera.
+                        In OpenCV, cap.read() is a method of the cv2.VideoCapture object used to capture a single frame from a video source or videoCapturer.
                         Functionality:
                            Grabs and Decodes:
-                           The read() method attempts to grab the next frame from the video stream (either a file or a live camera feed) and 
+                           The read() method attempts to grab the next frame from the video stream (either a file or a live videoCapturer feed) and 
                            then decodes it into an image format that OpenCV can use.
                            Returns a Tuple:
                            It returns a tuple containing two values:
@@ -1951,10 +1951,10 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                            # Read first frame
                            ret, frame = self.videoCapturer.read()
                            '''                  
-                           In OpenCV, cap.read() is a method of the cv2.VideoCapture object used to capture a single frame from a video source or camera.
+                           In OpenCV, cap.read() is a method of the cv2.VideoCapture object used to capture a single frame from a video source or videoCapturer.
                            Functionality:
                               Grabs and Decodes:
-                              The read() method attempts to grab the next frame from the video stream (either a file or a live camera feed) and 
+                              The read() method attempts to grab the next frame from the video stream (either a file or a live videoCapturer feed) and 
                               then decodes it into an image format that OpenCV can use.
                               Returns a Tuple:
                               It returns a tuple containing two values:
@@ -2198,7 +2198,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
 
     # Check Camera or Video availability at the given index or Path
     def check_camera_availability(self,camera_index_or_Video_path):
-         """Checks if a camera at the given index is available or a Video File exist in the given Path"""
+         """Checks if a videoCapturer at the given index is available or a Video File exist in the given Path"""
          if camera_index_or_Video_path == "" or camera_index_or_Video_path == None:
              return False
          else:

@@ -7,18 +7,26 @@ import os
 import threading
 from utilities.ImagesAndColorsManipulationsAndOprations import ImagesAndColorsManipulationsAndOprations
 from utilities.CreateSimpleCNN import CreateSimpleCNN
+from utilities.DeepLearningFoundationOperations import DeepLearningFoundationOperations
 from os import path, listdir
 from os.path import isfile, join
 import sys
 import time
-import cv2
+try:
+    import cv2
+    from cv2_enumerate_cameras import enumerate_cameras
+except: 
+    print("You Should Install OpenCV-Python and cv2_enumerate_cameras Libraries")
 import shutil
 import inspect
 from functools import partial
 import emoji
 import numpy as np
 import regex
-import PyQt6
+try:
+    import PyQt6
+except:
+    print("You Should Install PyQt6 Library!")
 import PyQt6.QtCore
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QMenu, QMainWindow, QApplication, QWidget, QMessageBox, QFileDialog
@@ -33,6 +41,7 @@ from utilities.CustomPDFView import CustomPdfView
 
 class Ui_MainWindow(QMainWindow,object):
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 1
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1024, 768)
@@ -495,6 +504,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.label_SelectImage.setObjectName("label_SelectImage")
         self.comboBox_SelectVideo = QtWidgets.QComboBox(parent=self.page_ImagesAndColorsManipulationsAndOprations)
         self.comboBox_SelectVideo.setGeometry(QtCore.QRect(750, 0, 241, 31))
+        self.comboBox_SelectVideo.setMaxVisibleItems(50)
         self.comboBox_SelectVideo.setObjectName("comboBox_SelectVideo")
         self.comboBox_SelectVideo.addItem("")
         self.comboBox_SelectVideo.setItemText(0, "")
@@ -509,6 +519,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.pushButton_UploadImages.setObjectName("pushButton_UploadImages")
         self.comboBox_SelectImage = QtWidgets.QComboBox(parent=self.page_ImagesAndColorsManipulationsAndOprations)
         self.comboBox_SelectImage.setGeometry(QtCore.QRect(250, 0, 241, 31))
+        self.comboBox_SelectImage.setMaxVisibleItems(50)
         self.comboBox_SelectImage.setObjectName("comboBox_SelectImage")
         self.comboBox_SelectImage.addItem("")
         self.comboBox_SelectImage.setItemText(0, "")
@@ -942,6 +953,84 @@ class Ui_MainWindow(QMainWindow,object):
         self.label_Step4CreateSimpleCNN.setGeometry(QtCore.QRect(18, 560, 121, 31))
         self.label_Step4CreateSimpleCNN.setObjectName("label_Step4CreateSimpleCNN")
         self.pages.addWidget(self.page_CreateSimpleCNNConvolutionalNeuralNetwork)
+        self.page_DeepLearningFoundationOperations = QtWidgets.QWidget()
+        self.page_DeepLearningFoundationOperations.setObjectName("page_DeepLearningFoundationOperations")
+        self.pushButton_UploadImages_DeepLearningFoundation = QtWidgets.QPushButton(parent=self.page_DeepLearningFoundationOperations)
+        self.pushButton_UploadImages_DeepLearningFoundation.setGeometry(QtCore.QRect(9, 0, 111, 31))
+        self.pushButton_UploadImages_DeepLearningFoundation.setObjectName("pushButton_UploadImages_DeepLearningFoundation")
+        self.pushButton_UploadVideos_DeepLearningFoundation = QtWidgets.QPushButton(parent=self.page_DeepLearningFoundationOperations)
+        self.pushButton_UploadVideos_DeepLearningFoundation.setGeometry(QtCore.QRect(10, 40, 111, 31))
+        self.pushButton_UploadVideos_DeepLearningFoundation.setObjectName("pushButton_UploadVideos_DeepLearningFoundation")
+        self.comboBox_SelectVideo_DeepLearningFoundation = QtWidgets.QComboBox(parent=self.page_DeepLearningFoundationOperations)
+        self.comboBox_SelectVideo_DeepLearningFoundation.setGeometry(QtCore.QRect(210, 40, 231, 31))
+        self.comboBox_SelectVideo_DeepLearningFoundation.setMaxVisibleItems(50)
+        self.comboBox_SelectVideo_DeepLearningFoundation.setObjectName("comboBox_SelectVideo_DeepLearningFoundation")
+        self.comboBox_SelectVideo_DeepLearningFoundation.addItem("")
+        self.comboBox_SelectVideo_DeepLearningFoundation.setItemText(0, "")
+        self.comboBox_SelectImage_DeepLearningFoundation = QtWidgets.QComboBox(parent=self.page_DeepLearningFoundationOperations)
+        self.comboBox_SelectImage_DeepLearningFoundation.setGeometry(QtCore.QRect(210, 0, 231, 31))
+        self.comboBox_SelectImage_DeepLearningFoundation.setMaxVisibleItems(50)
+        self.comboBox_SelectImage_DeepLearningFoundation.setObjectName("comboBox_SelectImage_DeepLearningFoundation")
+        self.comboBox_SelectImage_DeepLearningFoundation.addItem("")
+        self.comboBox_SelectImage_DeepLearningFoundation.setItemText(0, "")
+        self.label_SelectImage_DeepLearningFoundation = QtWidgets.QLabel(parent=self.page_DeepLearningFoundationOperations)
+        self.label_SelectImage_DeepLearningFoundation.setGeometry(QtCore.QRect(130, 0, 71, 31))
+        self.label_SelectImage_DeepLearningFoundation.setObjectName("label_SelectImage_DeepLearningFoundation")
+        self.pushButton_SaveCode_DeepLearningFoundation = QtWidgets.QPushButton(parent=self.page_DeepLearningFoundationOperations)
+        self.pushButton_SaveCode_DeepLearningFoundation.setGeometry(QtCore.QRect(890, 680, 100, 40))
+        self.pushButton_SaveCode_DeepLearningFoundation.setObjectName("pushButton_SaveCode_DeepLearningFoundation")
+        self.label_SelectVideo_DeepLearningFoundation = QtWidgets.QLabel(parent=self.page_DeepLearningFoundationOperations)
+        self.label_SelectVideo_DeepLearningFoundation.setGeometry(QtCore.QRect(130, 45, 71, 21))
+        self.label_SelectVideo_DeepLearningFoundation.setObjectName("label_SelectVideo_DeepLearningFoundation")
+        self.pushButton_SaveImage_DeepLearningFoundation = QtWidgets.QPushButton(parent=self.page_DeepLearningFoundationOperations)
+        self.pushButton_SaveImage_DeepLearningFoundation.setGeometry(QtCore.QRect(10, 680, 100, 40))
+        self.pushButton_SaveImage_DeepLearningFoundation.setObjectName("pushButton_SaveImage_DeepLearningFoundation")
+        self.textBrowser_DeepLearningFoundation = QtWidgets.QTextBrowser(parent=self.page_DeepLearningFoundationOperations)
+        self.textBrowser_DeepLearningFoundation.setGeometry(QtCore.QRect(10, 600, 981, 81))
+        self.textBrowser_DeepLearningFoundation.setObjectName("textBrowser_DeepLearningFoundation")
+        self.label_SelectCameraDeepLearningFoundation = QtWidgets.QLabel(parent=self.page_DeepLearningFoundationOperations)
+        self.label_SelectCameraDeepLearningFoundation.setGeometry(QtCore.QRect(450, 0, 91, 31))
+        self.label_SelectCameraDeepLearningFoundation.setObjectName("label_SelectCameraDeepLearningFoundation")
+        self.comboBox_SelectCameraDeepLearningFoundation = QtWidgets.QComboBox(parent=self.page_DeepLearningFoundationOperations)
+        self.comboBox_SelectCameraDeepLearningFoundation.setGeometry(QtCore.QRect(550, 0, 441, 31))
+        self.comboBox_SelectCameraDeepLearningFoundation.setMaxVisibleItems(50)
+        self.comboBox_SelectCameraDeepLearningFoundation.setObjectName("comboBox_SelectCameraDeepLearningFoundation")
+        self.comboBox_SelectCameraDeepLearningFoundation.addItem("")
+        self.comboBox_SelectCameraDeepLearningFoundation.setItemText(0, "")
+        self.comboBox_SelectOperationDeepLearningFoundation = QtWidgets.QComboBox(parent=self.page_DeepLearningFoundationOperations)
+        self.comboBox_SelectOperationDeepLearningFoundation.setGeometry(QtCore.QRect(550, 40, 441, 31))
+        self.comboBox_SelectOperationDeepLearningFoundation.setMaxVisibleItems(50)
+        self.comboBox_SelectOperationDeepLearningFoundation.setObjectName("comboBox_SelectOperationDeepLearningFoundation")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(0, "")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.comboBox_SelectOperationDeepLearningFoundation.addItem("")
+        self.label_SelectOperationDeepLearningFoundation = QtWidgets.QLabel(parent=self.page_DeepLearningFoundationOperations)
+        self.label_SelectOperationDeepLearningFoundation.setGeometry(QtCore.QRect(450, 40, 91, 31))
+        self.label_SelectOperationDeepLearningFoundation.setObjectName("label_SelectOperationDeepLearningFoundation")
+        self.textBrowser_DeepLearningFoundationOperations = QtWidgets.QTextBrowser(parent=self.page_DeepLearningFoundationOperations)
+        self.textBrowser_DeepLearningFoundationOperations.setGeometry(QtCore.QRect(10, 80, 981, 511))
+        self.textBrowser_DeepLearningFoundationOperations.setObjectName("textBrowser_DeepLearningFoundationOperations")
+        self.pages.addWidget(self.page_DeepLearningFoundationOperations)
         self.page_AboutAuthorDeveloper = QtWidgets.QWidget()
         self.page_AboutAuthorDeveloper.setObjectName("page_AboutAuthorDeveloper")
         self.textBrowser_AboutAuthorDeveloper = QtWidgets.QTextBrowser(parent=self.page_AboutAuthorDeveloper)
@@ -1319,6 +1408,35 @@ class Ui_MainWindow(QMainWindow,object):
         self.comboBox_Epochs_Step4CreateSimpleCNN.setItemText(9, _translate("MainWindow", "50"))
         self.pushButton_CancelTraining_Step4CreateSimpleCNN.setText(_translate("MainWindow", "Cancel Training"))
         self.label_Step4CreateSimpleCNN.setText(_translate("MainWindow", "4) Train the Model:"))
+        self.pushButton_UploadImages_DeepLearningFoundation.setText(_translate("MainWindow", "Upload Images"))
+        self.pushButton_UploadVideos_DeepLearningFoundation.setText(_translate("MainWindow", "Upload Videos"))
+        self.label_SelectImage_DeepLearningFoundation.setText(_translate("MainWindow", "Select Image:"))
+        self.pushButton_SaveCode_DeepLearningFoundation.setText(_translate("MainWindow", "Save Code"))
+        self.label_SelectVideo_DeepLearningFoundation.setText(_translate("MainWindow", "Select Video:"))
+        self.pushButton_SaveImage_DeepLearningFoundation.setText(_translate("MainWindow", "Save Image"))
+        self.label_SelectCameraDeepLearningFoundation.setText(_translate("MainWindow", "Select Camera:"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(1, _translate("MainWindow", "Image Recognition using Pre-Trained VGGNet16 Model"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(2, _translate("MainWindow", "Image Recognition using Pre-Trained VGGNet19 Model"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(3, _translate("MainWindow", "Image Recognition using Pre-Trained ResNet Model"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(4, _translate("MainWindow", "Image Recognition using Pre-Trained Inception Model"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(5, _translate("MainWindow", "Image Recognition using Pre-Trained Xception Model"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(6, _translate("MainWindow", "Object Detection by Pre-Trained Mobilenet SSD Model on Images"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(7, _translate("MainWindow", "Object Detection by Pre-Trained Mobilenet SSD Model on Pre-Saved Video"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(8, _translate("MainWindow", "Object Detection by Pre-Trained Mobilenet SSD Model on Realtime Video"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(9, _translate("MainWindow", "Object Mask Implementation by Pre-Trained MaskRCNN Model on Images"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(10, _translate("MainWindow", "Bounding Box Implementation by Pre-Trained MaskRCNN Model on Images"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(11, _translate("MainWindow", "Object Detection by Pre-Trained MaskRCNN Model on Pre-Saved Video"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(12, _translate("MainWindow", "Object Detection by Pre-Trained MaskRCNN Model on Realtime Video"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(13, _translate("MainWindow", "Object Detection by Pre-Trained Tiny YOLO Model on Images"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(14, _translate("MainWindow", "Object Detection by Pre-Trained Tiny YOLO Model on Pre-Saved Video"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(15, _translate("MainWindow", "Object Detection by Pre-Trained Tiny YOLO Model on Realtime Video"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(16, _translate("MainWindow", "Object Detection by Pre-Trained YOLO Model on Images"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(17, _translate("MainWindow", "Object Detection by Pre-Trained Optimized YOLO Model on Images"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(18, _translate("MainWindow", "Object Detection by Pre-Trained YOLO Model on Pre-Saved Video"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(19, _translate("MainWindow", "Object Detection by Pre-Trained Optimized YOLO Model on Pre-Saved Video"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(20, _translate("MainWindow", "Object Detection by Pre-Trained YOLO Model on Realtime Video"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(21, _translate("MainWindow", "Object Detection by Pre-Trained Optimized YOLO Model on Realtime Video"))
+        self.label_SelectOperationDeepLearningFoundation.setText(_translate("MainWindow", "Select Operation:"))
         self.menuTopics.setTitle(_translate("MainWindow", "Topics"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
         self.menuControls.setTitle(_translate("MainWindow", "Controls"))
@@ -1350,7 +1468,7 @@ class Ui_MainWindow(QMainWindow,object):
         #
         self.action_CreateDefaultFolders.setText(_translate("MainWindow", "📁 Create Default Folders"))
         self.action_UploadImages.setText(_translate("MainWindow", "⤴️ Upload Images"))
-        self.action_UlpoadModels.setText(_translate("MainWindow", "🔼 Ulpoad Models"))
+        self.action_UlpoadModels.setText(_translate("MainWindow", "🔼 Upoad Models"))
         self.action_UploadStyles.setText(_translate("MainWindow", "⏫ Upload Styles"))
         self.action_UploadVideos.setText(_translate("MainWindow", "📤 Upload Videos"))
         self.action_UploadClassifiers.setText(_translate("MainWindow", "⏏️ Upload Classifiers"))
@@ -1379,6 +1497,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_CreateSimpleCNNConvolutionalNeuralNetwork.setText(_translate("MainWindow", "🕸️ Create Simple CNN(ConvolutionalNeuralNetwork)"))
         self.action_TheoreticalDeepLearningFoundation.setText(_translate("MainWindow", "֎ Theoretical"))
         self.menu_PracticalDeepLearningFoundations.setTitle(_translate("MainWindow","🛠 Practical"))
+        self.action_DeepLearningFoundationOperations.setText(_translate("MainWindow","✳️ Deep Learning Foundation Operations"))
         #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 3
 
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 4
@@ -1414,6 +1533,7 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_CreateDefaultFolders.triggered.connect(self.CheckCreateDefaultFolders)
         self.action_ImagesAndColorsManipulationsAndOprations.triggered.connect(self.changePage)
         self.action_CreateSimpleCNNConvolutionalNeuralNetwork.triggered.connect(self.changePage)
+        self.action_DeepLearningFoundationOperations.triggered.connect(self.changePage)
 
         self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"https://mml-book.github.io/book/mml-book.pdf",False))
         self.action_PythonProgramming.triggered.connect(partial(self.pdf_in_browser,"https://www.w3schools.com/python/default.asp",False))
@@ -1425,12 +1545,15 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_UploadVideos.triggered.connect(self.upload_files)
         self.pushButton_UploadImages.clicked.connect(self.upload_files)
         self.pushButton_UploadVideos.clicked.connect(self.upload_files)
+        self.pushButton_UploadImages_DeepLearningFoundation.clicked.connect(self.upload_files)
+        self.pushButton_UploadVideos_DeepLearningFoundation.clicked.connect(self.upload_files)
         self.comboBox_SelectImage.currentTextChanged.connect(self.PrepareSelectImage)
         self.comboBox_SelectVideo.currentTextChanged.connect(self.PrepareSelectVideo)
         self.comboBox_ColorSpaceConversion.currentTextChanged.connect(self.PrepareConvertColorSpace)
         self.ImagesAndColorsHandler.valueChanged.connect(self.SetImageInfo)
         self.pushButton_SaveCode.clicked.connect(partial(self.SaveCode,self.textBrowser_ImageAndColors)) 
-        self.pushButton_SaveCode_CreateSimpleCNN.clicked.connect(partial(self.SaveCode,self.textBrowser_CreateSimpleCNN))      
+        self.pushButton_SaveCode_CreateSimpleCNN.clicked.connect(partial(self.SaveCode,self.textBrowser_CreateSimpleCNN)) 
+        self.pushButton_SaveCode_DeepLearningFoundation.clicked.connect(partial(self.SaveCode,self.textBrowser_DeepLearningFoundation))      
         self.pushButton_SaveImage.clicked.connect(self.ImagesAndColorsHandler.SaveImage)
         self.ImagesAndColorsHandler.ImageSizeChanged.connect(self.ImageSizeChanged)
         
@@ -2129,31 +2252,22 @@ class Ui_MainWindow(QMainWindow,object):
             if isfile(join(Base_Image_Path, f)) and self.is_valid_extension(f.strip(),"video"):             
                if self.comboBox_SelectVideo.findText(f) == -1 :
                   self.comboBox_SelectVideo.addItem(f) 
+               if self.comboBox_SelectVideo_DeepLearningFoundation.findText(f) == -1 :
+                  self.comboBox_SelectVideo_DeepLearningFoundation.addItem(f) 
                    
         Base_Image_Path = os.path.normpath(join("resources","images"))
         for f in listdir(Base_Image_Path):
             if isfile(join(Base_Image_Path, f)) and self.is_valid_extension(f.strip(),"image"):             
                if self.comboBox_SelectImage.findText(f) == -1 :
-                  self.comboBox_SelectImage.addItem(f)   
+                  self.comboBox_SelectImage.addItem(f)  
+               if self.comboBox_SelectImage_DeepLearningFoundation.findText(f) == -1 :
+                  self.comboBox_SelectImage_DeepLearningFoundation.addItem(f)    
 
-               #    index = self.comboBox_SelectImage.findText(f)                           
-               #    self.comboBox_SelectImage.setCurrentIndex(index)
-     #    for index in range(self.comboBox_SelectImage.count()):
-     #        if self.comboBox_SelectImage.itemText(index).strip() == "":
-     #            self.comboBox_SelectImage.removeItem(index)                                         
-
-     #    model_file_path = os.path.normpath(join("resources","models"))# "./models/"
-     #    for f in listdir(model_file_path):
-     #        if isfile(join(model_file_path, f)):
-     #           if self.comboBox_1.findText(f) == -1 :
-     #              self.comboBox_1.addItem(f)
-     #              index = self.comboBox_1.findText(f)
-     #              self.comboBox_1.setCurrentIndex(index)
-
-     #    for index in range(self.comboBox_1.count()):
-     #        if self.comboBox_1.itemText(index).strip() == "":
-     #            self.comboBox_1.removeItem(index)  
-
+        for camera_info in enumerate_cameras(cv2.CAP_MSMF):
+             cap = f"Index: {camera_info.index}, Name: {camera_info.name}, Backend: {camera_info.backend}"
+             if self.comboBox_SelectCameraDeepLearningFoundation.findText(cap) == -1 :
+                  self.comboBox_SelectCameraDeepLearningFoundation.addItem(cap) 
+      
     def closeEvent(self, event: QCloseEvent):
         #print(self.sender().objectName())
         event.accept()  
@@ -2199,6 +2313,7 @@ class Ui_MainWindow(QMainWindow,object):
     def manualSetup(self):
         self.ImagesAndColorsHandler = ImagesAndColorsManipulationsAndOprations()
         self.CreateSimpleCNNHandler = CreateSimpleCNN()
+        self.DeepLearningFoundationOperationsHandler = DeepLearningFoundationOperations()
 
         self.ColorChannelChangeCheckBoxes = [
             self.checkBox_BlueChannel,
@@ -2322,6 +2437,9 @@ class Ui_MainWindow(QMainWindow,object):
         self.menu_PracticalDeepLearningFoundations = QMenu(parent=MainWindow)  
         self.menu_PracticalDeepLearningFoundations.setObjectName("menu_PracticalDeepLearningFoundations")
         self.menu_DeepLearningFoundations.addMenu(self.menu_PracticalDeepLearningFoundations)
+        self.action_DeepLearningFoundationOperations = QtGui.QAction(parent=MainWindow)  
+        self.action_DeepLearningFoundationOperations.setObjectName("action_DeepLearningFoundationOperations")
+        self.menu_PracticalDeepLearningFoundations.addAction(self.action_DeepLearningFoundationOperations)
 
         self.pdf_view = CustomPdfView(self.pages)
         self.pdf_document = QPdfDocument(self.pdf_view)
@@ -2349,8 +2467,9 @@ class Ui_MainWindow(QMainWindow,object):
         self.LoadResources()
         self.FillCode(ImagesAndColorsManipulationsAndOprations,self.textBrowser_ImageAndColors, 15)
         self.FillCode(CreateSimpleCNN,self.textBrowser_CreateSimpleCNN, 25)
+        self.FillCode(DeepLearningFoundationOperations,self.textBrowser_DeepLearningFoundation, 12)
 
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 4    
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 4  
 
 if __name__ == "__main__":
     import sys

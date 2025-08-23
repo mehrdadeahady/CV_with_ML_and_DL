@@ -692,6 +692,38 @@ class TrainingLogPopupClass(QDialog):
         self.training_thread.stop()
 
 
-
+  # List of Libraries and Packages required to Install for running above Functions:
+    '''
+    1) Tensorflow: compatible with your Operation System (OS)(Software) and Your Computer System (Hardware).
+                   (check cpu gpu support of the System and OS, check Python version)
+    2) Keras:      when installing tensorflow, it installs keras and tensorboard automatically.
+    3) OpenCV:     compatible with Tensorflow and Keras.
+    4) Numpy:      It will be installed During Tensorflow or OpenCV installation, compatible with both.
+    '''
+    '''
+    import os
+    # Put import of Tensorflow and Keras in Try Block to check Correct Instalation
+    try:
+        # Below to bypass unnecessary log info
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+        import tensorflow as tf
+        import keras
+        from keras.datasets import mnist 
+        from keras.utils import to_categorical
+        from keras.models import Sequential
+        from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
+        from keras import backend as K
+        from keras import callbacks
+        from keras.callbacks import Callback
+        from keras.optimizers import SGD 
+        print(tf.__version__)
+        print(keras.__version__)
+    except:
+        print("Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
+    import cv2
+    import time
+    import matplotlib.pyplot as plt
+    from os.path import isfile, join
+    '''
 
 

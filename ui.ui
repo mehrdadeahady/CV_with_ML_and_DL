@@ -100,7 +100,7 @@
      </size>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page_ImagesAndColorsManipulationsAndOprations">
      <property name="sizePolicy">
@@ -1196,6 +1196,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
         <height>31</height>
        </rect>
       </property>
+      <property name="maxVisibleItems">
+       <number>50</number>
+      </property>
       <item>
        <property name="text">
         <string/>
@@ -1249,6 +1252,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
         <width>241</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="maxVisibleItems">
+       <number>50</number>
       </property>
       <item>
        <property name="text">
@@ -2542,6 +2548,309 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="page_DeepLearningFoundationOperations">
+     <widget class="QPushButton" name="pushButton_UploadImages_DeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>9</x>
+        <y>0</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Upload Images</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_UploadVideos_DeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Upload Videos</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_SelectVideo_DeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>40</y>
+        <width>231</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxVisibleItems">
+       <number>50</number>
+      </property>
+      <item>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_SelectImage_DeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>0</y>
+        <width>231</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxVisibleItems">
+       <number>50</number>
+      </property>
+      <item>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_SelectImage_DeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>0</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Select Image:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_SaveCode_DeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>890</x>
+        <y>680</y>
+        <width>100</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save Code</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_SelectVideo_DeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>45</y>
+        <width>71</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Select Video:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_SaveImage_DeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>680</y>
+        <width>100</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save Image</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser_DeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>600</y>
+        <width>981</width>
+        <height>81</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_SelectCameraDeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>0</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Select Camera:</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_SelectCameraDeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>550</x>
+        <y>0</y>
+        <width>441</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxVisibleItems">
+       <number>50</number>
+      </property>
+      <item>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+     </widget>
+     <widget class="QComboBox" name="comboBox_SelectOperationDeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>550</x>
+        <y>40</y>
+        <width>441</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="maxVisibleItems">
+       <number>50</number>
+      </property>
+      <item>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Image Recognition using Pre-Trained VGGNet16 Model</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Image Recognition using Pre-Trained VGGNet19 Model</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Image Recognition using Pre-Trained ResNet Model</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Image Recognition using Pre-Trained Inception Model</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Image Recognition using Pre-Trained Xception Model</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained Mobilenet SSD Model on Images</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained Mobilenet SSD Model on Pre-Saved Video</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained Mobilenet SSD Model on Realtime Video</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Mask Implementation by Pre-Trained MaskRCNN Model on Images</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Bounding Box Implementation by Pre-Trained MaskRCNN Model on Images</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained MaskRCNN Model on Pre-Saved Video</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained MaskRCNN Model on Realtime Video</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained Tiny YOLO Model on Images</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained Tiny YOLO Model on Pre-Saved Video</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained Tiny YOLO Model on Realtime Video</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained YOLO Model on Images</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained Optimized YOLO Model on Images</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained YOLO Model on Pre-Saved Video</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained Optimized YOLO Model on Pre-Saved Video</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained YOLO Model on Realtime Video</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Object Detection by Pre-Trained Optimized YOLO Model on Realtime Video</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_SelectOperationDeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>40</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Select Operation:</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser_DeepLearningFoundationOperations">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>80</y>
+        <width>981</width>
+        <height>511</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
     <widget class="QWidget" name="page_AboutAuthorDeveloper">
      <widget class="QTextBrowser" name="textBrowser_AboutAuthorDeveloper">
       <property name="geometry">
@@ -2856,7 +3165,7 @@ Portfolios</string>
   </action>
   <action name="action_UlpoadModels">
    <property name="text">
-    <string>🔼 Ulpoad Models</string>
+    <string>🔼 Upoad Models</string>
    </property>
   </action>
   <action name="action_UploadStyles">
@@ -2866,12 +3175,12 @@ Portfolios</string>
   </action>
   <action name="action_UploadVideos">
    <property name="text">
-    <string>📤Upload Videos</string>
+    <string>📤 Upload Videos</string>
    </property>
   </action>
   <action name="action_UploadClassifiers">
    <property name="text">
-    <string>⏏️Upload Classifiers</string>
+    <string>⏏️ Upload Classifiers</string>
    </property>
   </action>
  </widget>
