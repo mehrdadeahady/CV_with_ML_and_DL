@@ -1,4 +1,3 @@
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 1
 # -*- Encoding: utf-8 -*- #
 """
 @Author | Developer: Mehrdad Ahady
@@ -40,9 +39,7 @@ from PyQt6.QtWebEngineCore import QWebEngineProfile
 from utilities.CustomPDFView import CustomPdfView
 
 class Ui_MainWindow(object):
-
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 1
-
+    
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1024, 768)
@@ -1471,8 +1468,6 @@ class Ui_MainWindow(object):
         self.action_UploadVideos.setText(_translate("MainWindow", "📤 Upload Videos"))
         self.action_UploadClassifiers.setText(_translate("MainWindow", "⏏️ Upload Classifiers"))
 
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 2
-
 class MainWindow(QMainWindow):
     
     def __init__(self):
@@ -1483,7 +1478,7 @@ class MainWindow(QMainWindow):
         self.SetupUi(self)
         self.ConnectActions()
 
-    def closeEvent(self, event):
+    def closeEvent(self, event):     
         cv2.destroyAllWindows()
         event.accept()
     
@@ -2021,14 +2016,12 @@ class MainWindow(QMainWindow):
                     file.write(content)
     
     def changePage(self):
-        self.lower()
         cv2.destroyAllWindows()
         selectedPage = self.ui.pages.findChild(QtWidgets.QWidget,"page_" + self.sender().objectName().split("_")[1])
         if selectedPage != None:
            self.ui.pages.setCurrentWidget(selectedPage)
   
     def changePDFPage(self,index):
-        self.lower()
         cv2.destroyAllWindows()
         self.ui.pages.setCurrentWidget(self.pdf_view)
         self.pdf_path = ""
@@ -2487,5 +2480,3 @@ def LunchApp():
     
 if __name__ == "__main__":
     LunchApp()
-    
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 2
