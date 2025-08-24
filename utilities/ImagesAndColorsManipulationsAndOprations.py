@@ -54,8 +54,8 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                  # imshow is Displaying Image Function in OpenCV that takes 2 parameter:
                  # cv2.imshow(Parameter1 = Desired Name for Image, Parameter2 = Image has obtained from imread Function )
                  cv2.imshow(self.imageName,self.image)
-                  # api is automatically finalized when used in a with-statement (context manager).
-                  # otherwise api.End() should be explicitly called when it's no longer needed.
+                 # api is automatically finalized when used in a with-statement (context manager).
+                 # otherwise api.End() should be explicitly called when it's no longer needed.
                  self.WaitKeyCloseWindows()
 
     # Reading a Video File
@@ -1273,7 +1273,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                      
                      message =  ""
                      if len(contours) > 10: message += "Only 10 of contours presented to Avoid Time Consuming Process!\n"
-                     message += "Contor Areas before sorting =\n" + str(self.get_contour_areas(contours)) + "\nContor Areas after sorting =\n" + str(self.get_contour_areas(sorted_contours))                 
+                     message += "Contor Areas before sorting =\n" + str(self.Get_Contour_Areas(contours)) + "\nContor Areas after sorting =\n" + str(self.Get_Contour_Areas(sorted_contours))                 
                      # Number of Contours + Areas of the Contours before and After Sorting
                      QMessageBox.information(None, "Number of Contours found = " + str(len(contours)), message)
 
@@ -1288,13 +1288,13 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                      orginal_image = self.image.copy()
                      # Places a red circle on the center of contours
                      for index, contour in enumerate(contours):
-                         red = self.label_contour_center(self.image, contour)
+                         red = self.Label_Contour_Center(self.image, contour)
                      
                      # Showing the Contour centers
                      cv2.imshow("Red circle on the center of contours", self.image)
                      
-                     # Sort by left to right using x_cord_contour function located above
-                     contours_left_to_right = sorted(contours, key = self.x_cord_contour, reverse = False)                      
+                     # Sort by left to right using X_Cordinate_Contour function located above
+                     contours_left_to_right = sorted(contours, key = self.X_Cordinate_Contour, reverse = False)                      
 
                      # Labeling Contours left to right
                      for (index,contour)  in enumerate(contours_left_to_right):
@@ -1854,7 +1854,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
 
                case "Live Face and Eye Detection with HAAR Cascade Classifiers":
                   cv2.destroyAllWindows()
-                  if self.check_camera_availability(0):                  
+                  if self.Check_Camera_Availability(0):                  
                      self.videoCapturer = cv2.VideoCapture(0)
                      while True:
                         '''                  
@@ -1879,7 +1879,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                               break
                               #QMessageBox.warning(None, "No Frame Detected", "Error: Could not capture frame!")
                         else:
-                           cv2.imshow('Face Extractor', self.face_detector(frame))
+                           cv2.imshow('Face Extractor', self.Face_Detector(frame))
                            if cv2.waitKey(1) in range(0,255):
                               self.videoCapturer.release()
                               break
@@ -1943,7 +1943,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                      # Create body classifier
                      body_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, fullbody_classifier_Path))
                      
-                     if self.check_camera_availability(self.video):
+                     if self.Check_Camera_Availability(self.video):
                         # Initiate video capture for video file                 
                         self.videoCapturer = cv2.VideoCapture(self.video) 
                         # Loop once video is successfully loaded
@@ -2004,7 +2004,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                      # Create car classifier
                      car_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, car_classifier_Path))
                      
-                     if self.check_camera_availability(self.video):   
+                     if self.Check_Camera_Availability(self.video):   
                         # Initiate video capture for video file            
                         self.videoCapturer = cv2.VideoCapture(self.video) 
                 
@@ -2093,7 +2093,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                         # Find Contours (here external boundaries detected)
                         contours, _ = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
                         #Sort contours left to right by using their x cordinates
-                        contours = sorted(contours, key = self.x_cord_contour, reverse = False)
+                        contours = sorted(contours, key = self.X_Cordinate_Contour, reverse = False)
 
                         # Empty array to Store Detected Numbers
                         detected_number_list = ["List of Detected Numbers:\n"]
@@ -2107,7 +2107,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                               roi = gray[y:y + h, x:x + w]
                               ret, roi = cv2.threshold(roi, 127, 255,cv2.THRESH_BINARY_INV)
                               roi = self.makeSquare(roi)
-                              roi = self.resize_to_pixel(28, roi)
+                              roi = self.Resize_To_Pixel(28, roi)
                               # cv2.imshow("ROI", roi)
                               roi = roi / 255.0
                               roi = roi.reshape(1,28,28,1) 
@@ -2197,21 +2197,24 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
 # *** PreProcessor Functions as Helpers to Processor Functions: ***
 
     # Check Camera or Video availability at the given index or Path
-    def check_camera_availability(self,camera_index_or_Video_path):
+    def Check_Camera_Availability(self,camera_index_or_Video_path):
          """Checks if a videoCapturer at the given index is available or a Video File exist in the given Path"""
          if camera_index_or_Video_path == "" or camera_index_or_Video_path == None:
              return False
          else:
-            self.videoCapturer = cv2.VideoCapture(camera_index_or_Video_path)
-            if self.videoCapturer is None or not self.videoCapturer.isOpened():
-               return False
-            else:
-               self.videoCapturer.release()
-               self.videoCapturer = None
-               return True
+             if isfile(camera_index_or_Video_path): 
+                return True
+             else:
+               self.videoCapturer = cv2.VideoCapture(camera_index_or_Video_path)
+               if self.videoCapturer is None or not self.videoCapturer.isOpened():
+                  return False
+               else:
+                  self.videoCapturer.release()
+                  self.videoCapturer = None
+                  return True
     
     # Detecting Faces at Images Comming from a Camera
-    def face_detector(self,img, size=0.5):
+    def Face_Detector(self,img, size=0.5):
       Base_haarcascades_Path = os.path.normpath(join("resources","haarcascades"))
       face_classifier_Path = 'haarcascade_frontalface_default.xml'
       eye_classifier_Path = 'haarcascade_eye.xml'                  
@@ -2328,7 +2331,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
          return doublesize_square
 
     # Resizing Image to Specificied Width
-    def resize_to_pixel(self,newWidth, image):  
+    def Resize_To_Pixel(self,newWidth, image):  
          height, width = image.shape[0:2]
          newWidth  = newWidth - 4 # buffer_pixel
          newHeight = int((newWidth / width) * height)
@@ -2343,7 +2346,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
          return ReSizedImg
 
     # Function to Display Contour Area
-    def get_contour_areas(self,contours):
+    def Get_Contour_Areas(self,contours):
          """returns the areas of all contours as list"""
          all_areas = []
          for contour in contours:
@@ -2352,7 +2355,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
          return all_areas
       
     # Function take a contour from findContours then outputs the x centroid coordinates
-    def x_cord_contour(self,contours):
+    def X_Cordinate_Contour(self,contours):
          """Returns the X cordinate for the contour"""
          Moment = cv2.moments(contours)  
          '''
@@ -2396,7 +2399,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
          else:
              return int(Moment['m10'])
           
-    def label_contour_center(self,image, contour):
+    def Label_Contour_Center(self,image, contour):
       """Places a red circle on the center of contours"""
       Moment = cv2.moments(contour)
       # To avoid divided by zero error

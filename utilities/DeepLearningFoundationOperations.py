@@ -16,14 +16,16 @@ import re
 class DeepLearningFoundationOperations(QObject):
     def __init__(self,parent=None):
         super().__init__()
-        # Internal Variable to Access Images and Videos inside All Functions in the Class 
-        self.image = None
-        self.imageName = None
-        self.tempImage = None
-        self.tempImageName = None
-        self.video = None
-        self.videoCapturer = None
+        # Internal Variable to Access Images and Videos inside All Functions in the Class      
         self.camera = None
 
     # Consider|Attention: 
-    
+
+    def SelectDLOperations(sef,text):
+        print(text)
+
+    def PrepareSelectDLCamera(self,text):
+        print(text)
+        self.camera = text
+
+     
