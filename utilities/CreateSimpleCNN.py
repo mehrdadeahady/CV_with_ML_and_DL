@@ -688,7 +688,7 @@ class TrainingLogPopupClass(QDialog):
         self.scroll_area.verticalScrollBar().setValue(textEdit.y())#(epoch + 1) * 60)
 
     # Stop Training On Close Popup
-    def closeEvent(self, evnt):
+    def closeEvent(self, event):
         self.training_thread.stop()
 
 

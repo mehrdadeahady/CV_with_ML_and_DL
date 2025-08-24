@@ -27,7 +27,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
         self.tempImageName = None
         self.video = None
         self.videoCapturer = None
-
+    
     # Consider|Attention: 
     # Check List of Libraries to Install and Import at the End pf the Page
     # All parameters Assigned have relation to Image Dimensions for Visibility of Changes in the Screen > image.shape = (height,width,depth)

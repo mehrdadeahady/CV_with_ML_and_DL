@@ -15,7 +15,7 @@ import time
 try:
     import cv2
     from cv2_enumerate_cameras import enumerate_cameras
-except: 
+except:
     print("You Should Install OpenCV-Python and cv2_enumerate_cameras Libraries")
 import shutil
 import inspect
@@ -39,7 +39,8 @@ from PyQt6.QtCore import QUrl, Qt
 from PyQt6.QtWebEngineCore import QWebEngineProfile
 from utilities.CustomPDFView import CustomPdfView
 
-class Ui_MainWindow(QMainWindow,object):
+class Ui_MainWindow(object):
+
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 1
 
     def setupUi(self, MainWindow):
@@ -1229,9 +1230,6 @@ class Ui_MainWindow(QMainWindow,object):
         self.menubar.addAction(self.menuControls.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
 
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 2
-        self.manualSetup()     
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 2
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -1472,7 +1470,23 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_UploadStyles.setText(_translate("MainWindow", "⏫ Upload Styles"))
         self.action_UploadVideos.setText(_translate("MainWindow", "📤 Upload Videos"))
         self.action_UploadClassifiers.setText(_translate("MainWindow", "⏏️ Upload Classifiers"))
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 3
+
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 2
+
+class MainWindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)    
+        self.manualSetup()
+        self.setupUi(self)
+
+    def closeEvent(self, event):
+        cv2.destroyAllWindows()
+        event.accept()
+    
+    def setupUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
         self.menu_Mathematics.setTitle(_translate("MainWindow", "🧮 Mathematics"))
         self.action_LinearAlgebraAndCalculus.setText(_translate("MainWindow", "📉 Linear Algebra and Calculus"))
         self.action_ProbabilityAndStatistics.setText(_translate("MainWindow", "🎲 Probability and Statistics"))
@@ -1498,171 +1512,69 @@ class Ui_MainWindow(QMainWindow,object):
         self.action_TheoreticalDeepLearningFoundation.setText(_translate("MainWindow", "֎ Theoretical"))
         self.menu_PracticalDeepLearningFoundations.setTitle(_translate("MainWindow","🛠 Practical"))
         self.action_DeepLearningFoundationOperations.setText(_translate("MainWindow","✳️ Deep Learning Foundation Operations"))
-        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 3
-
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start Block 4
-    
-    def connectActions(self):
-        self.action_BigPicture.triggered.connect(partial(self.changePDFPage,0))
-        self.action_UniversityCurriculum.triggered.connect(partial(self.changePDFPage,1))
-        self.action_RoadMap.triggered.connect(partial(self.changePDFPage,2))
-        self.action_StudyPlan.triggered.connect(partial(self.changePDFPage,3))
-        self.action_HeadingResearch.triggered.connect(partial(self.changePDFPage,4))
-        self.action_UserGuide.triggered.connect(partial(self.changePDFPage,5))
-        self.action_MLBigPicture.triggered.connect(partial(self.changePDFPage,6))
-        self.action_CategorizingByLearningParadigm.triggered.connect(partial(self.changePDFPage,7))
-        self.action_FromFundamentalsToAdvanced.triggered.connect(partial(self.changePDFPage,8))
-        self.action_CodeSamplesByLearningParadigm.triggered.connect(partial(self.changePDFPage,9))
-        self.action_DeeperCodeSamplesWithDefinitions.triggered.connect(partial(self.changePDFPage,10))
-        self.action_TheoreticalFoundationsOfComputerVision.triggered.connect(partial(self.changePDFPage,11))
-        self.action_Numpy.triggered.connect(partial(self.changePDFPage,12))
-        self.action_Pandas.triggered.connect(partial(self.changePDFPage,13))
-        self.action_MatPlotLib.triggered.connect(partial(self.changePDFPage,14))
-        self.action_SeaBorn.triggered.connect(partial(self.changePDFPage,15))
-        self.action_SupervisedMLProcess.triggered.connect(partial(self.changePDFPage,16))
-        self.action_TheoreticalDeepLearningFoundation.triggered.connect(partial(self.changePDFPage,17))
-
-        self.action_AboutTool.triggered.connect(self.changePage)
-        self.action_AboutAuthorDeveloper.triggered.connect(self.changePage)
-        self.action_CloseOtherWindows.triggered.connect(self.closeWindow)
-        self.action_CloseMainWindow.triggered.connect(self.closeWindow)
-        self.action_CloseAllWindows.triggered.connect(self.closeWindow)
-        self.action_PythonProgramming.triggered.connect(self.changePage)
-        self.action_LinearAlgebraAndCalculus.triggered.connect(self.changePage)
-        self.action_ProbabilityAndStatistics.triggered.connect(self.changePage)
-        self.action_CreateDefaultFolders.triggered.connect(self.CheckCreateDefaultFolders)
-        self.action_ImagesAndColorsManipulationsAndOprations.triggered.connect(self.changePage)
-        self.action_CreateSimpleCNNConvolutionalNeuralNetwork.triggered.connect(self.changePage)
-        self.action_DeepLearningFoundationOperations.triggered.connect(self.changePage)
-
-        self.action_ProbabilityAndStatistics.triggered.connect(partial(self.pdf_in_browser,"https://mml-book.github.io/book/mml-book.pdf",False))
-        self.action_PythonProgramming.triggered.connect(partial(self.pdf_in_browser,"https://www.w3schools.com/python/default.asp",False))
-        self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.pdf_in_browser,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization",False))
-        self.action_MLModelOverview.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/docs-guides/source/mlmodel.html",False))
-        self.action_CoreMLModelFormatSpecification.triggered.connect(partial(self.pdf_in_browser,"https://apple.github.io/coremltools/mlmodel/index.html",False))
-
-        self.action_UploadImages.triggered.connect(self.upload_files)
-        self.action_UploadVideos.triggered.connect(self.upload_files)
-        self.pushButton_UploadImages.clicked.connect(self.upload_files)
-        self.pushButton_UploadVideos.clicked.connect(self.upload_files)
-        self.pushButton_UploadImages_DeepLearningFoundation.clicked.connect(self.upload_files)
-        self.pushButton_UploadVideos_DeepLearningFoundation.clicked.connect(self.upload_files)
-        self.comboBox_SelectImage.currentTextChanged.connect(self.PrepareSelectImage)
-        self.comboBox_SelectVideo.currentTextChanged.connect(self.PrepareSelectVideo)
-        self.comboBox_ColorSpaceConversion.currentTextChanged.connect(self.PrepareConvertColorSpace)
-        self.ImagesAndColorsHandler.valueChanged.connect(self.SetImageInfo)
-        self.pushButton_SaveCode.clicked.connect(partial(self.SaveCode,self.textBrowser_ImageAndColors)) 
-        self.pushButton_SaveCode_CreateSimpleCNN.clicked.connect(partial(self.SaveCode,self.textBrowser_CreateSimpleCNN)) 
-        self.pushButton_SaveCode_DeepLearningFoundation.clicked.connect(partial(self.SaveCode,self.textBrowser_DeepLearningFoundation))      
-        self.pushButton_SaveImage.clicked.connect(self.ImagesAndColorsHandler.SaveImage)
-        self.ImagesAndColorsHandler.ImageSizeChanged.connect(self.ImageSizeChanged)
-        
-        for channel in self.ColorChannelChangeCheckBoxes:
-            channel.clicked.connect(partial(self.PrepareColorChannelRemove,channel.objectName()))#stateChanged
-
-        for translation in self.TranslationDials:
-             translation.valueChanged.connect(self.PrepareTranslateImage)
-        
-        self.horizontalSlider_SkewHeight.valueChanged.connect(self.PrepareSkewImage)
-        self.horizontalSlider_SkewWidth.valueChanged.connect(self.PrepareSkewImage)
-        self.horizontalSlider_ResizeHeight.valueChanged.connect(self.PrepareResizeImage)
-        self.horizontalSlider_ResizeWidth.valueChanged.connect(self.PrepareResizeImage)
-        self.pushButton_LargerPyrUp.clicked.connect(self.PreparePyrUpDown)
-        self.pushButton_SmallerPyrDown.clicked.connect(self.PreparePyrUpDown)
-        self.ImagesAndColorsHandler.ResetParams.connect(self.ResetParams)
-        self.dial_RotationScale.valueChanged.connect(self.PrepareScaleByCoefficient)
-        self.dial_RotationDegree.valueChanged.connect(self.PrepareRotationByAngle)
-        self.checkBox_FlipHorizantal.checkStateChanged.connect(self.PrepareFlip)
-        self.checkBox_FlipVertical.checkStateChanged.connect(self.PrepareFlip)
-        self.checkBox_SwapTranspose.checkStateChanged.connect(self.PrepareTranspose)
-        self.horizontalSlider_CropTopLefCoefficient.valueChanged.connect(self.PrepareCrop)
-        self.horizontalSlider_CropBottomRightCoefficient.valueChanged.connect(self.PrepareCrop)
-        self.pushButton_AddText.clicked.connect(self.PrepareAddText)
-        self.comboBox_DrawShape.currentTextChanged.connect(self.PrepareDrawShape)
-        self.comboBox_ArithmeticAndBitwiseOperations.currentTextChanged.connect(self.PrepareOperations)
-        self.comboBox_Filters.currentTextChanged.connect(self.PrepareFilters)
-        self.comboBox_DilationErosionEdgeDetection.currentTextChanged.connect(self.PrepareDilationErosionEdgeDetection)
-        self.comboBox_SegmentationAndContours.currentTextChanged.connect(self.PrepareSegmentationAndContours)
-        self.comboBox_ObjectDetection.currentTextChanged.connect(self.PrepareObjectDetection)
-        self.comboBox_OCR.currentTextChanged.connect(self.PrepareOpticalCharacterRecognition)
-
-        self.pushButton_LoadMNIST_Step1CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.LoadMNIST)
-        self.CreateSimpleCNNHandler.LoadMNISTRawDataOrPreparedData.connect(self.LoadMNISTRawDataOrPreparedData)
-        self.pushButton_TestMNIST_Step1CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.TestMNIST)
-        self.pushButton_PlotMNIST_Step1CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.PlotMNIST)
-        self.pushButton_PrepareData_Step2CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.PrepareData)
-        self.pushButton_EncodeMap_Step2CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.EncodeMap)
-        self.pushButton_ModelMap_Step3CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.ModelMap)
-        self.pushButton_CreateModel_Step3CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.CreateModel)
-        self.pushButton_ModelSummary_Step3CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.ModelSummaryFunction)
-        self.pushButton_TrainModel_Step4CreateSimpleCNN.clicked.connect(self.PrepareTrainModel)
-        self.pushButton_CancelTraining_Step4CreateSimpleCNN.clicked.connect(self.PrepareCancelTraining)
-        self.pushButton_PlotAccuracy_Step4CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.PlotAccuracy)
-        self.pushButton_PlotLoss_Step4CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.PlotLoss)
-        self.pushButton_SaveTrainedModel_Step4CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.SaveTrainedModel)
 
     def PrepareCancelTraining(self):
-        self.CreateSimpleCNNHandler.CancelTraining()  
+        self.CreateSimpleCNNHandler.CancelTraining()
 
     def PrepareTrainModel(self):
-        total_epochs = int(self.comboBox_Epochs_Step4CreateSimpleCNN.currentText().strip())
+        total_epochs = int(self.ui.comboBox_Epochs_Step4CreateSimpleCNN.currentText().strip())
         self.CreateSimpleCNNHandler.TrainModel(total_epochs)
 
-    def LoadMNISTRawDataOrPreparedData(self,type): 
+    def LoadMNISTRawDataOrPreparedData(self,type):
         if type == 0:
-            self.label_Step1CreateSimpleCNN_Info1_ShapeOfTrainingDataValue.setStyleSheet("color:red")
-            self.label_Step1CreateSimpleCNN_Info1_ShapeOfTrainingDataValue.setText(str(self.CreateSimpleCNNHandler.x_train.shape))
-            self.label_Step1CreateSimpleCNN_Info1_ShapeOfTrainingDataLabelsValue.setStyleSheet("color:red")
-            self.label_Step1CreateSimpleCNN_Info1_ShapeOfTrainingDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_train.shape))
-            self.label_Step1CreateSimpleCNN_Info1_ShapeOfTestDataValue.setStyleSheet("color:red")
-            self.label_Step1CreateSimpleCNN_Info1_ShapeOfTestDataValue.setText(str(self.CreateSimpleCNNHandler.x_test.shape))
-            self.label_Step1CreateSimpleCNN_Info1_ShapeOfTestDataLabelsValue.setStyleSheet("color:red")
-            self.label_Step1CreateSimpleCNN_Info1_ShapeOfTestDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_test.shape))
-            self.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataValue.setStyleSheet("color:red")
-            self.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataValue.setText(str(len(self.CreateSimpleCNNHandler.x_train)))
-            self.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataLabelsValue.setStyleSheet("color:red")
-            self.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataLabelsValue.setText(str(len(self.CreateSimpleCNNHandler.y_train)))
-            self.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTestDataValue.setStyleSheet("color:red")
-            self.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTestDataValue.setText(str(len(self.CreateSimpleCNNHandler.x_test)))
-            self.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTestDataLabelsValue.setStyleSheet("color:red")
-            self.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTestDataLabelsValue.setText(str(len(self.CreateSimpleCNNHandler.y_test)))
-            self.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataValue.setStyleSheet("color:red")
-            self.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataValue.setText(str(self.CreateSimpleCNNHandler.x_train[0].shape))
-            self.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataLabelsValue.setStyleSheet("color:red")
-            self.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_train[0].shape))
-            self.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataValue.setStyleSheet("color:red")
-            self.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataValue.setText(str(self.CreateSimpleCNNHandler.x_test[0].shape))
-            self.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataLabelsValue.setStyleSheet("color:red")
-            self.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_test[0].shape))
+            self.ui.label_Step1CreateSimpleCNN_Info1_ShapeOfTrainingDataValue.setStyleSheet("color:red")
+            self.ui.label_Step1CreateSimpleCNN_Info1_ShapeOfTrainingDataValue.setText(str(self.CreateSimpleCNNHandler.x_train.shape))
+            self.ui.label_Step1CreateSimpleCNN_Info1_ShapeOfTrainingDataLabelsValue.setStyleSheet("color:red")
+            self.ui.label_Step1CreateSimpleCNN_Info1_ShapeOfTrainingDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_train.shape))
+            self.ui.label_Step1CreateSimpleCNN_Info1_ShapeOfTestDataValue.setStyleSheet("color:red")
+            self.ui.label_Step1CreateSimpleCNN_Info1_ShapeOfTestDataValue.setText(str(self.CreateSimpleCNNHandler.x_test.shape))
+            self.ui.label_Step1CreateSimpleCNN_Info1_ShapeOfTestDataLabelsValue.setStyleSheet("color:red")
+            self.ui.label_Step1CreateSimpleCNN_Info1_ShapeOfTestDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_test.shape))
+            self.ui.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataValue.setStyleSheet("color:red")
+            self.ui.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataValue.setText(str(len(self.CreateSimpleCNNHandler.x_train)))
+            self.ui.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataLabelsValue.setStyleSheet("color:red")
+            self.ui.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataLabelsValue.setText(str(len(self.CreateSimpleCNNHandler.y_train)))
+            self.ui.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTestDataValue.setStyleSheet("color:red")
+            self.ui.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTestDataValue.setText(str(len(self.CreateSimpleCNNHandler.x_test)))
+            self.ui.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTestDataLabelsValue.setStyleSheet("color:red")
+            self.ui.label_Step1CreateSimpleCNN_Info2_NumberOfSamplesInTestDataLabelsValue.setText(str(len(self.CreateSimpleCNNHandler.y_test)))
+            self.ui.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataValue.setStyleSheet("color:red")
+            self.ui.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataValue.setText(str(self.CreateSimpleCNNHandler.x_train[0].shape))
+            self.ui.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataLabelsValue.setStyleSheet("color:red")
+            self.ui.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_train[0].shape))
+            self.ui.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataValue.setStyleSheet("color:red")
+            self.ui.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataValue.setText(str(self.CreateSimpleCNNHandler.x_test[0].shape))
+            self.ui.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataLabelsValue.setStyleSheet("color:red")
+            self.ui.label_Step1CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_test[0].shape))
         elif type == 1:
-            self.label_Step2CreateSimpleCNN_Info1_ShapeOfTrainingDataValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info1_ShapeOfTrainingDataValue.setText(str(self.CreateSimpleCNNHandler.x_train.shape))
-            self.label_Step2CreateSimpleCNN_Info1_ShapeOfTrainingDataLabelsValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info1_ShapeOfTrainingDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_train.shape))
-            self.label_Step2CreateSimpleCNN_Info1_ShapeOfTestDataValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info1_ShapeOfTestDataValue.setText(str(self.CreateSimpleCNNHandler.x_test.shape))
-            self.label_Step2CreateSimpleCNN_Info1_ShapeOfTestDataLabelsValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info1_ShapeOfTestDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_test.shape))
-            self.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataValue.setText(str(len(self.CreateSimpleCNNHandler.x_train)))
-            self.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataLabelsValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataLabelsValue.setText(str(len(self.CreateSimpleCNNHandler.y_train)))
-            self.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTestDataValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTestDataValue.setText(str(len(self.CreateSimpleCNNHandler.x_test)))
-            self.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTestDataLabelsValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTestDataLabelsValue.setText(str(len(self.CreateSimpleCNNHandler.y_test)))
-            self.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataValue.setText(str(self.CreateSimpleCNNHandler.x_train[0].shape))
-            self.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataLabelsValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_train[0].shape))
-            self.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataValue.setText(str(self.CreateSimpleCNNHandler.x_test[0].shape))
-            self.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataLabelsValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_test[0].shape))
-            self.label_Step2CreateSimpleCNN_Info4NumberOfClassesValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info4NumberOfClassesValue.setText(str(self.CreateSimpleCNNHandler.numberOfClasses))
-            self.label_Step2CreateSimpleCNN_Info4NumberOfPixelsValue.setStyleSheet("color:red")
-            self.label_Step2CreateSimpleCNN_Info4NumberOfPixelsValue.setText(str(self.CreateSimpleCNNHandler.numberOfPixels))
+            self.ui.label_Step2CreateSimpleCNN_Info1_ShapeOfTrainingDataValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info1_ShapeOfTrainingDataValue.setText(str(self.CreateSimpleCNNHandler.x_train.shape))
+            self.ui.label_Step2CreateSimpleCNN_Info1_ShapeOfTrainingDataLabelsValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info1_ShapeOfTrainingDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_train.shape))
+            self.ui.label_Step2CreateSimpleCNN_Info1_ShapeOfTestDataValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info1_ShapeOfTestDataValue.setText(str(self.CreateSimpleCNNHandler.x_test.shape))
+            self.ui.label_Step2CreateSimpleCNN_Info1_ShapeOfTestDataLabelsValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info1_ShapeOfTestDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_test.shape))
+            self.ui.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataValue.setText(str(len(self.CreateSimpleCNNHandler.x_train)))
+            self.ui.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataLabelsValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTrainingDataLabelsValue.setText(str(len(self.CreateSimpleCNNHandler.y_train)))
+            self.ui.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTestDataValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTestDataValue.setText(str(len(self.CreateSimpleCNNHandler.x_test)))
+            self.ui.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTestDataLabelsValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info2_NumberOfSamplesInTestDataLabelsValue.setText(str(len(self.CreateSimpleCNNHandler.y_test)))
+            self.ui.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataValue.setText(str(self.CreateSimpleCNNHandler.x_train[0].shape))
+            self.ui.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataLabelsValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTrainingDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_train[0].shape))
+            self.ui.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataValue.setText(str(self.CreateSimpleCNNHandler.x_test[0].shape))
+            self.ui.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataLabelsValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info3_ShapeOf1SampleInTestDataLabelsValue.setText(str(self.CreateSimpleCNNHandler.y_test[0].shape))
+            self.ui.label_Step2CreateSimpleCNN_Info4NumberOfClassesValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info4NumberOfClassesValue.setText(str(self.CreateSimpleCNNHandler.numberOfClasses))
+            self.ui.label_Step2CreateSimpleCNN_Info4NumberOfPixelsValue.setStyleSheet("color:red")
+            self.ui.label_Step2CreateSimpleCNN_Info4NumberOfPixelsValue.setText(str(self.CreateSimpleCNNHandler.numberOfPixels))
 
     def PrepareOpticalCharacterRecognition(self,text):
         if str(text).strip() != "":
@@ -1675,18 +1587,18 @@ class Ui_MainWindow(QMainWindow,object):
     def PrepareSegmentationAndContours(self,text):
         if str(text).strip() != "":
            self.ImagesAndColorsHandler.SegmentationAndContours(text.strip())
-         
+
     def PrepareOperations(self,operation):
         if str(operation).strip() != "":
            self.ImagesAndColorsHandler.Operations(operation.strip())
 
     def PrepareFilters(self,filter):
         if str(filter).strip() != "":
-           self.ImagesAndColorsHandler.Filters(filter.strip()) 
+           self.ImagesAndColorsHandler.Filters(filter.strip())
 
     def PrepareDilationErosionEdgeDetection(self,operation):
         if str(operation).strip() != "":
-           self.ImagesAndColorsHandler.DilationErosionEdgeDetection(operation.strip())     
+           self.ImagesAndColorsHandler.DilationErosionEdgeDetection(operation.strip())
 
     def PrepareDrawShape(self,shape):
         if str(shape).strip() != "":
@@ -1695,72 +1607,72 @@ class Ui_MainWindow(QMainWindow,object):
         #      QMessageBox.warning(None, "No Shape Selected", "First, Select a Shape!")
 
     def PrepareAddText(self):
-        text = self.textEdit_AddText.toPlainText().strip()
+        text = self.ui.textEdit_AddText.toPlainText().strip()
         if text != "":
-             self.ImagesAndColorsHandler.AddText(text)     
+             self.ImagesAndColorsHandler.AddText(text)
         else:
              QMessageBox.warning(None, "Empty Text", "First, Write a Text!")
-                
+
     def PrepareCrop(self):
         # print(value,self.sender().objectName())
-        if self.label_ImageShapeValue.text().strip() != ""  and self.ImagesAndColorsHandler.image is not None: 
+        if self.ui.label_ImageShapeValue.text().strip() != ""  and self.ImagesAndColorsHandler.image is not None:
             name = self.sender().objectName().split("_")[1]
             if name == "CropTopLefCoefficient":
                  self.label_CropTopLefCoefficientValue.setText(str(self.horizontalSlider_CropTopLefCoefficient.value()) +" %")
-                 QMessageBox.warning(None, "Top Lef Coefficient is Set", "Set Bottom Right Coefficient to Continue!") 
+                 QMessageBox.warning(None, "Top Lef Coefficient is Set", "Set Bottom Right Coefficient to Continue!")
             else:
                 TopLeft= self.horizontalSlider_CropTopLefCoefficient.value()
                 BottomRight = self.horizontalSlider_CropBottomRightCoefficient.value()
                 if TopLeft == 0 or TopLeft == 100 or BottomRight == 0 or BottomRight == 100:
-                   QMessageBox.critical(None, "Coefficient Error", "Coefficient Can't be 0 % or 100 %!")  
+                   QMessageBox.critical(None, "Coefficient Error", "Coefficient Can't be 0 % or 100 %!")
                 else:
                     self.lower()
                     cv2.destroyAllWindows()
                     self.label_CropBottomRightCoefficientValue.setText(str(BottomRight) + " %")
-                    self.ImagesAndColorsHandler.Crop(TopLeft/100,BottomRight/100) 
-         
+                    self.ImagesAndColorsHandler.Crop(TopLeft/100,BottomRight/100)
+
     def PrepareTranspose(self):
-        if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if self.ui.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None:
             self.lower()
             cv2.destroyAllWindows()
             self.ImagesAndColorsHandler.Transpose()
 
     def PrepareFlip(self,check):
-        if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if self.ui.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None:
             self.lower()
             cv2.destroyAllWindows()
             name = self.sender().objectName().split("_")[1]
             self.ImagesAndColorsHandler.Flip(name)
 
     def PrepareRotationByAngle(self,angle):
-          if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+          if self.ui.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None:
              if angle == 0:
-                QMessageBox.critical(None, "Value Error", "Angle Must be Greater than 0!") 
+                QMessageBox.critical(None, "Value Error", "Angle Must be Greater than 0!")
              else:
                 self.lower()
                 cv2.destroyAllWindows()
-                self.label_RotationDegreeValue.setText(str(angle) + " degree")
+                self.ui.label_RotationDegreeValue.setText(str(angle) + " degree")
                 self.ImagesAndColorsHandler.RotationByAngle(angle)
 
     def PrepareScaleByCoefficient(self,coefficient):
-          if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+          if self.ui.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None:
              if coefficient == 0:
-                QMessageBox.critical(None, "Value Error", "Coefficient Must be Greater than 0!") 
+                QMessageBox.critical(None, "Value Error", "Coefficient Must be Greater than 0!")
              else:
                 self.lower()
                 cv2.destroyAllWindows()
-                self.label_RorationScaleValue.setText(str(coefficient) + " times")
-                self.ImagesAndColorsHandler.ScaleByCoefficient(coefficient)       
+                self.ui.label_RorationScaleValue.setText(str(coefficient) + " times")
+                self.ImagesAndColorsHandler.ScaleByCoefficient(coefficient)
 
     def PrepareTranslateImage(self,value):
-        if  self.ImagesAndColorsHandler.image is not None: 
+        if  self.ImagesAndColorsHandler.image is not None:
             self.lower()
             cv2.destroyAllWindows()
             name = self.sender().objectName().split("_")[1]
             Diff_Array = [
-                 [self.dial_X1.value(),self.dial_X2.value()],
-                 [self.dial_Y1.value(),self.dial_Y2.value()],
-                 [self.dial_Z1.value(),self.dial_Z2.value()]
+                 [self.ui.dial_X1.value(),self.ui.dial_X2.value()],
+                 [self.ui.dial_Y1.value(),self.ui.dial_Y2.value()],
+                 [self.ui.dial_Z1.value(),self.ui.dial_Z2.value()]
             ]
             for TranslationLabelValue in self.TranslationLabelValues:
                  dialName = "dial_" + TranslationLabelValue.objectName().split("_")[1]
@@ -1770,7 +1682,7 @@ class Ui_MainWindow(QMainWindow,object):
 
     def PrepareSkewImage(self,value):
         #print(value,type(value))
-        if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if self.ui.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None:
             self.lower()
             cv2.destroyAllWindows()
             name = self.sender().objectName().split("_")[1]
@@ -1779,32 +1691,32 @@ class Ui_MainWindow(QMainWindow,object):
             self.ImagesAndColorsHandler.SkewImage(name,value)
 
     def PrepareResizeImage(self,value):
-        if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if self.ui.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None:
             self.lower()
             cv2.destroyAllWindows()
             name = self.sender().objectName().split("_")[1]
             self.ImagesAndColorsHandler.ResizeImage(name,value)
 
     def PreparePyrUpDown(self):
-        if self.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None: 
+        if self.ui.label_ImageShapeValue.text().strip() != "" and self.ImagesAndColorsHandler.image is not None:
             self.lower()
             cv2.destroyAllWindows()
             name = self.sender().objectName().split("_")[1]
-            self.ImagesAndColorsHandler.PyrUpDown(name)    
+            self.ImagesAndColorsHandler.PyrUpDown(name)
 
     def ResetParams(self,text):
         self.lower()
         cv2.destroyAllWindows()
-            
+
         if text != "SelectImage":
-            self.comboBox_SelectImage.blockSignals(True)
-            self.comboBox_SelectImage.setCurrentIndex(0)
-            self.comboBox_SelectImage.blockSignals(False)
+            self.ui.comboBox_SelectImage.blockSignals(True)
+            self.ui.comboBox_SelectImage.setCurrentIndex(0)
+            self.ui.comboBox_SelectImage.blockSignals(False)
 
         if text != "SelectVideo" and self.ImagesAndColorsHandler.image is not None:
-           self.comboBox_SelectVideo.blockSignals(True)
-           self.comboBox_SelectVideo.setCurrentIndex(0)
-           self.comboBox_SelectVideo.blockSignals(False)
+           self.ui.comboBox_SelectVideo.blockSignals(True)
+           self.ui.comboBox_SelectVideo.setCurrentIndex(0)
+           self.ui.comboBox_SelectVideo.blockSignals(False)
 
         self.ImagesAndColorsHandler.image = None
         self.ImagesAndColorsHandler.imageName = None
@@ -1814,39 +1726,39 @@ class Ui_MainWindow(QMainWindow,object):
         # if text == "ResetParams":
         #    self.ImagesAndColorsHandler.video = None
         if self.ImagesAndColorsHandler.videoCapturer is not None:
-           self.ImagesAndColorsHandler.videoCapturer.release()       
+           self.ImagesAndColorsHandler.videoCapturer.release()
            #self.ImagesAndColorsHandler.videoCapturer = None
 
-        self.comboBox_ColorSpaceConversion.blockSignals(True)
-        self.comboBox_ColorSpaceConversion.setCurrentIndex(0)  
-        self.comboBox_ColorSpaceConversion.blockSignals(False)
-        self.comboBox_ArithmeticAndBitwiseOperations.blockSignals(True)    
-        self.comboBox_ArithmeticAndBitwiseOperations.setCurrentIndex(0)
-        self.comboBox_ArithmeticAndBitwiseOperations.blockSignals(False)
-        self.comboBox_Filters.blockSignals(True)    
-        self.comboBox_Filters.setCurrentIndex(0)
-        self.comboBox_Filters.blockSignals(False)
-        self.comboBox_DilationErosionEdgeDetection.blockSignals(True)    
-        self.comboBox_DilationErosionEdgeDetection.setCurrentIndex(0)
-        self.comboBox_DilationErosionEdgeDetection.blockSignals(False)
-        self.comboBox_DrawShape.blockSignals(True)    
-        self.comboBox_DrawShape.setCurrentIndex(0)
-        self.comboBox_DrawShape.blockSignals(False)
-        self.comboBox_SegmentationAndContours.blockSignals(True)    
-        self.comboBox_SegmentationAndContours.setCurrentIndex(0)
-        self.comboBox_SegmentationAndContours.blockSignals(False)
-        self.comboBox_ObjectDetection.blockSignals(True)    
-        self.comboBox_ObjectDetection.setCurrentIndex(0)
-        self.comboBox_ObjectDetection.blockSignals(False)
-        self.comboBox_OCR.blockSignals(True)    
-        self.comboBox_OCR.setCurrentIndex(0)
-        self.comboBox_OCR.blockSignals(False)
+        self.ui.comboBox_ColorSpaceConversion.blockSignals(True)
+        self.ui.comboBox_ColorSpaceConversion.setCurrentIndex(0)
+        self.ui.comboBox_ColorSpaceConversion.blockSignals(False)
+        self.ui.comboBox_ArithmeticAndBitwiseOperations.blockSignals(True)
+        self.ui.comboBox_ArithmeticAndBitwiseOperations.setCurrentIndex(0)
+        self.ui.comboBox_ArithmeticAndBitwiseOperations.blockSignals(False)
+        self.ui.comboBox_Filters.blockSignals(True)
+        self.ui.comboBox_Filters.setCurrentIndex(0)
+        self.ui.comboBox_Filters.blockSignals(False)
+        self.ui.comboBox_DilationErosionEdgeDetection.blockSignals(True)
+        self.ui.comboBox_DilationErosionEdgeDetection.setCurrentIndex(0)
+        self.ui.comboBox_DilationErosionEdgeDetection.blockSignals(False)
+        self.ui.comboBox_DrawShape.blockSignals(True)
+        self.ui.comboBox_DrawShape.setCurrentIndex(0)
+        self.ui.comboBox_DrawShape.blockSignals(False)
+        self.ui.comboBox_SegmentationAndContours.blockSignals(True)
+        self.ui.comboBox_SegmentationAndContours.setCurrentIndex(0)
+        self.ui.comboBox_SegmentationAndContours.blockSignals(False)
+        self.ui.comboBox_ObjectDetection.blockSignals(True)
+        self.ui.comboBox_ObjectDetection.setCurrentIndex(0)
+        self.ui.comboBox_ObjectDetection.blockSignals(False)
+        self.ui.comboBox_OCR.blockSignals(True)
+        self.ui.comboBox_OCR.setCurrentIndex(0)
+        self.ui.comboBox_OCR.blockSignals(False)
 
-        self.textEdit_AddText.clear()
-        self.label_ImageShapeValue.clear()
-        self.label_ImageHeightValue.clear() 
-        self.label_ImageWidthValue.clear()
-        self.label_ImageDepthValue.clear() 
+        self.ui.textEdit_AddText.clear()
+        self.ui.label_ImageShapeValue.clear()
+        self.ui.label_ImageHeightValue.clear()
+        self.ui.label_ImageWidthValue.clear()
+        self.ui.label_ImageDepthValue.clear()
 
         for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
                 option.blockSignals(True)
@@ -1855,64 +1767,64 @@ class Ui_MainWindow(QMainWindow,object):
                 option.setEnabled(False)
                 option.blockSignals(False)
 
-        self.label_X1_Value.setText("10")
-        self.label_X2_Value.setText("100")
-        self.label_Y1_Value.setText("200")
-        self.label_Y2_Value.setText("50")
-        self.label_Z1_Value.setText("100")
-        self.label_Z2_Value.setText("250")
-        self.dial_X1.setValue(10)
-        self.dial_X2.setValue(100)
-        self.dial_Y1.setValue(200)
-        self.dial_Y2.setValue(50)
-        self.dial_Z1.setValue(100)
-        self.dial_Z2.setValue(250)       
+        self.ui.label_X1_Value.setText("10")
+        self.ui.label_X2_Value.setText("100")
+        self.ui.label_Y1_Value.setText("200")
+        self.ui.label_Y2_Value.setText("50")
+        self.ui.label_Z1_Value.setText("100")
+        self.ui.label_Z2_Value.setText("250")
+        self.ui.dial_X1.setValue(10)
+        self.ui.dial_X2.setValue(100)
+        self.ui.dial_Y1.setValue(200)
+        self.ui.dial_Y2.setValue(50)
+        self.ui.dial_Z1.setValue(100)
+        self.ui.dial_Z2.setValue(250)
 
-        self.label_CropBottomRightCoefficientValue.setText("100 %")
-        self.label_CropTopLefCoefficientValue.setText("0 %")
-        self.horizontalSlider_CropBottomRightCoefficient.setValue(100)
-        self.horizontalSlider_CropTopLefCoefficient.setValue(0)
+        self.ui.label_CropBottomRightCoefficientValue.setText("100 %")
+        self.ui.label_CropTopLefCoefficientValue.setText("0 %")
+        self.ui.horizontalSlider_CropBottomRightCoefficient.setValue(100)
+        self.ui.horizontalSlider_CropTopLefCoefficient.setValue(0)
 
-        self.label_RotationDegreeValue.setText("0 degree")
-        self.label_RorationScaleValue.setText("0 times")
-        self.dial_RotationDegree.setValue(0)
-        self.dial_RotationScale.setValue(0)
+        self.ui.label_RotationDegreeValue.setText("0 degree")
+        self.ui.label_RorationScaleValue.setText("0 times")
+        self.ui.dial_RotationDegree.setValue(0)
+        self.ui.dial_RotationScale.setValue(0)
 
-        self.comboBox_DrawShape.blockSignals(True)
-        self.comboBox_DrawShape.setCurrentIndex(0)
-        self.comboBox_DrawShape.blockSignals(False)
+        self.ui.comboBox_DrawShape.blockSignals(True)
+        self.ui.comboBox_DrawShape.setCurrentIndex(0)
+        self.ui.comboBox_DrawShape.blockSignals(False)
 
-        self.horizontalSlider_ResizeHeight.blockSignals(True)
-        self.horizontalSlider_ResizeWidth.blockSignals(True)
-        self.horizontalSlider_SkewHeight.blockSignals(True)
-        self.horizontalSlider_SkewWidth.blockSignals(True)
-        self.horizontalSlider_ResizeHeight.setValue(50)   
-        self.horizontalSlider_ResizeWidth.setValue(50)   
-        self.horizontalSlider_SkewHeight.setValue(50)                          
-        self.horizontalSlider_SkewWidth.setValue(50) 
-        self.horizontalSlider_ResizeHeight.blockSignals(False)
-        self.horizontalSlider_ResizeWidth.blockSignals(False)
-        self.horizontalSlider_SkewHeight.blockSignals(False)
-        self.horizontalSlider_SkewWidth.blockSignals(False)  
+        self.ui.horizontalSlider_ResizeHeight.blockSignals(True)
+        self.ui.horizontalSlider_ResizeWidth.blockSignals(True)
+        self.ui.horizontalSlider_SkewHeight.blockSignals(True)
+        self.ui.horizontalSlider_SkewWidth.blockSignals(True)
+        self.ui.horizontalSlider_ResizeHeight.setValue(50)
+        self.ui.horizontalSlider_ResizeWidth.setValue(50)
+        self.ui.horizontalSlider_SkewHeight.setValue(50)
+        self.ui.horizontalSlider_SkewWidth.setValue(50)
+        self.ui.horizontalSlider_ResizeHeight.blockSignals(False)
+        self.ui.horizontalSlider_ResizeWidth.blockSignals(False)
+        self.ui.horizontalSlider_SkewHeight.blockSignals(False)
+        self.ui.horizontalSlider_SkewWidth.blockSignals(False)
 
-        self.dial_X1.blockSignals(True)
-        self.dial_X2.blockSignals(True)
-        self.dial_Y1.blockSignals(True)
-        self.dial_Y2.blockSignals(True)
-        self.dial_Z1.blockSignals(True)
-        self.dial_Z2.blockSignals(True)    
-        self.dial_X1.setValue(10)
-        self.dial_X2.setValue(100)
-        self.dial_Y1.setValue(200)
-        self.dial_Y2.setValue(50)
-        self.dial_Z1.setValue(100)
-        self.dial_Z2.setValue(250) 
-        self.dial_X1.blockSignals(False)
-        self.dial_X2.blockSignals(False)
-        self.dial_Y1.blockSignals(False)
-        self.dial_Y2.blockSignals(False)
-        self.dial_Z1.blockSignals(False)
-        self.dial_Z2.blockSignals(False)                     
+        self.ui.dial_X1.blockSignals(True)
+        self.ui.dial_X2.blockSignals(True)
+        self.ui.dial_Y1.blockSignals(True)
+        self.ui.dial_Y2.blockSignals(True)
+        self.ui.dial_Z1.blockSignals(True)
+        self.ui.dial_Z2.blockSignals(True)
+        self.ui.dial_X1.setValue(10)
+        self.ui.dial_X2.setValue(100)
+        self.ui.dial_Y1.setValue(200)
+        self.ui.dial_Y2.setValue(50)
+        self.ui.dial_Z1.setValue(100)
+        self.ui.dial_Z2.setValue(250)
+        self.ui.dial_X1.blockSignals(False)
+        self.ui.dial_X2.blockSignals(False)
+        self.ui.dial_Y1.blockSignals(False)
+        self.ui.dial_Y2.blockSignals(False)
+        self.ui.dial_Z1.blockSignals(False)
+        self.ui.dial_Z2.blockSignals(False)
 
     def PrepareColorChannelRemove(self,text,check):
         if self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None:
@@ -1923,88 +1835,87 @@ class Ui_MainWindow(QMainWindow,object):
                  else:
                       channel.setDisabled(True)
                       channel.setEnabled(False)
-             
+
              self.ImagesAndColorsHandler.ColorChannelRemove(channels)
 
         else:
              QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
-   
+
     def PrepareSelectVideo(self,VideoName):
-        self.ResetParams("SelectVideo")     
-        if self.is_valid_extension(VideoName.strip(),"video"):
+        self.ResetParams("SelectVideo")
+        if self.Is_Valid_Extension(VideoName.strip(),"video"):
            self.ImagesAndColorsHandler.ReadVideo(VideoName)
         else:
-             if VideoName.strip() != "":       
+             if VideoName.strip() != "":
                 QMessageBox.critical(None, "Video Extension Error", "Valid Extensions: " + " avi , mp4 , mpg , mpeg , mov , WMV , MKV , FLV ")
 
     def PrepareSelectImage(self,text):
-        self.ResetParams("SelectImage") 
-        self.comboBox_SelectVideo.blockSignals(True)
-        self.comboBox_SelectVideo.setCurrentIndex(0)
-        self.comboBox_SelectVideo.blockSignals(False)
-        if self.is_valid_extension(text.strip(),"image"):
+        self.ResetParams("SelectImage")
+        self.ui.comboBox_SelectVideo.blockSignals(True)
+        self.ui.comboBox_SelectVideo.setCurrentIndex(0)
+        self.ui.comboBox_SelectVideo.blockSignals(False)
+        if self.Is_Valid_Extension(text.strip(),"image"):
            self.ImagesAndColorsHandler.ReadShowImage(text)
         else:
-             if text.strip() != "":      
+             if text.strip() != "":
                 QMessageBox.critical(None, "Image Extension Error", "Valid Extensions: " + " jpg , jpeg , png , gif , bmp , psd ")
 
     def PrepareConvertColorSpace(self,text):
         if text.strip() != "":
-            self.comboBox_ArithmeticAndBitwiseOperations.setCurrentIndex(0)
-            self.comboBox_Filters.setCurrentIndex(0)
-            self.comboBox_DilationErosionEdgeDetection.setCurrentIndex(0)
-            self.comboBox_SegmentationAndContours.setCurrentIndex(0)
-            self.comboBox_ObjectDetection.setCurrentIndex(0)
-            self.comboBox_OCR.setCurrentIndex(0)
-            self.comboBox_DrawShape.setCurrentIndex(0)
-            self.textEdit_AddText.clear()
+            self.ui.comboBox_ArithmeticAndBitwiseOperations.setCurrentIndex(0)
+            self.ui.comboBox_Filters.setCurrentIndex(0)
+            self.ui.comboBox_DilationErosionEdgeDetection.setCurrentIndex(0)
+            self.ui.comboBox_SegmentationAndContours.setCurrentIndex(0)
+            self.ui.comboBox_ObjectDetection.setCurrentIndex(0)
+            self.ui.comboBox_OCR.setCurrentIndex(0)
+            self.ui.comboBox_DrawShape.setCurrentIndex(0)
+            self.ui.textEdit_AddText.clear()
 
-            self.ImagesAndColorsHandler.ConvertColorSpace(text)       
+            self.ImagesAndColorsHandler.ConvertColorSpace(text)
 
     def ImageSizeChanged(self, text):
-           
             shape = self.ImagesAndColorsHandler.image.shape
             height = self.ImagesAndColorsHandler.image.shape[0]
             width = self.ImagesAndColorsHandler.image.shape[1]
 
-            self.horizontalSlider_ResizeHeight.blockSignals(True)
-            self.horizontalSlider_ResizeWidth.blockSignals(True)
-            self.horizontalSlider_SkewHeight.blockSignals(True)
-            self.horizontalSlider_SkewWidth.blockSignals(True)
-            self.horizontalSlider_ResizeHeight.setValue(height)   
-            self.horizontalSlider_ResizeWidth.setValue(width)   
-            self.horizontalSlider_SkewHeight.setValue(height)                          
-            self.horizontalSlider_SkewWidth.setValue(width) 
-            self.horizontalSlider_ResizeHeight.blockSignals(False)
-            self.horizontalSlider_ResizeWidth.blockSignals(False)
-            self.horizontalSlider_SkewHeight.blockSignals(False)
-            self.horizontalSlider_SkewWidth.blockSignals(False) 
+            self.ui.horizontalSlider_ResizeHeight.blockSignals(True)
+            self.ui.horizontalSlider_ResizeWidth.blockSignals(True)
+            self.ui.horizontalSlider_SkewHeight.blockSignals(True)
+            self.ui.horizontalSlider_SkewWidth.blockSignals(True)
+            self.ui.horizontalSlider_ResizeHeight.setValue(height)
+            self.ui.horizontalSlider_ResizeWidth.setValue(width)
+            self.ui.horizontalSlider_SkewHeight.setValue(height)
+            self.ui.horizontalSlider_SkewWidth.setValue(width)
+            self.ui.horizontalSlider_ResizeHeight.blockSignals(False)
+            self.ui.horizontalSlider_ResizeWidth.blockSignals(False)
+            self.ui.horizontalSlider_SkewHeight.blockSignals(False)
+            self.ui.horizontalSlider_SkewWidth.blockSignals(False)
 
-            self.label_ImageShapeValue.setText(str(shape))
-            self.label_ImageHeightValue.setText(str(height))  
-            self.label_ImageWidthValue.setText(str(width))
+            self.ui.label_ImageShapeValue.setText(str(shape))
+            self.ui.label_ImageHeightValue.setText(str(height))
+            self.ui.label_ImageWidthValue.setText(str(width))
             if self.ImagesAndColorsHandler.imageConversion not in ["BGR2GRAY","RGB2GRAY"]:
-                depth = self.ImagesAndColorsHandler.image.shape[2]       
-                self.label_ImageDepthValue.setText(str(depth))
-              
+                depth = self.ImagesAndColorsHandler.image.shape[2]
+                self.ui.label_ImageDepthValue.setText(str(depth))
+
     def SetImageInfo(self,text):
         if  self.ImagesAndColorsHandler.image is not None: #self.comboBox_SelectImage.currentText().strip() != "" and
             shape = self.ImagesAndColorsHandler.image.shape
             height = self.ImagesAndColorsHandler.image.shape[0]
             width = self.ImagesAndColorsHandler.image.shape[1]
 
-            self.horizontalSlider_ResizeHeight.setValue(height)   
-            self.horizontalSlider_ResizeWidth.setValue(width)   
-            self.horizontalSlider_SkewHeight.setValue(height)                          
-            self.horizontalSlider_SkewWidth.setValue(width)  
+            self.ui.horizontalSlider_ResizeHeight.setValue(height)
+            self.ui.horizontalSlider_ResizeWidth.setValue(width)
+            self.ui.horizontalSlider_SkewHeight.setValue(height)
+            self.ui.horizontalSlider_SkewWidth.setValue(width)
 
-            self.label_ImageShapeValue.setText(str(shape))
-            self.label_ImageHeightValue.setText(str(height))  
-            self.label_ImageWidthValue.setText(str(width))
+            self.ui.label_ImageShapeValue.setText(str(shape))
+            self.ui.label_ImageHeightValue.setText(str(height))
+            self.ui.label_ImageWidthValue.setText(str(width))
             if self.ImagesAndColorsHandler.imageConversion not in ["BGR2GRAY","RGB2GRAY"]:
-                depth = self.ImagesAndColorsHandler.image.shape[2]       
-                self.label_ImageDepthValue.setText(str(depth))
-            
+                depth = self.ImagesAndColorsHandler.image.shape[2]
+                self.ui.label_ImageDepthValue.setText(str(depth))
+
             if self.ImagesAndColorsHandler.imageConversion is not None:
                match self.ImagesAndColorsHandler.imageConversion:
                     case "BGR2GRAY"|"RGB2GRAY":
@@ -2023,7 +1934,7 @@ class Ui_MainWindow(QMainWindow,object):
                                     option.setDisabled(True)
                                     option.setEnabled(False)
                                     option.setChecked(False)
-                                                                        
+
                     case "BGR2HSV"|"RGB2HSV":
                         for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
                                 if counter in [3,4,5]:
@@ -2034,7 +1945,7 @@ class Ui_MainWindow(QMainWindow,object):
                                     option.setDisabled(True)
                                     option.setEnabled(False)
                                     option.setChecked(False)
-                  
+
             else:
                 for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
                                     if counter in [0,1,2]:
@@ -2049,20 +1960,20 @@ class Ui_MainWindow(QMainWindow,object):
         else:
             self.lower()
             cv2.destroyAllWindows()
-            self.comboBox_ColorSpaceConversion.setCurrentIndex(0)
-            self.label_ImageShapeValue.clear()
-            self.label_ImageHeightValue.clear() 
-            self.label_ImageWidthValue.clear()
-            self.label_ImageDepthValue.clear()
-            self.horizontalSlider_ResizeHeight.setValue(50)   
-            self.horizontalSlider_ResizeWidth.setValue(50)   
-            self.horizontalSlider_SkewHeight.setValue(50)                          
-            self.horizontalSlider_SkewWidth.setValue(50)  
+            self.ui.comboBox_ColorSpaceConversion.setCurrentIndex(0)
+            self.ui.label_ImageShapeValue.clear()
+            self.ui.label_ImageHeightValue.clear()
+            self.ui.label_ImageWidthValue.clear()
+            self.ui.label_ImageDepthValue.clear()
+            self.ui.horizontalSlider_ResizeHeight.setValue(50)
+            self.ui.horizontalSlider_ResizeWidth.setValue(50)
+            self.ui.horizontalSlider_SkewHeight.setValue(50)
+            self.ui.horizontalSlider_SkewWidth.setValue(50)
             for counter, option in enumerate(self.ColorChannelChangeCheckBoxes):
                     option.setChecked(False)
                     option.setDisabled(True)
                     option.setEnabled(False)
-                  
+
     def messageBox(self,type,title,contents):
           match type:
               case "red":
@@ -2071,12 +1982,6 @@ class Ui_MainWindow(QMainWindow,object):
                   QMessageBox.information(self, title, contents)
               case "yellow":
                   QMessageBox.warning(self, title, contents)
-              
-    def changePage(self):
-        #print(self.sender().objectName())
-        selectedPage = self.pages.findChild(QtWidgets.QWidget,"page_" + self.sender().objectName().split("_")[1])
-        if selectedPage != None:
-           self.pages.setCurrentWidget(selectedPage)
 
     def closeWindow(self):
         match self.sender().objectName():
@@ -2084,23 +1989,19 @@ class Ui_MainWindow(QMainWindow,object):
                   self.lower()
                   cv2.destroyAllWindows()
              case "action_CloseMainWindow":
-                  MainWindow.close()
-                  MainWindow.destroy()
                   self.close()
                   self.destroy()
              case "action_CloseAllWindows":
                   self.lower()
                   cv2.destroyAllWindows()
-                  MainWindow.close()
-                  MainWindow.destroy()
                   self.close()
-                  self.destroy()   
-    
-    def load_html_file(self,file_path):
+                  self.destroy()
+
+    def Load_Html_File(self,file_path):
         with open(file_path, 'r') as f: #, encoding='utf-8'
             return f.read()
 
-    def on_cert_error(self,e):
+    def On_Cert_Error(self,e):
             # print(f"cert error: {e.description()}")
             # print(f"type: {e.type()}")
             # print(f"overridable: {e.isOverridable()}")
@@ -2117,11 +2018,11 @@ class Ui_MainWindow(QMainWindow,object):
                 pass
             else:
                 os.makedirs(base, exist_ok=True)
-            images = os.path.normpath(join("resources","images")) 
-            models = os.path.normpath(join("resources","models")) 
+            images = os.path.normpath(join("resources","images"))
+            models = os.path.normpath(join("resources","models"))
             styles = os.path.normpath(join("resources","styles"))
-            videos = os.path.normpath(join("resources","videos"))  
-            haarcascades = os.path.normpath(join("resources","haarcascades")) 
+            videos = os.path.normpath(join("resources","videos"))
+            haarcascades = os.path.normpath(join("resources","haarcascades"))
             if os.path.isdir(images):
                 pass
             else:
@@ -2143,14 +2044,14 @@ class Ui_MainWindow(QMainWindow,object):
             else:
                 os.makedirs(haarcascades, exist_ok=True)
 
-    def split_emojis(self,text):
+    def Split_Emojis(self,text):
         return regex.sub(r'\p{Emoji}', '', text)
 
-    def upload_files(self,type):
+    def Upload_Files(self,type):
           self.CheckCreateDefaultFolders()
           destination_folder = os.path.normpath("resources")
           senderObject = self.sender()
-          sender = (self.split_emojis(senderObject.text())).strip()
+          sender = (self.Split_Emojis(senderObject.text())).strip()
           #print(sender)
           file_paths, _ = QFileDialog.getOpenFileNames(self, "Select File", "", "All Files (*);;Text Files (*.txt)")
           if file_paths:
@@ -2159,42 +2060,115 @@ class Ui_MainWindow(QMainWindow,object):
                     file_name = os.path.basename(path)
 
                     if sender.__contains__("Upload Models"):
-                        destination_folder = os.path.normpath(join("resources","models")) 
+                        destination_folder = os.path.normpath(join("resources","models"))
 
                     if sender.__contains__("Upload Images"):
-                        if self.is_valid_extension(file_name.strip(),"image"):
-                           destination_folder = os.path.normpath(join("resources","images")) 
+                        if self.Is_Valid_Extension(file_name.strip(),"image"):
+                           destination_folder = os.path.normpath(join("resources","images"))
                         else:
                             QMessageBox.critical(None, "Image Extension Error: " + file_name, "Valid Extensions: " + " jpg , jpeg , png , gif , bmp , psd ")
                             continue
-                        
+
                     if sender.__contains__("Upload Styles"):
-                        destination_folder = os.path.normpath(join("resources","styles")) 
+                        destination_folder = os.path.normpath(join("resources","styles"))
 
                     if sender.__contains__("Upload Videos"):
-                        if self.is_valid_extension(file_name.strip(),"video"):
-                           destination_folder = os.path.normpath(join("resources","Videos"))  
+                        if self.Is_Valid_Extension(file_name.strip(),"video"):
+                           destination_folder = os.path.normpath(join("resources","Videos"))
                         else:
-                            QMessageBox.critical(None, "Video Extension Error: " + file_name, "Valid Extensions: " + " avi , mp4 , mpg , mpeg , mov , wmv , mkv , flv ") 
-                            continue                  
-                        
+                            QMessageBox.critical(None, "Video Extension Error: " + file_name, "Valid Extensions: " + " avi , mp4 , mpg , mpeg , mov , wmv , mkv , flv ")
+                            continue
+
                     dest_path = os.path.join(destination_folder, file_name)
                     if destination_folder != os.path.normpath("resources"):
-                       shutil.copy2(path, dest_path)                         
+                       shutil.copy2(path, dest_path)
 
                self.LoadResources()
                #print(f"Selected file: {file_paths}")
-     
-    def html_in_window(self,path):
+
+    def Html_In_Window(self,path):
         #  path = os.path.abspath(path)
         self.webView.setUrl(QUrl(path))
         #self.webView.load(QUrl.fromLocalFile(path))
         self.webView.show()
 
+    def Is_Valid_Extension(self,file_name,file_type):
+        match file_type:
+             case "image":
+                  valid_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp','.psd'}
+             case "video":
+                  valid_extensions = {'.avi','.mp4','.mpg','.mpeg','.mov','.WMV','.MKV','.FLV'}
+             case "haarcascades":
+                  valid_extensions = {'.xml'}
+        return any(file_name.lower().endswith(extension) for extension in valid_extensions)
+    
+    def Pdf_In_Browser(self,pdf_path,local):
+        if local == True:
+           pdf_path = os.path.relpath(pdf_path)
+           QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(pdf_path))
+        else:
+            QDesktopServices.openUrl(QUrl(pdf_path))
+
+    def LoadResources(self):
+        Base_Image_Path = os.path.normpath(join("resources","videos"))
+        for f in listdir(Base_Image_Path):
+            if isfile(join(Base_Image_Path, f)) and self.Is_Valid_Extension(f.strip(),"video"):
+               if self.ui.comboBox_SelectVideo.findText(f) == -1 :
+                  self.ui.comboBox_SelectVideo.addItem(f)
+               if self.ui.comboBox_SelectVideo_DeepLearningFoundation.findText(f) == -1 :
+                  self.ui.comboBox_SelectVideo_DeepLearningFoundation.addItem(f)
+
+        Base_Image_Path = os.path.normpath(join("resources","images"))
+        for f in listdir(Base_Image_Path):
+            if isfile(join(Base_Image_Path, f)) and self.Is_Valid_Extension(f.strip(),"image"):
+               if self.ui.comboBox_SelectImage.findText(f) == -1 :
+                  self.ui.comboBox_SelectImage.addItem(f)
+               if self.ui.comboBox_SelectImage_DeepLearningFoundation.findText(f) == -1 :
+                  self.ui.comboBox_SelectImage_DeepLearningFoundation.addItem(f)
+
+        for camera_info in enumerate_cameras(cv2.CAP_MSMF):
+             cap = f"Index: {camera_info.index}, Name: {camera_info.name}, Backend: {camera_info.backend}"
+             if self.comboBox_SelectCameraDeepLearningFoundation.findText(cap) == -1 :
+                  self.comboBox_SelectCameraDeepLearningFoundation.addItem(cap)
+
+    def FillCode(self, function, textBrowser, LineStart):
+        function_code = inspect.getsource(function)
+        lines = function_code.splitlines()[LineStart:]
+        commentCount = 0
+        ChangedContent = ""
+        for index,line in enumerate(lines):
+            #print(index)
+            stripedLine = line.strip()
+            if lines[index].strip().startswith("'''"): commentCount += 1
+            if stripedLine.startswith("#") or (commentCount % 2 != 0 or lines[index].strip().startswith("'''")):
+                line = "<span style='color: green'>" + line +"</span>" #.strip()
+            ChangedContent += line +"\n"
+        textBrowser.setHtml(("<pre>" + ChangedContent ).strip())
+        textBrowser.show()
+
+    def SaveCode(self, textBrowser):
+        # Choose file location
+        file_path, _ = QFileDialog.getSaveFileName(self, "Save File", "", "Text Files (*.txt);;HTML Files (*.html);;All Files (*)")
+        if file_path:
+            content = ""
+            # Choose between plain text or HTML
+            if(file_path.endswith("html") or file_path.endswith("htm")):
+                content = textBrowser.toHtml()
+            else:
+                content = textBrowser.toPlainText()
+            with open(file_path, 'w', encoding='utf-8') as file:
+                    file.write(content)
+    
+    def changePage(self):
+        #print(self.sender().objectName())
+        selectedPage = self.ui.pages.findChild(QtWidgets.QWidget,"page_" + self.sender().objectName().split("_")[1])
+        if selectedPage != None:
+           self.ui.pages.setCurrentWidget(selectedPage)
+  
     def changePDFPage(self,index):
-        self.pages.setCurrentWidget(self.pdf_view)
+        self.ui.pages.setCurrentWidget(self.pdf_view)
         self.pdf_path = ""
-        match index: 
+        match index:
              case 0:
                   self.pdf_path = os.path.relpath("pages/BigPicture.pdf")
              case 1:
@@ -2231,84 +2205,124 @@ class Ui_MainWindow(QMainWindow,object):
                   self.pdf_path = os.path.relpath("pages/SupervisedML_Process.pdf")
              case 17:
                   self.pdf_path = os.path.relpath("pages/TheoreticalDeepLearningFoundation.pdf")
-                  
+
         self.pdf_document.load(self.pdf_path)
         self.pdf_view.pdf_path = self.pdf_path
         self.pdf_view.setDocument(self.pdf_document)
-        self.pdf_view.pdf_document = self.pdf_document 
+        self.pdf_view.pdf_document = self.pdf_document
         self.pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
         self.pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
+  
+    def connectActions(self):
+        self.ui.action_BigPicture.triggered.connect(partial(self.changePDFPage,0))
+        self.ui.action_UniversityCurriculum.triggered.connect(partial(self.changePDFPage,1))
+        self.ui.action_RoadMap.triggered.connect(partial(self.changePDFPage,2))
+        self.ui.action_StudyPlan.triggered.connect(partial(self.changePDFPage,3))
+        self.ui.action_HeadingResearch.triggered.connect(partial(self.changePDFPage,4))
+        self.ui.action_UserGuide.triggered.connect(partial(self.changePDFPage,5))
 
-    def pdf_in_browser(self,pdf_path,local):
-        if local == True:
-           pdf_path = os.path.relpath(pdf_path)
-           QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(pdf_path))
-        else:
-            QDesktopServices.openUrl(QUrl(pdf_path))
+        self.ui.action_AboutTool.triggered.connect(self.changePage)
+        self.ui.action_AboutAuthorDeveloper.triggered.connect(self.changePage)
+        self.ui.action_CloseOtherWindows.triggered.connect(self.closeWindow)
+        self.ui.action_CloseMainWindow.triggered.connect(self.closeWindow)
+        self.ui.action_CloseAllWindows.triggered.connect(self.closeWindow)
 
-    def LoadResources(self):
-        Base_Image_Path = os.path.normpath(join("resources","videos"))
-        for f in listdir(Base_Image_Path):
-            if isfile(join(Base_Image_Path, f)) and self.is_valid_extension(f.strip(),"video"):             
-               if self.comboBox_SelectVideo.findText(f) == -1 :
-                  self.comboBox_SelectVideo.addItem(f) 
-               if self.comboBox_SelectVideo_DeepLearningFoundation.findText(f) == -1 :
-                  self.comboBox_SelectVideo_DeepLearningFoundation.addItem(f) 
-                   
-        Base_Image_Path = os.path.normpath(join("resources","images"))
-        for f in listdir(Base_Image_Path):
-            if isfile(join(Base_Image_Path, f)) and self.is_valid_extension(f.strip(),"image"):             
-               if self.comboBox_SelectImage.findText(f) == -1 :
-                  self.comboBox_SelectImage.addItem(f)  
-               if self.comboBox_SelectImage_DeepLearningFoundation.findText(f) == -1 :
-                  self.comboBox_SelectImage_DeepLearningFoundation.addItem(f)    
+        self.ui.action_CreateDefaultFolders.triggered.connect(self.CheckCreateDefaultFolders)
 
-        for camera_info in enumerate_cameras(cv2.CAP_MSMF):
-             cap = f"Index: {camera_info.index}, Name: {camera_info.name}, Backend: {camera_info.backend}"
-             if self.comboBox_SelectCameraDeepLearningFoundation.findText(cap) == -1 :
-                  self.comboBox_SelectCameraDeepLearningFoundation.addItem(cap) 
+        self.ui.action_UploadImages.triggered.connect(self.Upload_Files)
+        self.ui.action_UploadVideos.triggered.connect(self.Upload_Files)
+        self.ui.pushButton_UploadImages.clicked.connect(self.Upload_Files)
+        self.ui.pushButton_UploadVideos.clicked.connect(self.Upload_Files)
+        self.ui.pushButton_UploadImages_DeepLearningFoundation.clicked.connect(self.Upload_Files)
+        self.ui.pushButton_UploadVideos_DeepLearningFoundation.clicked.connect(self.Upload_Files)
+        self.ui.comboBox_SelectImage.currentTextChanged.connect(self.PrepareSelectImage)
+        self.ui.comboBox_SelectVideo.currentTextChanged.connect(self.PrepareSelectVideo)
+        self.ui.comboBox_ColorSpaceConversion.currentTextChanged.connect(self.PrepareConvertColorSpace)
+        self.ui.pushButton_SaveCode.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_ImageAndColors))
+        self.ui.pushButton_SaveCode_CreateSimpleCNN.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_CreateSimpleCNN))
+        self.ui.pushButton_SaveCode_DeepLearningFoundation.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_DeepLearningFoundation))
+        self.ui.pushButton_SaveImage.clicked.connect(self.ImagesAndColorsHandler.SaveImage)
+
+        self.ui.horizontalSlider_SkewHeight.valueChanged.connect(self.PrepareSkewImage)
+        self.ui.horizontalSlider_SkewWidth.valueChanged.connect(self.PrepareSkewImage)
+        self.ui.horizontalSlider_ResizeHeight.valueChanged.connect(self.PrepareResizeImage)
+        self.ui.horizontalSlider_ResizeWidth.valueChanged.connect(self.PrepareResizeImage)
+        self.ui.pushButton_LargerPyrUp.clicked.connect(self.PreparePyrUpDown)
+        self.ui.pushButton_SmallerPyrDown.clicked.connect(self.PreparePyrUpDown)
+
+        self.ui.dial_RotationScale.valueChanged.connect(self.PrepareScaleByCoefficient)
+        self.ui.dial_RotationDegree.valueChanged.connect(self.PrepareRotationByAngle)
+        self.ui.checkBox_FlipHorizantal.checkStateChanged.connect(self.PrepareFlip)
+        self.ui.checkBox_FlipVertical.checkStateChanged.connect(self.PrepareFlip)
+        self.ui.checkBox_SwapTranspose.checkStateChanged.connect(self.PrepareTranspose)
+        self.ui.horizontalSlider_CropTopLefCoefficient.valueChanged.connect(self.PrepareCrop)
+        self.ui.horizontalSlider_CropBottomRightCoefficient.valueChanged.connect(self.PrepareCrop)
+        self.ui.pushButton_AddText.clicked.connect(self.PrepareAddText)
+        self.ui.comboBox_DrawShape.currentTextChanged.connect(self.PrepareDrawShape)
+        self.ui.comboBox_ArithmeticAndBitwiseOperations.currentTextChanged.connect(self.PrepareOperations)
+        self.ui.comboBox_Filters.currentTextChanged.connect(self.PrepareFilters)
+        self.ui.comboBox_DilationErosionEdgeDetection.currentTextChanged.connect(self.PrepareDilationErosionEdgeDetection)
+        self.ui.comboBox_SegmentationAndContours.currentTextChanged.connect(self.PrepareSegmentationAndContours)
+        self.ui.comboBox_ObjectDetection.currentTextChanged.connect(self.PrepareObjectDetection)
+        self.ui.comboBox_OCR.currentTextChanged.connect(self.PrepareOpticalCharacterRecognition)
+
+        self.ui.pushButton_LoadMNIST_Step1CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.LoadMNIST)
+
+        self.ui.pushButton_TestMNIST_Step1CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.TestMNIST)
+        self.ui.pushButton_PlotMNIST_Step1CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.PlotMNIST)
+        self.ui.pushButton_PrepareData_Step2CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.PrepareData)
+        self.ui.pushButton_EncodeMap_Step2CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.EncodeMap)
+        self.ui.pushButton_ModelMap_Step3CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.ModelMap)
+        self.ui.pushButton_CreateModel_Step3CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.CreateModel)
+        self.ui.pushButton_ModelSummary_Step3CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.ModelSummaryFunction)
+        self.ui.pushButton_TrainModel_Step4CreateSimpleCNN.clicked.connect(self.PrepareTrainModel)
+        self.ui.pushButton_CancelTraining_Step4CreateSimpleCNN.clicked.connect(self.PrepareCancelTraining)
+        self.ui.pushButton_PlotAccuracy_Step4CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.PlotAccuracy)
+        self.ui.pushButton_PlotLoss_Step4CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.PlotLoss)
+        self.ui.pushButton_SaveTrainedModel_Step4CreateSimpleCNN.clicked.connect(self.CreateSimpleCNNHandler.SaveTrainedModel)
+
+
+        self.action_MLBigPicture.triggered.connect(partial(self.changePDFPage,6))
+        self.action_CategorizingByLearningParadigm.triggered.connect(partial(self.changePDFPage,7))
+        self.action_FromFundamentalsToAdvanced.triggered.connect(partial(self.changePDFPage,8))
+        self.action_CodeSamplesByLearningParadigm.triggered.connect(partial(self.changePDFPage,9))
+        self.action_DeeperCodeSamplesWithDefinitions.triggered.connect(partial(self.changePDFPage,10))
+        self.action_TheoreticalFoundationsOfComputerVision.triggered.connect(partial(self.changePDFPage,11))
+        self.action_Numpy.triggered.connect(partial(self.changePDFPage,12))
+        self.action_Pandas.triggered.connect(partial(self.changePDFPage,13))
+        self.action_MatPlotLib.triggered.connect(partial(self.changePDFPage,14))
+        self.action_SeaBorn.triggered.connect(partial(self.changePDFPage,15))
+        self.action_SupervisedMLProcess.triggered.connect(partial(self.changePDFPage,16))
+        self.action_TheoreticalDeepLearningFoundation.triggered.connect(partial(self.changePDFPage,17))
+
+       
+        self.action_PythonProgramming.triggered.connect(self.changePage)
+        self.action_LinearAlgebraAndCalculus.triggered.connect(self.changePage)
+        self.action_ProbabilityAndStatistics.triggered.connect(self.changePage)
+        self.action_ImagesAndColorsManipulationsAndOprations.triggered.connect(self.changePage)
+        self.action_CreateSimpleCNNConvolutionalNeuralNetwork.triggered.connect(self.changePage)
+        self.action_DeepLearningFoundationOperations.triggered.connect(self.changePage)
+
+        self.action_ProbabilityAndStatistics.triggered.connect(partial(self.Pdf_In_Browser,"https://mml-book.github.io/book/mml-book.pdf",False))
+        self.action_PythonProgramming.triggered.connect(partial(self.Pdf_In_Browser,"https://www.w3schools.com/python/default.asp",False))
+        self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.Pdf_In_Browser,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization",False))
+        self.action_MLModelOverview.triggered.connect(partial(self.Pdf_In_Browser,"https://apple.github.io/coremltools/docs-guides/source/mlmodel.html",False))
+        self.action_CoreMLModelFormatSpecification.triggered.connect(partial(self.Pdf_In_Browser,"https://apple.github.io/coremltools/mlmodel/index.html",False))
+
+       
+        self.ImagesAndColorsHandler.valueChanged.connect(self.SetImageInfo)
+        self.ImagesAndColorsHandler.ImageSizeChanged.connect(self.ImageSizeChanged)
+
+        for channel in self.ColorChannelChangeCheckBoxes:
+            channel.clicked.connect(partial(self.PrepareColorChannelRemove,channel.objectName()))#stateChanged
+
+        for translation in self.TranslationDials:
+             translation.valueChanged.connect(self.PrepareTranslateImage)
+
+       
+        self.ImagesAndColorsHandler.ResetParams.connect(self.ResetParams)
       
-    def closeEvent(self, event: QCloseEvent):
-        #print(self.sender().objectName())
-        event.accept()  
-
-    def FillCode(self, function, textBrowser, LineStart):
-        function_code = inspect.getsource(function)
-        lines = function_code.splitlines()[LineStart:]
-        commentCount = 0
-        ChangedContent = ""
-        for index,line in enumerate(lines):
-            #print(index)
-            stripedLine = line.strip()
-            if lines[index].strip().startswith("'''"): commentCount += 1
-            if stripedLine.startswith("#") or (commentCount % 2 != 0 or lines[index].strip().startswith("'''")):
-                line = "<span style='color: green'>" + line +"</span>" #.strip()
-            ChangedContent += line +"\n"
-        textBrowser.setHtml(("<pre>" + ChangedContent ).strip())
-        textBrowser.show()
-
-    def SaveCode(self, textBrowser):
-        # Choose file location
-        file_path, _ = QFileDialog.getSaveFileName(self, "Save File", "", "Text Files (*.txt);;HTML Files (*.html);;All Files (*)")
-        if file_path:
-            content = ""
-            # Choose between plain text or HTML
-            if(file_path.endswith("html") or file_path.endswith("htm")):
-                content = textBrowser.toHtml()                
-            else:
-                content = textBrowser.toPlainText()
-            with open(file_path, 'w', encoding='utf-8') as file:
-                    file.write(content)
-
-    def is_valid_extension(self,file_name,file_type):
-        match file_type:
-             case "image":
-                  valid_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp','.psd'}
-             case "video":
-                  valid_extensions = {'.avi','.mp4','.mpg','.mpeg','.mov','.WMV','.MKV','.FLV'}
-             case "haarcascades":
-                  valid_extensions = {'.xml'}
-        return any(file_name.lower().endswith(extension) for extension in valid_extensions)
+        self.CreateSimpleCNNHandler.LoadMNISTRawDataOrPreparedData.connect(self.LoadMNISTRawDataOrPreparedData) 
 
     def manualSetup(self):
         self.ImagesAndColorsHandler = ImagesAndColorsManipulationsAndOprations()
@@ -2316,166 +2330,167 @@ class Ui_MainWindow(QMainWindow,object):
         self.DeepLearningFoundationOperationsHandler = DeepLearningFoundationOperations()
 
         self.ColorChannelChangeCheckBoxes = [
-            self.checkBox_BlueChannel,
-            self.checkBox_GreenChannel,
-            self.checkBox_RedChannel,
-            self.checkBox_HSVHueChannel,
-            self.checkBox_HSVSaturation,
-            self.checkBox_HSVValue
+            self.ui.checkBox_BlueChannel,
+            self.ui.checkBox_GreenChannel,
+            self.ui.checkBox_RedChannel,
+            self.ui.checkBox_HSVHueChannel,
+            self.ui.checkBox_HSVSaturation,
+            self.ui.checkBox_HSVValue
         ]
         for channel in self.ColorChannelChangeCheckBoxes:
                 channel.setDisabled(True)
                 channel.setEnabled(False)
 
         self.TranslationDials = [
-             self.dial_X1,
-             self.dial_Y1,
-             self.dial_Z1,
-             self.dial_X2,
-             self.dial_Y2,
-             self.dial_Z2
+             self.ui.dial_X1,
+             self.ui.dial_Y1,
+             self.ui.dial_Z1,
+             self.ui.dial_X2,
+             self.ui.dial_Y2,
+             self.ui.dial_Z2
         ]
 
-        self.dial_X1.setValue(10)
-        self.dial_X2.setValue(100)
-        self.dial_Y1.setValue(200)
-        self.dial_Y2.setValue(50)
-        self.dial_Z1.setValue(100)
-        self.dial_Z2.setValue(250)
+        self.ui.dial_X1.setValue(10)
+        self.ui.dial_X2.setValue(100)
+        self.ui.dial_Y1.setValue(200)
+        self.ui.dial_Y2.setValue(50)
+        self.ui.dial_Z1.setValue(100)
+        self.ui.dial_Z2.setValue(250)
 
         self.TranslationLabelValues = [
-             self.label_X1_Value,
-             self.label_X2_Value,
-             self.label_Y1_Value,
-             self.label_Y2_Value,
-             self.label_Z1_Value,
-             self.label_Z2_Value
+             self.ui.label_X1_Value,
+             self.ui.label_X2_Value,
+             self.ui.label_Y1_Value,
+             self.ui.label_Y2_Value,
+             self.ui.label_Z1_Value,
+             self.ui.label_Z2_Value
         ]
 
         for TranslationLabelValue in self.TranslationLabelValues:
              TranslationLabelValue.setStyleSheet("color:red")
-        
-        self.label_CropTopLefCoefficientValue.setStyleSheet("color:red")
-        self.label_CropBottomRightCoefficientValue.setStyleSheet("color:red")
-        self.label_RorationScaleValue.setStyleSheet("color:red")
-        self.label_RotationDegreeValue.setStyleSheet("color:red")
 
-        self.menu_PythonProgramming = QMenu(parent=MainWindow)  
+        self.ui.label_CropTopLefCoefficientValue.setStyleSheet("color:red")
+        self.ui.label_CropBottomRightCoefficientValue.setStyleSheet("color:red")
+        self.ui.label_RorationScaleValue.setStyleSheet("color:red")
+        self.ui.label_RotationDegreeValue.setStyleSheet("color:red")
+
+        self.menu_PythonProgramming = QMenu(parent=self)
         self.menu_PythonProgramming.setObjectName("action_PythonProgramming")
-        self.menu_PreRequisites.addMenu(self.menu_PythonProgramming)
-        self.action_PythonProgramming = QtGui.QAction(parent=MainWindow)  
+        self.ui.menu_PreRequisites.addMenu(self.menu_PythonProgramming)
+        self.action_PythonProgramming = QtGui.QAction(parent=self)
         self.action_PythonProgramming.setObjectName("action_PythonProgramming")
         self.menu_PythonProgramming.addAction(self.action_PythonProgramming)
-        self.action_Numpy = QtGui.QAction(parent=MainWindow)  
+        self.action_Numpy = QtGui.QAction(parent=self)
         self.action_Numpy.setObjectName("action_Numpy")
         self.menu_PythonProgramming.addAction(self.action_Numpy)
-        self.action_Pandas = QtGui.QAction(parent=MainWindow)  
+        self.action_Pandas = QtGui.QAction(parent=self)
         self.action_Pandas.setObjectName("action_Pandas")
         self.menu_PythonProgramming.addAction(self.action_Pandas)
-        self.action_MatPlotLib = QtGui.QAction(parent=MainWindow)  
+        self.action_MatPlotLib = QtGui.QAction(parent=self)
         self.action_MatPlotLib.setObjectName("action_MatPlotLib")
         self.menu_PythonProgramming.addAction(self.action_MatPlotLib)
-        self.action_SeaBorn = QtGui.QAction(parent=MainWindow)  
+        self.action_SeaBorn = QtGui.QAction(parent=self)
         self.action_SeaBorn.setObjectName("action_SeaBorn")
         self.menu_PythonProgramming.addAction(self.action_SeaBorn)
 
-        self.menu_Mathematics = QMenu(parent=MainWindow)  
+        self.menu_Mathematics = QMenu(parent=self)
         self.menu_Mathematics.setObjectName("menu_Mathematics")
-        self.menu_PreRequisites.addMenu(self.menu_Mathematics)
-        self.action_LinearAlgebraAndCalculus = QtGui.QAction(parent=MainWindow)
-        self.action_LinearAlgebraAndCalculus.setObjectName("action_LinearAlgebraAndCalculus")    
+        self.ui.menu_PreRequisites.addMenu(self.menu_Mathematics)
+        self.action_LinearAlgebraAndCalculus = QtGui.QAction(parent=self)
+        self.action_LinearAlgebraAndCalculus.setObjectName("action_LinearAlgebraAndCalculus")
         self.menu_Mathematics.addAction(self.action_LinearAlgebraAndCalculus)
-        self.action_ProbabilityAndStatistics = QtGui.QAction(parent=MainWindow)
-        self.action_ProbabilityAndStatistics.setObjectName("action_ProbabilityAndStatistics")    
+        self.action_ProbabilityAndStatistics = QtGui.QAction(parent=self)
+        self.action_ProbabilityAndStatistics.setObjectName("action_ProbabilityAndStatistics")
         self.menu_Mathematics.addAction(self.action_ProbabilityAndStatistics)
-        
-        self.menu_CoreMachineLearningPrinciples = QMenu(parent=MainWindow)  
-        self.menu_CoreMachineLearningPrinciples.setObjectName("menu_CoreMachineLearningPrinciples")
-        self.menu_PreRequisites.addMenu(self.menu_CoreMachineLearningPrinciples)
-        self.action_MLBigPicture = QtGui.QAction(parent=MainWindow)
-        self.action_MLBigPicture.setObjectName("action_MLBigPicture")    
-        self.menu_CoreMachineLearningPrinciples.addAction(self.action_MLBigPicture)
-        self.action_CategorizingByLearningParadigm = QtGui.QAction(parent=MainWindow)
-        self.action_CategorizingByLearningParadigm.setObjectName("action_CategorizingByLearningParadigm")    
-        self.menu_CoreMachineLearningPrinciples.addAction(self.action_CategorizingByLearningParadigm)
-        self.action_FromFundamentalsToAdvanced = QtGui.QAction(parent=MainWindow)
-        self.action_FromFundamentalsToAdvanced.setObjectName("action_FromFundamentalsToAdvanced")    
-        self.menu_CoreMachineLearningPrinciples.addAction(self.action_FromFundamentalsToAdvanced)
-        
-        self.action_MLModelOverview = QtGui.QAction(parent=MainWindow)  
-        self.action_MLModelOverview.setObjectName("action_MLModelOverview")
-        self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_MLModelOverview)
-        self.action_CoreMLModelFormatSpecification = QtGui.QAction(parent=MainWindow)  
-        self.action_CoreMLModelFormatSpecification.setObjectName("action_CoreMLModelFormatSpecification")
-        self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_CoreMLModelFormatSpecification)
-        self.action_SupervisedMLProcess = QtGui.QAction(parent=MainWindow)  
-        self.action_SupervisedMLProcess.setObjectName("action_SupervisedMLProcess")
-        self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_SupervisedMLProcess)
-        self.action_CodeSamplesByLearningParadigm = QtGui.QAction(parent=MainWindow)  
-        self.action_CodeSamplesByLearningParadigm.setObjectName("action_CodeSamplesByLearningParadigm")
-        self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_CodeSamplesByLearningParadigm)
-        self.action_DeeperCodeSamplesWithDefinitions = QtGui.QAction(parent=MainWindow)  
-        self.action_DeeperCodeSamplesWithDefinitions.setObjectName("action_DeeperCodeSamplesWithDefinitions")
-        self.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_DeeperCodeSamplesWithDefinitions)
 
-        self.action_TheoreticalFoundationsOfComputerVision = QtGui.QAction(parent=MainWindow)  
+        self.menu_CoreMachineLearningPrinciples = QMenu(parent=self)
+        self.menu_CoreMachineLearningPrinciples.setObjectName("menu_CoreMachineLearningPrinciples")
+        self.ui.menu_PreRequisites.addMenu(self.menu_CoreMachineLearningPrinciples)
+        self.action_MLBigPicture = QtGui.QAction(parent=self)
+        self.action_MLBigPicture.setObjectName("action_MLBigPicture")
+        self.menu_CoreMachineLearningPrinciples.addAction(self.action_MLBigPicture)
+        self.action_CategorizingByLearningParadigm = QtGui.QAction(parent=self)
+        self.action_CategorizingByLearningParadigm.setObjectName("action_CategorizingByLearningParadigm")
+        self.menu_CoreMachineLearningPrinciples.addAction(self.action_CategorizingByLearningParadigm)
+        self.action_FromFundamentalsToAdvanced = QtGui.QAction(parent=self)
+        self.action_FromFundamentalsToAdvanced.setObjectName("action_FromFundamentalsToAdvanced")
+        self.menu_CoreMachineLearningPrinciples.addAction(self.action_FromFundamentalsToAdvanced)
+
+        self.action_MLModelOverview = QtGui.QAction(parent=self)
+        self.action_MLModelOverview.setObjectName("action_MLModelOverview")
+        self.ui.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_MLModelOverview)
+        self.action_CoreMLModelFormatSpecification = QtGui.QAction(parent=self)
+        self.action_CoreMLModelFormatSpecification.setObjectName("action_CoreMLModelFormatSpecification")
+        self.ui.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_CoreMLModelFormatSpecification)
+        self.action_SupervisedMLProcess = QtGui.QAction(parent=self)
+        self.action_SupervisedMLProcess.setObjectName("action_SupervisedMLProcess")
+        self.ui.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_SupervisedMLProcess)
+        self.action_CodeSamplesByLearningParadigm = QtGui.QAction(parent=self)
+        self.action_CodeSamplesByLearningParadigm.setObjectName("action_CodeSamplesByLearningParadigm")
+        self.ui.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_CodeSamplesByLearningParadigm)
+        self.action_DeeperCodeSamplesWithDefinitions = QtGui.QAction(parent=self)
+        self.action_DeeperCodeSamplesWithDefinitions.setObjectName("action_DeeperCodeSamplesWithDefinitions")
+        self.ui.menu_Machine_Learning_Model_Fundamentals.addAction(self.action_DeeperCodeSamplesWithDefinitions)
+
+        self.action_TheoreticalFoundationsOfComputerVision = QtGui.QAction(parent=self)
         self.action_TheoreticalFoundationsOfComputerVision.setObjectName("action_TheoreticalFoundationsOfComputerVision")
-        self.menu_FundamentalOfComputerVision.addAction(self.action_TheoreticalFoundationsOfComputerVision)
-        self.menu_PracticalFoundationsOfComputerVision = QMenu(parent=MainWindow)  
+        self.ui.menu_FundamentalOfComputerVision.addAction(self.action_TheoreticalFoundationsOfComputerVision)
+        self.menu_PracticalFoundationsOfComputerVision = QMenu(parent=self)
         self.menu_PracticalFoundationsOfComputerVision.setObjectName("menu_PracticalFoundationsOfComputerVision")
-        self.menu_FundamentalOfComputerVision.addMenu(self.menu_PracticalFoundationsOfComputerVision)
-        self.action_ImagesAndColorsManipulationsAndOprations = QtGui.QAction(parent=MainWindow)  
+        self.ui.menu_FundamentalOfComputerVision.addMenu(self.menu_PracticalFoundationsOfComputerVision)
+        self.action_ImagesAndColorsManipulationsAndOprations = QtGui.QAction(parent=self)
         self.action_ImagesAndColorsManipulationsAndOprations.setObjectName("action_ImagesAndColorsManipulationsAndOprations")
         self.menu_PracticalFoundationsOfComputerVision.addAction(self.action_ImagesAndColorsManipulationsAndOprations)
-        self.action_CreateSimpleCNNConvolutionalNeuralNetwork = QtGui.QAction(parent=MainWindow)  
+        self.action_CreateSimpleCNNConvolutionalNeuralNetwork = QtGui.QAction(parent=self)
         self.action_CreateSimpleCNNConvolutionalNeuralNetwork.setObjectName("action_CreateSimpleCNNConvolutionalNeuralNetwork")
         self.menu_PracticalFoundationsOfComputerVision.addAction(self.action_CreateSimpleCNNConvolutionalNeuralNetwork)
-        
-        self.action_TheoreticalDeepLearningFoundation = QtGui.QAction(parent=MainWindow)  
+
+        self.action_TheoreticalDeepLearningFoundation = QtGui.QAction(parent=self)
         self.action_TheoreticalDeepLearningFoundation.setObjectName("action_TheoreticalDeepLearningFoundation")
-        self.menu_DeepLearningFoundations.addAction(self.action_TheoreticalDeepLearningFoundation)
-        self.menu_PracticalDeepLearningFoundations = QMenu(parent=MainWindow)  
+        self.ui.menu_DeepLearningFoundations.addAction(self.action_TheoreticalDeepLearningFoundation)
+        self.menu_PracticalDeepLearningFoundations = QMenu(parent=self)
         self.menu_PracticalDeepLearningFoundations.setObjectName("menu_PracticalDeepLearningFoundations")
-        self.menu_DeepLearningFoundations.addMenu(self.menu_PracticalDeepLearningFoundations)
-        self.action_DeepLearningFoundationOperations = QtGui.QAction(parent=MainWindow)  
+        self.ui.menu_DeepLearningFoundations.addMenu(self.menu_PracticalDeepLearningFoundations)
+        self.action_DeepLearningFoundationOperations = QtGui.QAction(parent=self)
         self.action_DeepLearningFoundationOperations.setObjectName("action_DeepLearningFoundationOperations")
         self.menu_PracticalDeepLearningFoundations.addAction(self.action_DeepLearningFoundationOperations)
 
-        self.pdf_view = CustomPdfView(self.pages)
+        self.pdf_view = CustomPdfView(self.ui.pages)
         self.pdf_document = QPdfDocument(self.pdf_view)
-        self.pages.addWidget(self.pdf_view)
-      
-        AboutAuthorDeveloper = self.load_html_file(os.path.relpath("pages/Text_AboutAuthorDeveloper.html"))
-        self.textBrowser_AboutAuthorDeveloper.setHtml(AboutAuthorDeveloper)
-        self.textBrowser_AboutAuthorDeveloper.setStyleSheet("padding:10px")
-        AboutTool = self.load_html_file(os.path.relpath("pages/Text_AboutTool.html"))
-        self.textBrowser_AboutTool.setHtml(AboutTool)
-        self.textBrowser_AboutTool.setStyleSheet("padding:10px")
-        self.textBrowser_AboutTool.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.ui.pages.addWidget(self.pdf_view)
+
+        AboutAuthorDeveloper = self.Load_Html_File(os.path.relpath("pages/Text_AboutAuthorDeveloper.html"))
+        self.ui.textBrowser_AboutAuthorDeveloper.setHtml(AboutAuthorDeveloper)
+        self.ui.textBrowser_AboutAuthorDeveloper.setStyleSheet("padding:10px")
+        AboutTool = self.Load_Html_File(os.path.relpath("pages/Text_AboutTool.html"))
+        self.ui.textBrowser_AboutTool.setHtml(AboutTool)
+        self.ui.textBrowser_AboutTool.setStyleSheet("padding:10px")
+        self.ui.textBrowser_AboutTool.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         #.setHorizontalScrollBarPolicy(Qt.scrol.ScrollBarAlwaysOff)
-        self.pages.setCurrentWidget(self.page_AboutTool)
-        
-        self.label_ImageDepthValue.setStyleSheet("color:red")
-        self.label_ImageShapeValue.setStyleSheet("color:red")
-        self.label_ImageWidthValue.setStyleSheet("color:red")
-        self.label_ImageHeightValue.setStyleSheet("color:red")
+        self.ui.pages.setCurrentWidget(self.ui.page_AboutTool)
 
-        self.comboBox_Epochs_Step4CreateSimpleCNN.setCurrentIndex(1)
-       
+        self.ui.label_ImageDepthValue.setStyleSheet("color:red")
+        self.ui.label_ImageShapeValue.setStyleSheet("color:red")
+        self.ui.label_ImageWidthValue.setStyleSheet("color:red")
+        self.ui.label_ImageHeightValue.setStyleSheet("color:red")
+
+        self.ui.comboBox_Epochs_Step4CreateSimpleCNN.setCurrentIndex(1)
+
         self.CheckCreateDefaultFolders()
-        self.connectActions()        
+        self.connectActions()
         self.LoadResources()
-        self.FillCode(ImagesAndColorsManipulationsAndOprations,self.textBrowser_ImageAndColors, 15)
-        self.FillCode(CreateSimpleCNN,self.textBrowser_CreateSimpleCNN, 25)
-        self.FillCode(DeepLearningFoundationOperations,self.textBrowser_DeepLearningFoundation, 12)
+        self.FillCode(ImagesAndColorsManipulationsAndOprations,self.ui.textBrowser_ImageAndColors, 15)
+        self.FillCode(CreateSimpleCNN,self.ui.textBrowser_CreateSimpleCNN, 25)
+        self.FillCode(DeepLearningFoundationOperations,self.ui.textBrowser_DeepLearningFoundation, 12)
 
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 4  
-
-if __name__ == "__main__":
+def LunchApp():
     import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
     sys.exit(app.exec())
+    
+if __name__ == "__main__":
+    LunchApp()
+    
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End Block 2
