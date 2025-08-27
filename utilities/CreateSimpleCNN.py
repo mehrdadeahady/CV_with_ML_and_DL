@@ -24,7 +24,12 @@ In essence, CNNs are a powerful and efficient architecture within the broader do
 particularly adept at handling and extracting meaningful information from structured data like images.
 '''
 import os
-import numpy as np
+from os.path import isfile, join
+import time
+try:
+    import numpy as np
+except:
+    print("You Should Install numpy Library")
 try:
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     #import tensorflow as tf
@@ -40,12 +45,20 @@ try:
     from keras.optimizers import SGD 
 except:
     print("Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
-import cv2
-import time
-import matplotlib.pyplot as plt
-from os.path import isfile, join
-from PyQt6.QtCore import QObject, pyqtSignal, QThread, Qt
-from PyQt6.QtWidgets import QMessageBox,QTextEdit, QWidget, QVBoxLayout, QPushButton, QLabel, QDialog, QTextEdit,QScrollArea
+try:
+    import cv2
+    from cv2_enumerate_cameras import enumerate_cameras
+except:
+    print("You Should Install OpenCV-Python and cv2_enumerate_cameras Libraries")
+try:
+    import matplotlib.pyplot as plt
+except:
+    print("You Should Install matplotlib Library!")
+try:
+    from PyQt6.QtCore import QObject, pyqtSignal, QThread, Qt
+    from PyQt6.QtWidgets import QMessageBox,QTextEdit, QWidget, QVBoxLayout, QPushButton, QLabel, QDialog, QTextEdit,QScrollArea
+except:
+    print("You Should Install PyQt6 Library!")
 
 class CreateSimpleCNN(QObject):
     LoadMNISTRawDataOrPreparedData = pyqtSignal(int)
@@ -64,7 +77,7 @@ class CreateSimpleCNN(QObject):
         self.modelHistory = None
         self.TrainedModel  = None
         self.training_thread = None
-        self._is_running = True
+        self._is_running = False
         self.steps_per_epoch = None 
         self.signal_emitter = SignalEmitter()
         self.signal_emitter.batch_signal.connect(self.show_batch)
@@ -300,25 +313,28 @@ class CreateSimpleCNN(QObject):
                             metrics = ['accuracy'])
                 
                 self.model = model
-                ###################model.save("resources/models/raw_simpleCNN.keras")
-                # Capture Summary function to Display Model Layers and Parameters
-                stringlist = []
-                model.summary(print_fn=lambda x: stringlist.append(x))
-                ModelSummary = ""
-                for i,e in enumerate(stringlist[0].split("\n")):
-                    if i != 1 and i != 3:
-                        if i == 2:
-                            ModelSummary += "<pre>"+(str(e).replace("#","")).replace("┃"," ")+"</pre>"
-                        else:   
-                            ModelSummary += "<pre>"+e+"</pre>"
-
-                self.modelSummary = ModelSummary       
+                # Capture Summary function to Display Model Layers and Parameters             
+                self.modelSummary = self.ModelSummaryCapture(model)       
                 QMessageBox.information(None,"Model Summary:",self.modelSummary)
 
              except:
                    QMessageBox.critical(None, "Instalation Error", "Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
         else:
              QMessageBox.warning(None,"Model Exist","Model Already Exist!")  
+
+    # Capture Model Summary function to Display Model Layers and Parameters
+    def ModelSummaryCapture(self,model):
+        stringlist = []
+        model.summary(print_fn=lambda x: stringlist.append(x))
+        ModelSummary = ""
+        for i,e in enumerate(stringlist[0].split("\n")):
+            if i != 1 and i != 3:
+                if i == 2:
+                    ModelSummary += "<pre>"+(str(e).replace("#","")).replace("┃"," ")+"</pre>"
+                else:   
+                    ModelSummary += "<pre>"+e+"</pre>"
+                    
+        return ModelSummary
 
     # Show Model Summary
     def ModelSummaryFunction(self):
@@ -433,9 +449,9 @@ class CreateSimpleCNN(QObject):
             You can still load .h5 models using tf.keras.models.load_model() in current TensorFlow/Keras environments.
             '''
             # Depricated Legacy saving by .h5 extension below:
-            # self.model.save("mnist_simple_cnn_10_Epochs.h5", include_optimizer=True)
+            # self.model.save("mnist_simple_cnn.h5", include_optimizer=True)
             # New way of Saving Keras Model by .keras extension:
-            self.TrainedModel.save("resources/models/mnist_simple_cnn_10_Epochs.keras", overwrite= True,include_optimizer=True)
+            self.TrainedModel.save("resources/models/mnist_simple_cnn.keras", overwrite= True,include_optimizer=True)
             # Obtain accuracy score by evalute function
             score = self.TrainedModel.evaluate(self.x_test, self.y_test, verbose=1)
             QMessageBox.information(None,"Training Model Saved Successfully","Saving Path = resources/models folder in the root." + 

@@ -2,41 +2,40 @@
 """
 @Author | Developer: Mehrdad Ahady
 """
-import os
-import threading
 from utilities.ImagesAndColorsManipulationsAndOprations import ImagesAndColorsManipulationsAndOprations
 from utilities.CreateSimpleCNN import CreateSimpleCNN
 from utilities.DeepLearningFoundationOperations import DeepLearningFoundationOperations
+import os
 from os import path, listdir
 from os.path import isfile, join
-import sys
+import shutil
+import inspect
+from functools import partial
 import time
+try:
+    import numpy as np
+except:
+    print("You Should Install numpy Library")
 try:
     import cv2
     from cv2_enumerate_cameras import enumerate_cameras
 except:
     print("You Should Install OpenCV-Python and cv2_enumerate_cameras Libraries")
-import shutil
-import inspect
-from functools import partial
-import emoji
-import numpy as np
-import regex
 try:
     import PyQt6
+    import PyQt6.QtCore
+    from PyQt6 import QtCore, QtGui, QtWidgets
+    from PyQt6.QtWidgets import QVBoxLayout,QMenu, QMainWindow, QApplication, QWidget, QMessageBox, QFileDialog
+    from PyQt6.QtPdf import QPdfDocument
+    from PyQt6.QtPdfWidgets import QPdfView
+    from PyQt6.QtGui import QDesktopServices, QCloseEvent
+    from PyQt6.QtWebEngineWidgets import QWebEngineView
+    from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
+    from PyQt6.QtCore import QUrl, Qt
+    from PyQt6.QtWebEngineCore import QWebEngineProfile
+    from utilities.CustomPDFView import CustomPdfView
 except:
     print("You Should Install PyQt6 Library!")
-import PyQt6.QtCore
-from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtWidgets import QMenu, QMainWindow, QApplication, QWidget, QMessageBox, QFileDialog
-from PyQt6.QtPdf import QPdfDocument
-from PyQt6.QtPdfWidgets import QPdfView
-from PyQt6.QtGui import QDesktopServices, QCloseEvent
-from PyQt6.QtWebEngineWidgets import QWebEngineView
-from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
-from PyQt6.QtCore import QUrl, Qt
-from PyQt6.QtWebEngineCore import QWebEngineProfile
-from utilities.CustomPDFView import CustomPdfView
 
 class Ui_MainWindow(object):
     
@@ -1025,9 +1024,11 @@ class Ui_MainWindow(object):
         self.label_SelectOperationDeepLearningFoundation = QtWidgets.QLabel(parent=self.page_DeepLearningFoundationOperations)
         self.label_SelectOperationDeepLearningFoundation.setGeometry(QtCore.QRect(450, 40, 91, 31))
         self.label_SelectOperationDeepLearningFoundation.setObjectName("label_SelectOperationDeepLearningFoundation")
-        self.textBrowser_DeepLearningFoundationOperations = QtWidgets.QTextBrowser(parent=self.page_DeepLearningFoundationOperations)
-        self.textBrowser_DeepLearningFoundationOperations.setGeometry(QtCore.QRect(10, 80, 981, 511))
-        self.textBrowser_DeepLearningFoundationOperations.setObjectName("textBrowser_DeepLearningFoundationOperations")
+        self.frame_DeepLearningFoundation = QtWidgets.QFrame(parent=self.page_DeepLearningFoundationOperations)
+        self.frame_DeepLearningFoundation.setGeometry(QtCore.QRect(10, 80, 981, 511))
+        self.frame_DeepLearningFoundation.setFrameShape(QtWidgets.QFrame.Shape.StyledPanel)
+        self.frame_DeepLearningFoundation.setFrameShadow(QtWidgets.QFrame.Shadow.Raised)
+        self.frame_DeepLearningFoundation.setObjectName("frame_DeepLearningFoundation")
         self.pages.addWidget(self.page_DeepLearningFoundationOperations)
         self.page_AboutAuthorDeveloper = QtWidgets.QWidget()
         self.page_AboutAuthorDeveloper.setObjectName("page_AboutAuthorDeveloper")
@@ -1160,8 +1161,8 @@ class Ui_MainWindow(object):
         self.action_CreateDefaultFolders.setObjectName("action_CreateDefaultFolders")
         self.action_UploadImages = QtGui.QAction(parent=MainWindow)
         self.action_UploadImages.setObjectName("action_UploadImages")
-        self.action_UlpoadModels = QtGui.QAction(parent=MainWindow)
-        self.action_UlpoadModels.setObjectName("action_UlpoadModels")
+        self.action_UploadModels = QtGui.QAction(parent=MainWindow)
+        self.action_UploadModels.setObjectName("action_UploadModels")
         self.action_UploadStyles = QtGui.QAction(parent=MainWindow)
         self.action_UploadStyles.setObjectName("action_UploadStyles")
         self.action_UploadVideos = QtGui.QAction(parent=MainWindow)
@@ -1187,7 +1188,7 @@ class Ui_MainWindow(object):
         self.menuSettings.addSeparator()
         self.menuSettings.addAction(self.action_UploadClassifiers)
         self.menuSettings.addSeparator()
-        self.menuSettings.addAction(self.action_UlpoadModels)
+        self.menuSettings.addAction(self.action_UploadModels)
         self.menuSettings.addSeparator()
         self.menuSettings.addAction(self.action_UploadImages)
         self.menuSettings.addSeparator()
@@ -1463,7 +1464,7 @@ class Ui_MainWindow(object):
         #**************************************************************************
         self.action_CreateDefaultFolders.setText(_translate("MainWindow", "📁 Create Default Folders"))
         self.action_UploadImages.setText(_translate("MainWindow", "⤴️ Upload Images"))
-        self.action_UlpoadModels.setText(_translate("MainWindow", "🔼 Upoad Models"))
+        self.action_UploadModels.setText(_translate("MainWindow", "🔼 Upoad Models"))
         self.action_UploadStyles.setText(_translate("MainWindow", "⏫ Upload Styles"))
         self.action_UploadVideos.setText(_translate("MainWindow", "📤 Upload Videos"))
         self.action_UploadClassifiers.setText(_translate("MainWindow", "⏏️ Upload Classifiers"))
@@ -1900,35 +1901,34 @@ class MainWindow(QMainWindow):
             else:
                 os.makedirs(haarcascades, exist_ok=True)
 
-    def Split_Emojis(self,text):
-        return regex.sub(r'\p{Emoji}', '', text)
-
     def Upload_Files(self,type):
           self.CheckCreateDefaultFolders()
           destination_folder = os.path.normpath("resources")
-          senderObject = self.sender()
-          sender = (self.Split_Emojis(senderObject.text())).strip()
-          #print(sender)
+          sender = self.sender().objectName() 
           file_paths, _ = QFileDialog.getOpenFileNames(self, "Select File", "", "All Files (*);;Text Files (*.txt)")
           if file_paths:
                # Copy each file
                for path in file_paths:
                     file_name = os.path.basename(path)
 
-                    if sender.__contains__("Upload Models"):
-                        destination_folder = os.path.normpath(join("resources","models"))
-
-                    if sender.__contains__("Upload Images"):
+                    if sender.__contains__("UploadModels"):
+                        if self.Is_Valid_Extension(file_name.strip(),"model"):
+                           destination_folder = os.path.normpath(join("resources","models"))
+                        else:
+                            QMessageBox.critical(None, "Model Extension Error: " + file_name, "Valid Extensions: " + " keras , h5 ")
+                            continue
+                        
+                    if sender.__contains__("UploadImages"):
                         if self.Is_Valid_Extension(file_name.strip(),"image"):
                            destination_folder = os.path.normpath(join("resources","images"))
                         else:
                             QMessageBox.critical(None, "Image Extension Error: " + file_name, "Valid Extensions: " + " jpg , jpeg , png , gif , bmp , psd ")
                             continue
 
-                    if sender.__contains__("Upload Styles"):
+                    if sender.__contains__("UploadStyles"):
                         destination_folder = os.path.normpath(join("resources","styles"))
 
-                    if sender.__contains__("Upload Videos"):
+                    if sender.__contains__("UploadVideos"):
                         if self.Is_Valid_Extension(file_name.strip(),"video"):
                            destination_folder = os.path.normpath(join("resources","Videos"))
                         else:
@@ -1954,8 +1954,10 @@ class MainWindow(QMainWindow):
                   valid_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.bmp','.psd'}
              case "video":
                   valid_extensions = {'.avi','.mp4','.mpg','.mpeg','.mov','.WMV','.MKV','.FLV'}
-             case "haarcascades":
+             case "haarcascade":
                   valid_extensions = {'.xml'}
+             case "model":
+                  valid_extensions = {'.h5','.keras'}
         return any(file_name.lower().endswith(extension) for extension in valid_extensions)
     
     def Pdf_In_Browser(self,pdf_path,local):
@@ -2088,23 +2090,40 @@ class MainWindow(QMainWindow):
              if text.strip() != "":
                 QMessageBox.critical(None, "Image Extension Error", "Valid Extensions: " + " jpg , jpeg , png , gif , bmp , psd ")
 
-    def PrepareSelectDLCamera(self,comboBox,text):
+    def PrepareSelectDeepLearningCamera(self,comboBox,text):
         self.ResetComboBoxSelections(comboBox)
         if text != "":
-           self.DLOperationsHandler.PrepareSelectDLCamera(text)
+           self.DLOperationsHandler.SelectDeepLearningCamera(text)
 
-    def PrepareSelectDLOperations(self,comboBox,text):
+    def LoadFramePdf(self, filename):
+        pdfpath = "pages/" + filename
+        self.pdf_path = os.path.relpath(pdfpath)
+        self.frame_pdf_document.load(self.pdf_path)
+        self.frame_pdf_view.pdf_path = self.pdf_path
+        self.frame_pdf_view.setDocument(self.frame_pdf_document)
+        self.frame_pdf_view.pdf_document = self.frame_pdf_document
+        self.frame_pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
+        self.frame_pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
+
+    def PrepareSelectDeepLearningOperations(self,comboBox,text):
         self.ResetComboBoxSelections(comboBox)
         if text != "":
-           self.DLOperationsHandler.SelectDLOperations(text)
-    
+            imagePath = "resources/images/" + self.ui.comboBox_SelectImage_DeepLearningFoundation.currentText().strip()
+            if "VGGNet16" in text:
+                self.LoadFramePdf("VGGNet16.pdf")  
+            self.DLOperationsHandler.SelectDeepLearningOperations(text,imagePath)                     
+            
     def ResetComboBoxSelections(self, comboBox):
-        self.comboboxes = self.findChildren(QtWidgets.QComboBox)
-        for i,combo in enumerate(self.comboboxes):
-            if combo is not comboBox:
-               combo.blockSignals(True)
-               combo.setCurrentIndex(0)
-               combo.blockSignals(False)            
+        self.ui.comboBox_SelectOperationDeepLearningFoundation.objectName().__contains__
+        if not comboBox.objectName().__contains__("comboBox_SelectOperationDeepLearningFoundation"):
+            self.lower()
+            cv2.destroyAllWindows()
+            self.comboboxes = self.findChildren(QtWidgets.QComboBox)
+            for combo in self.comboboxes:
+                if combo is not comboBox:
+                    combo.blockSignals(True)
+                    combo.setCurrentIndex(0)
+                    combo.blockSignals(False)            
             
     def ResetParams(self,text):
         self.lower()
@@ -2249,6 +2268,7 @@ class MainWindow(QMainWindow):
         self.ui.action_CreateDefaultFolders.triggered.connect(self.CheckCreateDefaultFolders)
         self.ui.action_UploadImages.triggered.connect(self.Upload_Files)
         self.ui.action_UploadVideos.triggered.connect(self.Upload_Files)
+        self.ui.action_UploadModels.triggered.connect(self.Upload_Files)
         self.ui.pushButton_UploadImages.clicked.connect(self.Upload_Files)
         self.ui.pushButton_UploadVideos.clicked.connect(self.Upload_Files)
         self.ui.pushButton_UploadImages_DeepLearningFoundation.clicked.connect(self.Upload_Files)
@@ -2327,14 +2347,14 @@ class MainWindow(QMainWindow):
         self.ui.comboBox_SelectImage.currentTextChanged.connect(partial(self.PrepareSelectImage,self.ui.comboBox_SelectImage ))
         self.ui.comboBox_SelectVideo.currentTextChanged.connect(partial(self.PrepareSelectVideo,self.ui.comboBox_SelectVideo))
         self.ui.comboBox_SelectImage_DeepLearningFoundation.currentTextChanged.connect(partial(self.PrepareSelectImage,self.ui.comboBox_SelectImage_DeepLearningFoundation ))
-        self.ui.comboBox_SelectCameraDeepLearningFoundation.currentTextChanged.connect(partial(self.PrepareSelectDLCamera,self.ui.comboBox_SelectCameraDeepLearningFoundation))
+        self.ui.comboBox_SelectCameraDeepLearningFoundation.currentTextChanged.connect(partial(self.PrepareSelectDeepLearningCamera,self.ui.comboBox_SelectCameraDeepLearningFoundation))
         self.ui.comboBox_SelectVideo_DeepLearningFoundation.currentTextChanged.connect(partial(self.PrepareSelectVideo,self.ui.comboBox_SelectVideo_DeepLearningFoundation))
-        self.ui.comboBox_SelectOperationDeepLearningFoundation.currentTextChanged.connect(partial(self.PrepareSelectDLOperations,self.ui.comboBox_SelectOperationDeepLearningFoundation))
+        self.ui.comboBox_SelectOperationDeepLearningFoundation.currentTextChanged.connect(partial(self.PrepareSelectDeepLearningOperations,self.ui.comboBox_SelectOperationDeepLearningFoundation))
 
     def ManualSetup(self):
         self.ImagesAndColorsHandler = ImagesAndColorsManipulationsAndOprations()
         self.CreateSimpleCNNHandler = CreateSimpleCNN()
-        self.DLOperationsHandler = DeepLearningFoundationOperations()
+        self.DLOperationsHandler = DeepLearningFoundationOperations(self.ImagesAndColorsHandler, self.CreateSimpleCNNHandler)
         self.ColorChannelChangeCheckBoxes = [
             self.ui.checkBox_BlueChannel,
             self.ui.checkBox_GreenChannel,
@@ -2451,7 +2471,11 @@ class MainWindow(QMainWindow):
         self.menu_PracticalDeepLearningFoundations.addAction(self.action_DeepLearningFoundationOperations)
         self.pdf_view = CustomPdfView(self.ui.pages)
         self.pdf_document = QPdfDocument(self.pdf_view)
-        self.ui.pages.addWidget(self.pdf_view)
+        self.ui.pages.addWidget(self.pdf_view)       
+        self.framelayout = QVBoxLayout(self.ui.frame_DeepLearningFoundation)
+        self.frame_pdf_view = CustomPdfView(self.ui.frame_DeepLearningFoundation)
+        self.frame_pdf_document = QPdfDocument(self.frame_pdf_view)
+        self.framelayout.addWidget(self.frame_pdf_view)
         AboutAuthorDeveloper = self.Load_Html_File(os.path.relpath("pages/Text_AboutAuthorDeveloper.html"))
         self.ui.textBrowser_AboutAuthorDeveloper.setHtml(AboutAuthorDeveloper)
         self.ui.textBrowser_AboutAuthorDeveloper.setStyleSheet("padding:10px")
@@ -2469,7 +2493,7 @@ class MainWindow(QMainWindow):
         self.LoadResources()
         self.FillCode(ImagesAndColorsManipulationsAndOprations,self.ui.textBrowser_ImageAndColors, 15)
         self.FillCode(CreateSimpleCNN,self.ui.textBrowser_CreateSimpleCNN, 25)
-        self.FillCode(DeepLearningFoundationOperations,self.ui.textBrowser_DeepLearningFoundation, 12)
+        self.FillCode(DeepLearningFoundationOperations,self.ui.textBrowser_DeepLearningFoundation, 15)
 
 def LunchApp():
     import sys

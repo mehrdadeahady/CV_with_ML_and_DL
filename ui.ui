@@ -2840,7 +2840,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
        <string>Select Operation:</string>
       </property>
      </widget>
-     <widget class="QTextBrowser" name="textBrowser_DeepLearningFoundationOperations">
+     <widget class="QFrame" name="frame_DeepLearningFoundation">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -2848,6 +2848,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
         <width>981</width>
         <height>511</height>
        </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
      </widget>
     </widget>
@@ -2930,7 +2936,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <addaction name="separator"/>
     <addaction name="action_UploadClassifiers"/>
     <addaction name="separator"/>
-    <addaction name="action_UlpoadModels"/>
+    <addaction name="action_UploadModels"/>
     <addaction name="separator"/>
     <addaction name="action_UploadImages"/>
     <addaction name="separator"/>
@@ -3163,7 +3169,7 @@ Portfolios</string>
     <string>⤴️ Upload Images</string>
    </property>
   </action>
-  <action name="action_UlpoadModels">
+  <action name="action_UploadModels">
    <property name="text">
     <string>🔼 Upoad Models</string>
    </property>

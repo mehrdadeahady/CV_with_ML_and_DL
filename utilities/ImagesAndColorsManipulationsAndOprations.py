@@ -2082,7 +2082,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                         # from keras.models import load_model
 
                         # Load Trained CNN (Convolutional Neural Network) Model. In next section: Create and Train this Simple  Model.
-                        classifier = load_model('resources/models/mnist_simple_cnn_10_Epochs.keras', custom_objects=None, compile=True)
+                        classifier = load_model('resources/models/mnist_simple_cnn.keras', custom_objects=None, compile=True)
 
                         # Convert to Gray Scale
                         gray = cv2.cvtColor(self.image,cv2.COLOR_BGR2GRAY)
@@ -2423,7 +2423,6 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
         self.tempImage = None
         self.tempImageName = None
         self.ResetParams.emit("")
-      # if cv2.getWindowProperty(self.imageName, cv2.WND_PROP_VISIBLE) == -1:
  
     # List of Libraries and Packages required to Install for running above Functions:
     '''

@@ -1,0 +1,7 @@
+{
+    "VGGNet16":{
+        "url":"https://storage.googleapis.com/tensorflow/keras-applications/vgg16/vgg16_weights_tf_dim_ordering_tf_kernels.h5",
+        "name":"vgg16_weights.h5",
+        "md5hash":"64373286793e3c8b2b4e3219cbf3544b"
+    }
+}

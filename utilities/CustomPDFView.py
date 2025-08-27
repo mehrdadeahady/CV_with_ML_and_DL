@@ -1,6 +1,9 @@
-from PyQt6.QtWidgets import QFileDialog, QMenu, QMessageBox
-from PyQt6.QtPdfWidgets import QPdfView
-from PyQt6.QtCore import Qt
+try:
+    from PyQt6.QtWidgets import QFileDialog, QMenu, QMessageBox
+    from PyQt6.QtPdfWidgets import QPdfView
+    from PyQt6.QtCore import Qt
+except:
+    print("You Should Install PyQt6 Library!")
 import shutil
 
 class CustomPdfView(QPdfView):
@@ -33,9 +36,3 @@ class CustomPdfView(QPdfView):
             except Exception as e:
                 print(f"Failed to save PDF: {e}")
                 return f"Failed to save PDF: {e}"
-
-    # def mousePressEvent(self, event):
-    #     super().mousePressEvent(event)
-    #     QMessageBox.information(self, "PDF Clicked", "You clicked on the PDF view!")
-
-
