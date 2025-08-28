@@ -10,11 +10,16 @@ import urllib.error
 import hashlib
 import json
 import traceback
+import random
+import requests
+from urllib3.exceptions import IncompleteRead
 try:
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     import tensorflow as tf
     from keras.applications import VGG16
+    from keras.applications import VGG19
     from keras.applications.vgg16 import VGG16
+    from keras.applications.vgg19 import VGG19
     from keras.applications import imagenet_utils
     from keras.preprocessing.image import img_to_array, load_img
     from keras.models import load_model
@@ -33,7 +38,7 @@ except:
 try:    
     from PyQt6.QtCore import QObject, pyqtSignal,QTimer, Qt, QThread,QUrl
     from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
-    from PyQt6.QtWidgets import QProgressBar,QMessageBox, QFileDialog, QApplication, QDialog, QVBoxLayout, QTextEdit, QPushButton,QWidget,QLabel
+    from PyQt6.QtWidgets import QScrollArea,QProgressBar,QMessageBox, QFileDialog, QApplication, QDialog, QVBoxLayout, QTextEdit, QPushButton,QWidget,QLabel
 except:
     print("You Should Install PyQt6 Library!")
         
@@ -53,21 +58,8 @@ class DeepLearningFoundationOperations(QObject):
         self.log_emitter.finished_signal.connect(self.On_Finished)
         
     # Consider|Attention: 
-    # Loading_Model_Operation Function Contains Computer Vision Functions with Comments and Explanation
+    # Loading_Model_Operation() Function Contains Computer Vision Functions with Comments and Explanations
     # Rest of Functions are Pre-Processor and Helpers
-
-    # Updating Logs After Download Finished
-    def On_Finished(self, success, info ,modelType,filepath, imagePath):
-        if not success:
-            log = "Download Failed.\n" + str(info)
-            if not "Download Cancelled" in str(info):
-                log += "\nCheck Internet Connectivity!\nTry by VPN"
-
-            self.DownloadLogPopup.Append_Log(log)
-                                             
-        else:
-            self.DownloadLogPopup.Append_Log("Download Success.\nDownload Complete.")   
-            self.Loading_Model_Operation(modelType, filepath, imagePath)
 
     # Loading Downloaded or Existing Model and Complete the Operation
     def Loading_Model_Operation(self,modelType, filepath, imagePath):
@@ -100,7 +92,7 @@ class DeepLearningFoundationOperations(QObject):
                     '''
                     # Creating an empty VGG16 Model
                     model = VGG16(weights=None)
-                    # Loding Weights into the Model
+                    # Loding Pre-Trained Weights into the Model
                     model.load_weights(filepath)
                     self.log_emitter.log_signal.emit("Model loaded successfully.")
                     time.sleep(1)
@@ -108,7 +100,7 @@ class DeepLearningFoundationOperations(QObject):
                     self.DownloadLogPopup.close()
                     # Show Model Architecture in A new Popup
                     show_scrollable_message("Model Summary:", self.CreateSimpleCNNHandler.ModelSummaryCapture(model))
-                    # If Selected Image not Closed Bring it to Top
+                    # If Selected Image not Closed Bring it to the Top
                     imageName = self.ImagesAndColorsHandler.imageName or self.ImagesAndColorsHandler.tempImageName
                     if imageName is not None:
                        print(imageName, cv2.getWindowProperty(imageName, cv2.WND_PROP_VISIBLE))
@@ -185,13 +177,179 @@ class DeepLearningFoundationOperations(QObject):
                     '''
                     # Decode the Prediction
                     actual_prediction = imagenet_utils.decode_predictions(prediction)
-                    # Display the Result of Prediction on Top of Image
+                    # Display the Result of Prediction in a Window on Top of Image
                     msgBox = QMessageBox(parent=None)
                     msgBox.setWindowTitle("Detection Result:")
                     msgBox.setText("Predicted Object is:\n" + str(actual_prediction[0][0][1]).title() + "\nWith Accuracy:\n" + str(actual_prediction[0][0][2]*100))
                     msgBox.setWindowFlags(msgBox.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
                     msgBox.exec()
-                                            
+                case "VGGNet19":
+                    # This is a command for Download/Load with Tracing only in Console Not UI
+                    # model = VGG19(weights="imagenet") 
+
+                    # Creating an empty VGG19 Model
+                    model = VGG19(weights=None)
+                    # Loding Pre-Trained Weights into the Model
+                    model.load_weights(filepath)
+                    self.log_emitter.log_signal.emit("Model loaded successfully.")
+                    time.sleep(1)
+                    # Close Download/Load Log Window
+                    self.DownloadLogPopup.close()
+                    # Show Model Architecture in A new Popup
+                    show_scrollable_message("Model Summary:", self.CreateSimpleCNNHandler.ModelSummaryCapture(model))
+                    # If Selected Image not Closed Bring it to the Top
+                    imageName = self.ImagesAndColorsHandler.imageName or self.ImagesAndColorsHandler.tempImageName
+                    if imageName is not None:
+                       print(imageName, cv2.getWindowProperty(imageName, cv2.WND_PROP_VISIBLE))
+                       if cv2.getWindowProperty(imageName, cv2.WND_PROP_VISIBLE) >= 1:
+                          cv2.setWindowProperty(imageName, cv2.WND_PROP_TOPMOST, 1)          
+                    # Loading the Image to Predict
+                    img = load_img(imagePath)
+                    # Resize the Image to 224x224 Square Shape
+                    img = img.resize((224,224))
+                    # Convert the Image to Array
+                    img_array = img_to_array(img)
+                    # Convert the Image into a 4 Dimensional Tensor
+                    # Convert from (Height, Width, Channels), (Batchsize, Height, Width, Channels)
+                    img_array = np.expand_dims(img_array, axis=0)
+                    # Preprocess the Input Image Array
+                    img_array = imagenet_utils.preprocess_input(img_array)                  
+                    # Predict Using Predict() method (New Method)
+                    prediction = model.predict(img_array)
+                    # Decode the Prediction
+                    actual_prediction = imagenet_utils.decode_predictions(prediction)
+                    # Display the Result of Prediction in a Window on Top of Image
+                    msgBox = QMessageBox(parent=None)
+                    msgBox.setWindowTitle("Detection Result:")
+                    msgBox.setText("Predicted Object is:\n" + str(actual_prediction[0][0][1]).title() + "\nWith Accuracy:\n" + str(actual_prediction[0][0][2]*100))
+                    msgBox.setWindowFlags(msgBox.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
+                    msgBox.exec()
+
+    # Check, Validation for Download and Load Pre-Trained Model                
+    def PreProcessImage(self, imagePath,modelType, fileSize):
+        if self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None:      
+            models = {}
+            self.DownloadLogPopup = DownloadLogPopup(self.log_emitter)   
+            self.DownloadLogPopup.show()
+            self._is_running = True         
+            try:
+                with open('models.json', 'r') as f:
+                    models = json.load(f)
+            except FileNotFoundError:
+                self.log_emitter.log_signal.emit("Error: 'models.json' not found. Please ensure the file exists in the correct directory.")
+            except json.JSONDecodeError:
+                self.log_emitter.log_signal.emit("Error: Could not decode JSON from 'models.json'. Check the file's format.")
+            if len(models) > 0:                           
+                self.log_emitter.log_signal.emit("Checking for existing model file...")
+                url =  models[modelType]["url"] 
+                filename = models[modelType]["name"] 
+                expected_hash = models[modelType]["md5hash"] 
+                folder = os.path.normpath(join("resources","models"))
+                filepath = os.path.join(folder, filename)
+                if os.path.exists(filepath):
+                    if self.File_Hash_Validation("md5",filepath, expected_hash,self.log_emitter,True):
+                        self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + "\nModel file found locally with valid hash.\nLoading from cache...")
+                    else:
+                        self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + 
+                                                            "\nModel file found but hash mismatch.\nRe-downloading from internet...\n" +
+                                                            "Make Sure your System Connected to the Internet\n"+
+                                                            "File is Approximately "+fileSize+"\n"+
+                                                            "It takes a while Depending on the Speed of your System and Internet!")
+                else:
+                    self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + 
+                                                        "\nModel file not found. \nDownloading from internet...\n" + 
+                                                        "Make Sure your System Connected to the Internet\n"+
+                                                        "File is Approximately "+fileSize+"\n"+
+                                                        "It takes a while Depending on the Speed of your System and Internet!")
+                    
+                    self.log_emitter.log_signal.emit("Download Url: \n" + str(models[modelType]["url"]))           
+                
+                # Only Download if File is missing or Hash is Invalid
+                if not os.path.exists(filepath) or not self.File_Hash_Validation("md5",filepath, expected_hash,self.log_emitter, False) and self._is_running:      
+                    self.downloader = Downloader(url, filepath, modelType,imagePath,self.log_emitter, fileSize)
+                    self.DownloadLogPopup.Set_Downloader(self.downloader)
+                    self.downloader.Start()   
+                    
+                else:
+                    self.Loading_Model_Operation(modelType, filepath,imagePath)
+                                
+        else:
+            QMessageBox.warning(None, "No Image Selected","First, Select an Image!")
+
+    # Selecting Desired Operation
+    def SelectDeepLearningOperations(self,operation,imagePath):
+        self.DownloadLogPopup = None
+        match operation.strip():
+            case "Image Recognition using Pre-Trained VGGNet16 Model":
+                modelType = operation.strip().split(" ")[4]
+                fileSize = "530 MB"
+                self.PreProcessImage(imagePath, modelType,fileSize)
+
+            case "Image Recognition using Pre-Trained VGGNet19 Model":
+                modelType = operation.strip().split(" ")[4]
+                fileSize = "548 MB"
+                self.PreProcessImage(imagePath, modelType,fileSize)
+    
+            case "Image Recognition using Pre-Trained ResNet Model":
+                print(operation)
+            case "Image Recognition using Pre-Trained Inception Model":
+                print(operation)
+            case "Image Recognition using Pre-Trained Xception Model":
+                print(operation)
+            case "Object Detection by Pre-Trained Mobilenet SSD Model on Images":
+                print(operation)
+            case "Object Detection by Pre-Trained Mobilenet SSD Model on Pre-Saved Video":
+                print(operation)
+            case "Object Detection by Pre-Trained Mobilenet SSD Model on Realtime Video":
+                print(operation)
+            case "Object Mask Implementation by Pre-Trained MaskRCNN Model on Images":
+                print(operation)
+            case "Bounding Box Implementation by Pre-Trained MaskRCNN Model on Images":
+                print(operation)
+            case "Object Detection by Pre-Trained MaskRCNN Model on Pre-Saved Video":
+                print(operation)
+            case "Object Detection by Pre-Trained MaskRCNN Model on Realtime Video":
+                print(operation)
+            case "Object Detection by Pre-Trained Tiny YOLO Model on Images":
+                print(operation)
+            case "Object Detection by Pre-Trained Tiny YOLO Model on Pre-Saved Video":
+                print(operation)
+            case "Object Detection by Pre-Trained Tiny YOLO Model on Realtime Video":
+                print(operation)
+            case "Object Detection by Pre-Trained YOLO Model on Images":
+                print(operation)
+            case "Object Detection by Pre-Trained Optimized YOLO Model on Images":
+                print(operation)
+            case "Object Detection by Pre-Trained YOLO Model on Pre-Saved Video":
+                print(operation)
+            case "Object Detection by Pre-Trained Optimized YOLO Model on Pre-Saved Video":
+                print(operation)
+            case "Object Detection by Pre-Trained YOLO Model on Realtime Video":
+                print(operation)
+            case "Object Detection by Pre-Trained Optimized YOLO Model on Realtime Video":
+                print(operation)
+
+        self.ImagesAndColorsHandler.WaitKeyCloseWindows()       
+
+    # Selecting Active Camera
+    def SelectDeepLearningCamera(self,text):
+        if text.strip() != "":
+           self.camera = int((text.split(",")[0]).split(":")[1].strip())
+    
+    # Updating Logs After Download Finished
+    def On_Finished(self, success, info ,modelType,filepath, imagePath):
+        if not success:
+            log = "Download Failed.\n" + str(info)
+            if not "Download Cancelled" in str(info):
+                log += "\nCheck Internet Connectivity!"
+            
+            self.DownloadLogPopup.Append_Log(log)
+            return
+                                
+        else:
+            self.DownloadLogPopup.Append_Log(str(info)+"\nDownload Complete.")   
+            self.Loading_Model_Operation(modelType, filepath, imagePath)              
+
     # Updating ProgressBar
     def Update_Progress(self, percent):
         if self._is_running:
@@ -200,111 +358,7 @@ class DeepLearningFoundationOperations(QObject):
     # Updating Logs
     def Append_Log(self,message):
         if self._is_running:
-           self.DownloadLogPopup.Append_Log(message)
-
-    # Selecting Desired Operation
-    def SelectDeepLearningOperations(self,text,imagePath):
-        self.DownloadLogPopup = None
-        match text.strip():
-            case "Image Recognition using Pre-Trained VGGNet16 Model":
-                if self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None:
-                    modelType = text.strip().split(" ")[4]
-                    
-                    models = {}
-                    self.DownloadLogPopup = DownloadLogPopup(self.log_emitter)   
-                    self.DownloadLogPopup.show()
-                    self._is_running = True         
-                    try:
-                        with open('models.json', 'r') as f:
-                            models = json.load(f)
-                    except FileNotFoundError:
-                        self.log_emitter.log_signal.emit("Error: 'models.json' not found. Please ensure the file exists in the correct directory.")
-                    except json.JSONDecodeError:
-                        self.log_emitter.log_signal.emit("Error: Could not decode JSON from 'models.json'. Check the file's format.")
-                    if len(models) > 0:                           
-                        self.log_emitter.log_signal.emit("Checking for existing model file...")
-                        url =  models[modelType]["url"] 
-                        filename = models[modelType]["name"] 
-                        expected_hash = models[modelType]["md5hash"] 
-                        folder = os.path.normpath(join("resources","models"))
-                        filepath = os.path.join(folder, filename)
-                        if os.path.exists(filepath):
-                            if self.File_Hash_Validation("md5",filepath, expected_hash,self.log_emitter,True):
-                                self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + "\nModel file found locally with valid hash.\nLoading from cache...")
-                            else:
-                                self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + 
-                                                                 "\nModel file found but hash mismatch.\nRe-downloading from internet...\n" +
-                                                                 "Make Sure your System Connected to the Internet\n"+
-                                                                 "File is Approximately 530 MB\n"+
-                                                                 "It takes a while Depending on the Speed of your System and Internet!")
-                        else:
-                            self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + 
-                                                             "\nModel file not found. \nDownloading from internet...\n" + 
-                                                             "Make Sure your System Connected to the Internet\n"+
-                                                             "File is Approximately 530 MB\n"+
-                                                             "It takes a while Depending on the Speed of your System and Internet!")
-                            
-                            self.log_emitter.log_signal.emit("Download Url: \n" + str(models[modelType]["url"]))           
-                        
-                        # Only Download if File is missing or Hash is Invalid
-                        if not os.path.exists(filepath) or not self.File_Hash_Validation("md5",filepath, expected_hash,self.log_emitter, False) and self._is_running:      
-                            self.downloader = Downloader(url, filepath, modelType,imagePath,self.log_emitter)
-                            self.DownloadLogPopup.set_downloader(self.downloader)
-                            self.downloader.start()   
-                          
-                        else:
-                            self.Loading_Model_Operation(modelType, filepath,imagePath)
-                                     
-                else:
-                    QMessageBox.warning(None, "No Image Selected","First, Select an Image!")
-
-            case "Image Recognition using Pre-Trained VGGNet19 Model":
-                print(text)
-            case "Image Recognition using Pre-Trained ResNet Model":
-                print(text)
-            case "Image Recognition using Pre-Trained Inception Model":
-                print(text)
-            case "Image Recognition using Pre-Trained Xception Model":
-                print(text)
-            case "Object Detection by Pre-Trained Mobilenet SSD Model on Images":
-                print(text)
-            case "Object Detection by Pre-Trained Mobilenet SSD Model on Pre-Saved Video":
-                print(text)
-            case "Object Detection by Pre-Trained Mobilenet SSD Model on Realtime Video":
-                print(text)
-            case "Object Mask Implementation by Pre-Trained MaskRCNN Model on Images":
-                print(text)
-            case "Bounding Box Implementation by Pre-Trained MaskRCNN Model on Images":
-                print(text)
-            case "Object Detection by Pre-Trained MaskRCNN Model on Pre-Saved Video":
-                print(text)
-            case "Object Detection by Pre-Trained MaskRCNN Model on Realtime Video":
-                print(text)
-            case "Object Detection by Pre-Trained Tiny YOLO Model on Images":
-                print(text)
-            case "Object Detection by Pre-Trained Tiny YOLO Model on Pre-Saved Video":
-                print(text)
-            case "Object Detection by Pre-Trained Tiny YOLO Model on Realtime Video":
-                print(text)
-            case "Object Detection by Pre-Trained YOLO Model on Images":
-                print(text)
-            case "Object Detection by Pre-Trained Optimized YOLO Model on Images":
-                print(text)
-            case "Object Detection by Pre-Trained YOLO Model on Pre-Saved Video":
-                print(text)
-            case "Object Detection by Pre-Trained Optimized YOLO Model on Pre-Saved Video":
-                print(text)
-            case "Object Detection by Pre-Trained YOLO Model on Realtime Video":
-                print(text)
-            case "Object Detection by Pre-Trained Optimized YOLO Model on Realtime Video":
-                print(text)
-
-        self.WaitKeyCloseWindows()       
-
-    # Selecting Active Camera
-    def SelectDeepLearningCamera(self,text):
-        if text.strip() != "":
-           self.camera = int((text.split(",")[0]).split(":")[1].strip())
+            self.DownloadLogPopup.Append_Log(message)
 
     # Validating Hash of Files
     def File_Hash_Validation(self,type,path, expected_hash,log_emitter,check):
@@ -318,11 +372,11 @@ class DeepLearningFoundationOperations(QObject):
                             sha256.update(chunk)
                             actual_hash = sha256.hexdigest()
                             if check:
-                                log_emitter.log_signal.emit("Expected Hash: " + str(expected_hash))
-                                log_emitter.log_signal.emit("Actual    Hash: " + str(actual_hash))
-                    return actual_hash == expected_hash
+                                log_emitter.log_signal.emit("Expected   Hash: " + str(expected_hash))
+                                log_emitter.log_signal.emit("Downloaded Hash: " + str(actual_hash))
+                    return str(actual_hash).lower() == str(expected_hash).lower()
                 except Exception as e:
-                    print("Error:", e)
+                    log_emitter.log_signal.emit("Error:", str(e))
                     return False
                 
             case "md5":
@@ -333,27 +387,20 @@ class DeepLearningFoundationOperations(QObject):
                             md5.update(chunk)
                     actual_hash = md5.hexdigest()
                     if check:
-                        log_emitter.log_signal.emit("Expected Hash: " + str(expected_hash))
-                        log_emitter.log_signal.emit("Actual    Hash: " + str(actual_hash))
-                    return actual_hash == expected_hash
+                        log_emitter.log_signal.emit("Expected   Hash: " + str(expected_hash))
+                        log_emitter.log_signal.emit("Downloaded Hash: " + str(actual_hash))
+                    return str(actual_hash).lower() == str(expected_hash).lower()
                 except Exception as e:
-                    print("Error:", e)
+                    log_emitter.log_signal.emit("Error:", str(e))
                     return False
-
-    # Wait for Clicking a Key on Keyboard to Close All cv2 Windows
-    def WaitKeyCloseWindows(self):
-        # Wait until Clicking a Key on Keyboard
-        cv2.waitKey(0)
-        # Close All cv2 Windows
-        cv2.destroyAllWindows()
 
 # Signal emitter for Thread-Safe logging
 class LogEmitter(QObject):
     log_signal = pyqtSignal(str) # All Communications, Updates and Text Messages
     progressbar_signal = pyqtSignal(int) #  Percent: ProgressBar Update
-    finished_signal = pyqtSignal(bool, str, str , str, str) # success ,message info [error, cancel, success, fail] ,modelType , filepath, imagePath
+    finished_signal = pyqtSignal(bool, str, str , str, str) # success ,message info [error, Cancle, success, fail] ,modelType , filepath, imagePath
 
-# Dialog for showing logs During Model Download/Load and cancel Download/Load Operation
+# Dialog for showing logs During Model Download/Load and Cancle Download/Load Operation
 class DownloadLogPopup(QDialog):
     def __init__(self, log_emitter):
         super().__init__()
@@ -362,7 +409,23 @@ class DownloadLogPopup(QDialog):
         self.setWindowTitle("Model Download/Loading Log")
         self.setFixedSize(800, 400)
         self.setWindowModality(Qt.WindowModality.ApplicationModal)
-        self.layout = QVBoxLayout(self)
+        # Create a scroll area
+        self.scroll_area = QScrollArea(self)
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setStyleSheet("""
+            QScrollArea {
+                background: transparent;
+                border: none;
+            }
+            QScrollBar:vertical, QScrollBar:horizontal {
+                background: transparent;
+            }
+        """)
+        # Create a container widget for the scroll area
+        container = QWidget()
+        self.layout = QVBoxLayout(container)
+        self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        # Add QTextEdits to the layout
         self.log_output = QTextEdit()
         self.log_output.setReadOnly(True)
         self.layout.addWidget(self.log_output)
@@ -371,13 +434,18 @@ class DownloadLogPopup(QDialog):
         self.layout.addWidget(self.progress_bar)
         self.cancel_button = QPushButton("Cancel Download")
         self.layout.addWidget(self.cancel_button)
-        self.cancel_button.clicked.connect(self.cancel_download)
+        self.cancel_button.clicked.connect(self.Cancel_Download)
+         # Set the container as the scroll area's widget
+        self.scroll_area.setWidget(container)
+        # Final layout for the dialog
+        main_layout = QVBoxLayout(self)
+        main_layout.addWidget(self.scroll_area)
 
-    def set_downloader(self, downloader):
+    def Set_Downloader(self, downloader):
         self.downloader = downloader
 
     def Append_Log(self, message):
-        if str(message).startswith("Progress"):
+        if str(message).startswith("Progress") and not "[====================]" in message:
             ChangedContent = ""
             lines = self.log_output.toPlainText().splitlines()
             for line in lines:
@@ -387,28 +455,30 @@ class DownloadLogPopup(QDialog):
             self.log_output.setText(ChangedContent)
         else:
             self.log_output.append(message)
-        QApplication.processEvents()
+        self.scroll_area.verticalScrollBar().setValue(self.scroll_area.verticalScrollBar().minimum()) 
+        QApplication.processEvents()  
 
     def Update_Progress(self, percent):
         self.progress_bar.setValue(percent)
         QApplication.processEvents()
 
-    def cancel_download(self):
-        self.downloader.cancel()
+    def Cancel_Download(self):
+        self.downloader.Cancle()
         self.Append_Log("Download Cancelled by User!")
 
     def closeEvent(self, event):
-        if self.downloader:
+        log = self.log_output.toPlainText()
+        if self.downloader and not "Download Success" in log and not "Download Complete" in log and not "Download Cancelled" in log  and not "Download Failed" in log:
             response = QMessageBox.warning(None,"Warning!","If Download has not completed, it will be aborted!",QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
             if response == QMessageBox.StandardButton.Yes:
-                self.cancel_download()
+                self.Cancel_Download()
                 event.accept()
             elif response == QMessageBox.StandardButton.No:
                 event.ignore()
 
 # Downloader for Required Models   
 class Downloader(QObject):
-    def __init__(self, url: str, filepath: str,modelType: str,imagePath: str ,log_emitter, parent=None):
+    def __init__(self, url: str, filepath: str,modelType: str,imagePath: str ,log_emitter,fileSize: str, parent=None):
         super().__init__(parent)
         self.url = QUrl(url)
         self.filepath = filepath
@@ -419,21 +489,52 @@ class Downloader(QObject):
         self.cancelled = False
         self.modelType = modelType
         self.imagePath = imagePath
-
-    def start(self):
+        self.fileSize = fileSize
+        self.fallback_attempts = 0
+        self.max_fallback_attempts = 3
+        self.user_agents = [
+            # Windows
+            b"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
+            
+            # macOS
+            b"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+            
+            # Linux
+            b"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36",
+            
+            # Android
+            b"Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Mobile Safari/537.36",
+            
+            # iOS
+            b"Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/134.0.0.0 Mobile/15E148 Safari/604.1",
+            
+            # Chrome on iPad
+            b"Mozilla/5.0 (iPad; CPU OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/134.0.0.0 Mobile/15E148 Safari/604.1",
+            
+            # Chrome on Chromebook
+            b"Mozilla/5.0 (X11; CrOS x86_64 14526.83.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
+        ]
+    
+    def Start(self):
         request = QNetworkRequest(self.url)
+        random_user_agent = random.choice(self.user_agents)
+        #
+        #request.setRawHeader(b"User-Agent", b"MyDownloader/1.0")
+        request.setRawHeader(b"User-Agent", random_user_agent)
         self.reply = self.manager.get(request)
+        #
+        self.reply.sslErrors.connect(lambda errors: self.reply.ignoreSslErrors())
         self.start_time = time.time()
         # Connect signals from QNetworkReply, not QNetworkAccessManager
-        self.reply.downloadProgress.connect(self.on_progress)
+        self.reply.downloadProgress.connect(self.On_Progress)
         self.reply.finished.connect(self.On_Finished)
 
-    def cancel(self):
+    def Cancle(self):
         self.cancelled = True
         if self.reply:
             self.reply.abort()
 
-    def on_progress(self, downloaded: int, total_size: int):
+    def On_Progress(self, downloaded: int, total_size: int):
         if self.cancelled:
             self.log_emitter.finished_signal.emit(False, "Download Cancelled.","","","")
             return
@@ -444,7 +545,7 @@ class Downloader(QObject):
         speed_text = f"{speed:.2f} MB/s" if speed > 1 else f"{speed * 1024:.2f} KB/s"
         time_str = time.strftime("%M:%S", time.gmtime(elapsed))
         bar = '=' * (percent // 5) + '-' * (20 - (percent // 5))
-        progress_text = f"Progress: {downloaded}/{total_size} B [{bar}] {time_str} {speed_text}"
+        progress_text = f"Progress: {downloaded} B from {total_size} B [{bar}] {time_str} {speed_text}"
 
         self.log_emitter.progressbar_signal.emit(percent)
         self.log_emitter.log_signal.emit(progress_text)
@@ -456,9 +557,89 @@ class Downloader(QObject):
 
         if self.reply.error() != QNetworkReply.NetworkError.NoError:
             self.log_emitter.finished_signal.emit(False, self.reply.errorString(),"","","")
+            # Fallback to requests with streaming
+            self.Fallback_Download()
             return
 
         data = self.reply.readAll().data()
         with open(self.filepath, 'wb') as f:
             f.write(data)
+       
+        # validate file size 
+        actual_size = os.path.getsize(self.filepath)
+        expected_size = int(self.fileSize.split(" ")[0]) * (1024*1024)
+        if actual_size < expected_size:  # reject files smaller than fileSize
+            self.log_emitter.log_signal.emit(
+                f"Downloaded file too small ({actual_size} < {expected_size}). Attempt {self.fallback_attempts + 1}/{self.max_fallback_attempts}"
+            )
+            os.remove(self.filepath)
+            self.fallback_attempts += 1
+
+            if self.fallback_attempts < self.max_fallback_attempts:
+                self.Fallback_Download()
+
+            else:
+                self.log_emitter.finished_signal.emit(False, "Download failed after multiple fallback attempts.", "", "", "")
+
+            return
+
         self.log_emitter.finished_signal.emit(True, "Download Success.", self.modelType, self.filepath, self.imagePath)
+        return
+
+    def Fallback_Download(self):
+        headers = { "User-Agent": random.choice(self.user_agents).decode("utf-8") }
+        while self.fallback_attempts < self.max_fallback_attempts:
+            self.fallback_attempts += 1
+            self.log_emitter.log_signal.emit(f"Fallback attempt {self.fallback_attempts}/{self.max_fallback_attempts}")
+            try:
+                with requests.get(self.url.toString(), headers=headers, stream=True, timeout=60) as response:
+                    response.raise_for_status()
+                    total_size = int(response.headers.get("Content-Length", 0))
+                    downloaded = 0
+                    start_time = time.time()
+                    with open(self.filepath, "wb") as f:
+                        for chunk in response.iter_content(chunk_size=1024 * 1024):
+                            if self.cancelled:
+                                self.log_emitter.finished_signal.emit(False, "Download Cancelled.", "", "", "")
+                                return
+                            if chunk:
+                                f.write(chunk)
+                                downloaded += len(chunk)
+
+                                percent = int(downloaded * 100 / total_size) if total_size else 0
+                                elapsed = time.time() - start_time
+                                speed = downloaded / (1024 * 1024) / elapsed if elapsed > 0 else float('inf')
+                                speed_text = f"{speed:.2f} MB/s" if speed > 1 else f"{speed * 1024:.2f} KB/s"
+                                time_str = time.strftime("%M:%S", time.gmtime(elapsed))
+                                bar = '=' * (percent // 5) + '-' * (20 - (percent // 5))
+                                progress_text = f"Progress: {downloaded} B from {total_size} B [{bar}] {time_str} {speed_text}"
+
+                                self.log_emitter.progressbar_signal.emit(percent)
+                                self.log_emitter.log_signal.emit(progress_text)
+
+                # Validate file size
+                actual_size = os.path.getsize(self.filepath)
+                expected_size = int(self.fileSize.split(" ")[0]) * (1024 * 1024)
+
+                if actual_size < expected_size:
+                    self.log_emitter.log_signal.emit(
+                        f"Fallback file too small ({actual_size} < {expected_size}). Retrying..."
+                    )
+                    os.remove(self.filepath)
+                    time.sleep(2)
+                    continue  # retry
+
+                # Success
+                self.log_emitter.finished_signal.emit(True, "Download Success (via fallback).", self.modelType, self.filepath, self.imagePath)
+                return
+
+            except Exception as e:
+                self.log_emitter.log_signal.emit(f"Fallback error:\n {str(e)}. Retrying...")
+                if os.path.exists(self.filepath):
+                    os.remove(self.filepath)
+                time.sleep(2)
+                continue  # retry
+
+        # Final failure after all retries
+        self.log_emitter.finished_signal.emit(False, "Download failed after multiple fallback attempts.", "", "", "")
+        return

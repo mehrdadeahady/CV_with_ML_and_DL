@@ -2105,13 +2105,16 @@ class MainWindow(QMainWindow):
         self.frame_pdf_view.setPageMode(QPdfView.PageMode.MultiPage)
         self.frame_pdf_view.setZoomMode(QPdfView.ZoomMode.FitToWidth)
 
-    def PrepareSelectDeepLearningOperations(self,comboBox,text):
+    def PrepareSelectDeepLearningOperations(self,comboBox,operation):
         self.ResetComboBoxSelections(comboBox)
-        if text != "":
+        if operation != "":
             imagePath = "resources/images/" + self.ui.comboBox_SelectImage_DeepLearningFoundation.currentText().strip()
-            if "VGGNet16" in text:
+            if "VGGNet16" in operation:
                 self.LoadFramePdf("VGGNet16.pdf")  
-            self.DLOperationsHandler.SelectDeepLearningOperations(text,imagePath)                     
+            if "VGGNet19" in operation:
+                self.LoadFramePdf("VGGNet19.pdf")
+                
+            self.DLOperationsHandler.SelectDeepLearningOperations(operation,imagePath)                     
             
     def ResetComboBoxSelections(self, comboBox):
         self.ui.comboBox_SelectOperationDeepLearningFoundation.objectName().__contains__

@@ -3,5 +3,13 @@
         "url":"https://storage.googleapis.com/tensorflow/keras-applications/vgg16/vgg16_weights_tf_dim_ordering_tf_kernels.h5",
         "name":"vgg16_weights.h5",
         "md5hash":"64373286793e3c8b2b4e3219cbf3544b"
-    }
+    },
+    "VGGNet19": {
+    "url": "https://storage.googleapis.com/tensorflow/keras-applications/vgg19/vgg19_weights_tf_dim_ordering_tf_kernels.h5",
+    "name": "vgg19_weights.h5",
+    "Mirror_Image_md5hash": "CBE5617147190E668D6C5D5026F83318",
+    "md5hash":"cbe5617147190e668bd0d411d6b7a7d5"
+}
+
+
 }

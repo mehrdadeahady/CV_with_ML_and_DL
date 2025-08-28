@@ -80,10 +80,10 @@ class CreateSimpleCNN(QObject):
         self._is_running = False
         self.steps_per_epoch = None 
         self.signal_emitter = SignalEmitter()
-        self.signal_emitter.batch_signal.connect(self.show_batch)
-        self.signal_emitter.epoch_signal.connect(self.show_epoch_summary)
-        self.signal_emitter.exit_signal.connect(self.exit_message)
-        self.signal_emitter.modelTrainedSignal.connect(self.set_model_trained_values)
+        self.signal_emitter.batch_signal.connect(self.Show_Batch)
+        self.signal_emitter.epoch_signal.connect(self.Show_Epoch_Summary)
+        self.signal_emitter.exit_signal.connect(self.Exit_Message)
+        self.signal_emitter.modelTrainedSignal.connect(self.Set_Model_Trained_Values)
    
     # There are functions here for Creating a Simple CNN Model for Bachelor's Degree Level
     # In Master Degree Level it is possible to create Customisable Models with desired Layers and Import desired dataset
@@ -91,7 +91,7 @@ class CreateSimpleCNN(QObject):
     # UI functions do not have Comments because this is not a QT Training but they are Clear to Understand by its names and contents
 
     # Assigning Results of Training including: Trained Model and History Log
-    def set_model_trained_values(self,modelHistoryObject,TrainedModelObject):
+    def Set_Model_Trained_Values(self,modelHistoryObject,TrainedModelObject):
         self.modelHistory = modelHistoryObject
         self.TrainedModel = TrainedModelObject
         # Obtain accuracy score by evalute function
@@ -99,18 +99,18 @@ class CreateSimpleCNN(QObject):
         QMessageBox.information(None,"Training Finished Successfully", "Test Loss: " +str(score[0]) + "\nTest Accuracy: " + str(score[1]) + "\nReady for Saving the Training Model.")
        
     # Message When Canceling the Training of Model
-    def exit_message(self,message):
+    def Exit_Message(self,message):
         QMessageBox.critical(None, "Training Canceled", "Training Canceled by User!")
 
     # Displaying Realtime Progress of the Model Training
-    def show_batch(self, message, epoch):
+    def Show_Batch(self, message, epoch):
         if self._is_running:
-           self.TrainingLogPopup.show_batch_progress(message, epoch)
+           self.TrainingLogPopup.Show_Batch_Progress(message, epoch)
 
     # Displaying Result of the Model Training for Each Epoch
-    def show_epoch_summary(self, message, epoch):
+    def Show_Epoch_Summary(self, message, epoch):
         if self._is_running:
-           self.TrainingLogPopup.show_epoch_summary(message, epoch)
+           self.TrainingLogPopup.Show_Epoch_Summary(message, epoch)
 
     # Wait for Clicking a Key on Keyboard to Close All cv2 Windows
     def WaitKeyCloseWindows(self):
@@ -691,12 +691,12 @@ class TrainingLogPopupClass(QDialog):
         main_layout.addWidget(self.scroll_area)
     
     # Sending Realtime Progress of the Model Training
-    def show_batch_progress(self, message, epoch):
+    def Show_Batch_Progress(self, message, epoch):
         textEdit = self.findChild(QTextEdit, "text_edit" + str(epoch + 1))
         textEdit.setText(message)
     
     # Sending Result of the Model Training for Each Epoch
-    def show_epoch_summary(self, message, epoch):
+    def Show_Epoch_Summary(self, message, epoch):
         # Find the widget by its object name
         textEdit = self.findChild(QTextEdit, "text_edit" + str(epoch + 1))
         messagePlus = textEdit.toPlainText() + message 
