@@ -1429,7 +1429,13 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                      cv2.destroyAllWindows()
                      cv2.imshow("Original", self.image) 
                      # Grayscale and Canny Edges extracted
-                     gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+                     # May be Image Already is Gray
+                     gray = self.image
+                     # Check if Image is Gray
+                     if len(self.image.shape) > 2:
+                        # Convert the Image to Gray
+                        gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+                   
                      edges = cv2.Canny(gray, 100, 170, apertureSize = 3)
 
                      # Run HoughLines using a rho accuracy of 1 pixel
@@ -1491,7 +1497,12 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                      cv2.destroyAllWindows()
                      cv2.imshow("Original", self.image) 
                      # Grayscale and Canny Edges extracted
-                     gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+                     # May be Image Already is Gray
+                     gray = self.image
+                     # Check if Image is Gray
+                     if len(self.image.shape) > 2:
+                        # Convert the Image to Gray
+                        gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
                      edges = cv2.Canny(gray, 100, 170, apertureSize = 3)
 
                      # Again we use the same rho and theta accuracies
@@ -1551,7 +1562,12 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                   if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
                      cv2.destroyAllWindows()
                      cv2.imshow("Original", self.image) 
-                     gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+                     # May be Image Already is Gray
+                     gray = self.image
+                     # Check if Image is Gray
+                     if len(self.image.shape) > 2:
+                        # Convert the Image to Gray
+                        gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
                      blur = cv2.medianBlur(gray, 5)
                      '''                  
                      The cv2.HoughCircles() function in OpenCV is used to detect circles in a grayscale image using the Hough Transform. 
@@ -1780,7 +1796,12 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                         face_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, face_classifier_Path))
                         eye_classifier = cv2.CascadeClassifier(join(Base_haarcascades_Path, eye_classifier_Path))
                         
-                        gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+                        # May be Image Already is Gray
+                        gray = self.image
+                        # Check if Image is Gray
+                        if len(self.image.shape) > 2:
+                           # Convert the Image to Gray
+                           gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
                         numberOfEyes = 0
                         '''                     
                         The detectMultiScale method, typically associated with the cv2.CascadeClassifier class in OpenCV, is used for object detection, 
