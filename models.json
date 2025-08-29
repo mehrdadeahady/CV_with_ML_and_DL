@@ -2,14 +2,24 @@
     "VGGNet16":{
         "url":"https://storage.googleapis.com/tensorflow/keras-applications/vgg16/vgg16_weights_tf_dim_ordering_tf_kernels.h5",
         "name":"vgg16_weights.h5",
+        "size":"530 MB",
         "md5hash":"64373286793e3c8b2b4e3219cbf3544b"
     },
     "VGGNet19": {
     "url": "https://storage.googleapis.com/tensorflow/keras-applications/vgg19/vgg19_weights_tf_dim_ordering_tf_kernels.h5",
     "name": "vgg19_weights.h5",
-    "Mirror_Image_md5hash": "CBE5617147190E668D6C5D5026F83318",
-    "md5hash":"cbe5617147190e668bd0d411d6b7a7d5"
-}
+    "size":"548 MB",
+    "md5hash":"cbe5617147190e668bd0d411d6b7a7d5",
+    "Mirror_Image_md5hash": "CBE5617147190E668D6C5D5026F83318"
+    },
+    "ResNet50": {
+    "url": "https://storage.googleapis.com/tensorflow/keras-applications/resnet/resnet50_weights_tf_dim_ordering_tf_kernels.h5",
+    "name": "resnet50_weights.h5",
+    "size":"102 MB",
+    "md5hash": "a7b3fe01876c51b976af0dea6bc144eb"
+    }
+
+
 
 
 }

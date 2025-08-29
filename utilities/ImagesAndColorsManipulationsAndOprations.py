@@ -2,7 +2,9 @@
 import os
 import numpy as np
 try:
+   os.environ["KERAS_BACKEND"] = "tensorflow"  # or "jax", "torch"
    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+   os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1' # '0' or '1' 1 activate intel speed support
    from keras.models import load_model
 except:
     print("Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")

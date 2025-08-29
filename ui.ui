@@ -2733,7 +2733,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </item>
       <item>
        <property name="text">
-        <string>Image Recognition using Pre-Trained ResNet Model</string>
+        <string>Image Recognition using Pre-Trained ResNet50 Model</string>
        </property>
       </item>
       <item>

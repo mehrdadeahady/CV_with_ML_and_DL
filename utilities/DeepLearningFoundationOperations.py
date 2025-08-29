@@ -14,17 +14,20 @@ import random
 import requests
 from urllib3.exceptions import IncompleteRead
 try:
+    os.environ["KERAS_BACKEND"] = "tensorflow"  # or "jax", "torch"
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-    import tensorflow as tf
+    os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1' # '0' or '1' 1 activate intel speed support
     from keras.applications import VGG16
     from keras.applications import VGG19
+    from keras.applications import ResNet50
     from keras.applications.vgg16 import VGG16
     from keras.applications.vgg19 import VGG19
+    from keras.applications.resnet50 import ResNet50
     from keras.applications import imagenet_utils
     from keras.preprocessing.image import img_to_array, load_img
     from keras.models import load_model
     from keras.utils import get_file
-    import urllib.request
+    import urllib.request   
 except:
     print("Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
 try:
@@ -58,10 +61,104 @@ class DeepLearningFoundationOperations(QObject):
         self.log_emitter.finished_signal.connect(self.On_Finished)
         
     # Consider|Attention: 
-    # Loading_Model_Operation() Function Contains Computer Vision Functions with Comments and Explanations
+    # Process Functions Contains Computer Vision Functions with Comments and Explanations
     # Rest of Functions are Pre-Processor and Helpers
+    
+    # Processing the Operation on Pre-Trained Model
+    def ProcessImage(self,model,imagePath):
+        # Show Model Architecture in A new Popup
+        show_scrollable_message("Model Summary:", self.CreateSimpleCNNHandler.ModelSummaryCapture(model))
+        self.log_emitter.log_signal.emit("Do not Close the Log Window.\n Wait for Prediction Result.")
+        # ***If Selected Image not Closed Bring it to the Top***
+        # imageName = self.ImagesAndColorsHandler.imageName or self.ImagesAndColorsHandler.tempImageName
+        # if imageName is not None:
+        #     print(imageName, cv2.getWindowProperty(imageName, cv2.WND_PROP_VISIBLE))
+        #     if cv2.getWindowProperty(imageName, cv2.WND_PROP_VISIBLE) >= 1:
+        #         cv2.setWindowProperty(imageName, cv2.WND_PROP_TOPMOST, 1)   
+               
+        # Loading the Image to Predict
+        img = load_img(imagePath)          
+        # Resize the Image to 224x224 Square Shape
+        img = img.resize((224,224))
+        # Convert the Image to Array
+        img_array = img_to_array(img)
+        # Convert the Image into a 4 Dimensional Tensor
+        # Convert from (Height, Width, Channels), (Batchsize, Height, Width, Channels)
+        img_array = np.expand_dims(img_array, axis=0)
+        '''                  
+        The keras.applications.imagenet_utils.preprocess_input function is a utility designed to preprocess image data before it is fed into 
+        Keras models that have been pre-trained on the ImageNet dataset. These models, such as VGG16, ResNet50, MobileNet, etc., 
+        expect input images to be preprocessed in a specific way that matches the preprocessing applied during their original training.
+        Functionality:
+        This function takes a tensor or NumPy array representing a batch of images as input and applies transformations based on the specified mode. 
+        The available modes are: 
+            caffe:
+            This mode converts images from RGB to BGR and then zero-centers each color channel with respect to the ImageNet dataset's channel means, 
+            without scaling the pixel values.
+            tf:
+            This mode scales pixel values to be between -1 and 1, on a sample-wise basis.
+            torch:
+            This mode scales pixel values between 0 and 1 and then normalizes each channel using the ImageNet dataset's channel means and standard deviations.
+        '''
+        # Preprocess the Input Image Array
+        img_array = imagenet_utils.preprocess_input(img_array)
+        '''                    
+        The model.predict() method in machine learning is used to generate predictions from a trained model on new, unseen input data.
+        Functionality:
+            Input: It takes input data (often in the form of NumPy arrays or tf.data.Dataset objects in frameworks like TensorFlow/Keras) 
+            that the model has not previously encountered during training.
+        Processing: 
+            The input data is passed through the layers of the trained model.
+        Output: 
+            It returns the model's output, which represents the predictions for the given input. The format of the output depends on the type of model: 
+            Classification Models: 
+                    For classification tasks, model.predict() often returns probabilities for each class (e.g., a vector of probabilities 
+                    for a multi-class classification, or a single probability for binary classification if a sigmoid activation is used in the output layer)
+            Regression Models: 
+                    For regression tasks, it returns the predicted numerical values.
+        Usage:
+            The primary purpose of model.predict() is to apply a trained model to new data to obtain its predictions, enabling tasks such as forecasting, 
+            classification of new instances, or generating recommendations.
+        '''
+        # Predict Using Predict() method (New Method)
+        prediction = model.predict(img_array)
+         # Loading the Image to Predict
+        '''                    
+        The keras.imagenet_utils.decode_predictions function is a utility within Keras (now primarily integrated with TensorFlow as tf.keras) 
+        designed to interpret the raw predictions generated by models trained on the ImageNet dataset.
+        Purpose:
+        This function translates the numerical output (typically a 1000-dimensional vector of probabilities) from a pre-trained ImageNet model into 
+        human-readable class labels and their corresponding confidence scores.
+        Usage:
+        The function takes two main arguments:
 
-    # Loading Downloaded or Existing Model and Complete the Operation
+            preds:
+            A NumPy array representing a batch of predictions from an ImageNet-trained model. This array should have a shape of (samples, 1000), 
+            where samples is the number of images in the batch and 1000 corresponds to the 1000 ImageNet classes.
+            top:
+            An optional integer specifying how many top-ranking predictions (classes) to return for each sample. The default value is typically 5. 
+
+        Output:
+        It returns a list of lists. Each inner list corresponds to a sample in the input batch and contains a list of tuples. Each tuple represents 
+        a top prediction and consists of:
+
+            class_name: The ImageNet class identifier (e.g., 'n02129165').
+            class_description: A human-readable description of the class (e.g., 'lion').
+            score: The confidence score (probability) assigned to that class by the model.
+        '''
+        # Decode the Prediction
+        actual_prediction = imagenet_utils.decode_predictions(prediction)
+        # # Display the Result of Prediction in a Window on Top of Image
+        if self.DownloadLogPopup:
+           self.log_emitter.log_signal.emit("\n******************************\nDetection Result\n\nPredicted Object is:\n" + str(actual_prediction[0][0][1]).title() + "\nWith Accuracy:\n" + str(actual_prediction[0][0][2]*100) +"\n******************************")
+        else:
+            msgBox = QMessageBox(parent=None)
+            msgBox.setWindowTitle("Detection Result")
+            msgBox.setText("Predicted Object is:\n" + str(actual_prediction[0][0][1]).title() + "\nWith Accuracy:\n" + str(actual_prediction[0][0][2]*100))
+            msgBox.setWindowFlags(msgBox.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
+            msgBox.exec()
+       
+    # Loading Downloaded or Existing Pre-Trained Model and Complete the Operation
     def Loading_Model_Operation(self,modelType, filepath, imagePath):
             self.log_emitter.log_signal.emit("Loading model weights...")
             match modelType:
@@ -94,95 +191,9 @@ class DeepLearningFoundationOperations(QObject):
                     model = VGG16(weights=None)
                     # Loding Pre-Trained Weights into the Model
                     model.load_weights(filepath)
-                    self.log_emitter.log_signal.emit("Model loaded successfully.")
-                    time.sleep(1)
-                    # Close Download/Load Log Window
-                    self.DownloadLogPopup.close()
-                    # Show Model Architecture in A new Popup
-                    show_scrollable_message("Model Summary:", self.CreateSimpleCNNHandler.ModelSummaryCapture(model))
-                    # If Selected Image not Closed Bring it to the Top
-                    imageName = self.ImagesAndColorsHandler.imageName or self.ImagesAndColorsHandler.tempImageName
-                    if imageName is not None:
-                       print(imageName, cv2.getWindowProperty(imageName, cv2.WND_PROP_VISIBLE))
-                       if cv2.getWindowProperty(imageName, cv2.WND_PROP_VISIBLE) >= 1:
-                          cv2.setWindowProperty(imageName, cv2.WND_PROP_TOPMOST, 1)          
-                    # Loading the Image to Predict
-                    img = load_img(imagePath)          
-                    # Resize the Image to 224x224 Square Shape
-                    img = img.resize((224,224))
-                    # Convert the Image to Array
-                    img_array = img_to_array(img)
-                    # Convert the Image into a 4 Dimensional Tensor
-                    # Convert from (Height, Width, Channels), (Batchsize, Height, Width, Channels)
-                    img_array = np.expand_dims(img_array, axis=0)
-                    '''                  
-                    The keras.applications.imagenet_utils.preprocess_input function is a utility designed to preprocess image data before it is fed into 
-                    Keras models that have been pre-trained on the ImageNet dataset. These models, such as VGG16, ResNet50, MobileNet, etc., 
-                    expect input images to be preprocessed in a specific way that matches the preprocessing applied during their original training.
-                    Functionality:
-                    This function takes a tensor or NumPy array representing a batch of images as input and applies transformations based on the specified mode. 
-                    The available modes are: 
-                        caffe:
-                        This mode converts images from RGB to BGR and then zero-centers each color channel with respect to the ImageNet dataset's channel means, 
-                        without scaling the pixel values.
-                        tf:
-                        This mode scales pixel values to be between -1 and 1, on a sample-wise basis.
-                        torch:
-                        This mode scales pixel values between 0 and 1 and then normalizes each channel using the ImageNet dataset's channel means and standard deviations.
-                    '''
-                    # Preprocess the Input Image Array
-                    img_array = imagenet_utils.preprocess_input(img_array)
-                    '''                    
-                    The model.predict() method in machine learning is used to generate predictions from a trained model on new, unseen input data.
-                    Functionality:
-                        Input: It takes input data (often in the form of NumPy arrays or tf.data.Dataset objects in frameworks like TensorFlow/Keras) 
-                        that the model has not previously encountered during training.
-                    Processing: 
-                        The input data is passed through the layers of the trained model.
-                    Output: 
-                        It returns the model's output, which represents the predictions for the given input. The format of the output depends on the type of model: 
-                        Classification Models: 
-                              For classification tasks, model.predict() often returns probabilities for each class (e.g., a vector of probabilities 
-                              for a multi-class classification, or a single probability for binary classification if a sigmoid activation is used in the output layer)
-                        Regression Models: 
-                              For regression tasks, it returns the predicted numerical values.
-                    Usage:
-                        The primary purpose of model.predict() is to apply a trained model to new data to obtain its predictions, enabling tasks such as forecasting, 
-                        classification of new instances, or generating recommendations.
-                    '''
-                    # Predict Using Predict() method (New Method)
-                    prediction = model.predict(img_array)
-                    '''                    
-                    The keras.imagenet_utils.decode_predictions function is a utility within Keras (now primarily integrated with TensorFlow as tf.keras) 
-                    designed to interpret the raw predictions generated by models trained on the ImageNet dataset.
-                    Purpose:
-                    This function translates the numerical output (typically a 1000-dimensional vector of probabilities) from a pre-trained ImageNet model into 
-                    human-readable class labels and their corresponding confidence scores.
-                    Usage:
-                    The function takes two main arguments:
-
-                        preds:
-                        A NumPy array representing a batch of predictions from an ImageNet-trained model. This array should have a shape of (samples, 1000), 
-                        where samples is the number of images in the batch and 1000 corresponds to the 1000 ImageNet classes.
-                        top:
-                        An optional integer specifying how many top-ranking predictions (classes) to return for each sample. The default value is typically 5. 
-
-                    Output:
-                    It returns a list of lists. Each inner list corresponds to a sample in the input batch and contains a list of tuples. Each tuple represents 
-                    a top prediction and consists of:
-
-                        class_name: The ImageNet class identifier (e.g., 'n02129165').
-                        class_description: A human-readable description of the class (e.g., 'lion').
-                        score: The confidence score (probability) assigned to that class by the model.
-                    '''
-                    # Decode the Prediction
-                    actual_prediction = imagenet_utils.decode_predictions(prediction)
-                    # Display the Result of Prediction in a Window on Top of Image
-                    msgBox = QMessageBox(parent=None)
-                    msgBox.setWindowTitle("Detection Result:")
-                    msgBox.setText("Predicted Object is:\n" + str(actual_prediction[0][0][1]).title() + "\nWith Accuracy:\n" + str(actual_prediction[0][0][2]*100))
-                    msgBox.setWindowFlags(msgBox.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
-                    msgBox.exec()
+                    self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
+                    self.ProcessImage(model,imagePath)
+                    
                 case "VGGNet19":
                     # This is a command for Download/Load with Tracing only in Console Not UI
                     # model = VGG19(weights="imagenet") 
@@ -191,42 +202,22 @@ class DeepLearningFoundationOperations(QObject):
                     model = VGG19(weights=None)
                     # Loding Pre-Trained Weights into the Model
                     model.load_weights(filepath)
-                    self.log_emitter.log_signal.emit("Model loaded successfully.")
-                    time.sleep(1)
-                    # Close Download/Load Log Window
-                    self.DownloadLogPopup.close()
-                    # Show Model Architecture in A new Popup
-                    show_scrollable_message("Model Summary:", self.CreateSimpleCNNHandler.ModelSummaryCapture(model))
-                    # If Selected Image not Closed Bring it to the Top
-                    imageName = self.ImagesAndColorsHandler.imageName or self.ImagesAndColorsHandler.tempImageName
-                    if imageName is not None:
-                       print(imageName, cv2.getWindowProperty(imageName, cv2.WND_PROP_VISIBLE))
-                       if cv2.getWindowProperty(imageName, cv2.WND_PROP_VISIBLE) >= 1:
-                          cv2.setWindowProperty(imageName, cv2.WND_PROP_TOPMOST, 1)          
-                    # Loading the Image to Predict
-                    img = load_img(imagePath)
-                    # Resize the Image to 224x224 Square Shape
-                    img = img.resize((224,224))
-                    # Convert the Image to Array
-                    img_array = img_to_array(img)
-                    # Convert the Image into a 4 Dimensional Tensor
-                    # Convert from (Height, Width, Channels), (Batchsize, Height, Width, Channels)
-                    img_array = np.expand_dims(img_array, axis=0)
-                    # Preprocess the Input Image Array
-                    img_array = imagenet_utils.preprocess_input(img_array)                  
-                    # Predict Using Predict() method (New Method)
-                    prediction = model.predict(img_array)
-                    # Decode the Prediction
-                    actual_prediction = imagenet_utils.decode_predictions(prediction)
-                    # Display the Result of Prediction in a Window on Top of Image
-                    msgBox = QMessageBox(parent=None)
-                    msgBox.setWindowTitle("Detection Result:")
-                    msgBox.setText("Predicted Object is:\n" + str(actual_prediction[0][0][1]).title() + "\nWith Accuracy:\n" + str(actual_prediction[0][0][2]*100))
-                    msgBox.setWindowFlags(msgBox.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
-                    msgBox.exec()
+                    self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
+                    self.ProcessImage(model,imagePath)
+
+                case "ResNet50":
+                    # This is a command for Download/Load with Tracing only in Console Not UI
+                    # model = VGG19(weights="imagenet") 
+
+                    # Creating an empty VGG19 Model
+                    model = ResNet50(weights=None)
+                    # Loding Pre-Trained Weights into the Model
+                    model.load_weights(filepath)
+                    self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
+                    self.ProcessImage(model,imagePath)
 
     # Check, Validation for Download and Load Pre-Trained Model                
-    def PreProcessImage(self, imagePath,modelType, fileSize):
+    def PreProcessImage(self, imagePath,modelType):
         if self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None:      
             models = {}
             self.DownloadLogPopup = DownloadLogPopup(self.log_emitter)   
@@ -243,18 +234,23 @@ class DeepLearningFoundationOperations(QObject):
                 self.log_emitter.log_signal.emit("Checking for existing model file...")
                 url =  models[modelType]["url"] 
                 filename = models[modelType]["name"] 
+                fileSize = models[modelType]["size"] 
                 expected_hash = models[modelType]["md5hash"] 
+                expected_size = fileSize
                 folder = os.path.normpath(join("resources","models"))
                 filepath = os.path.join(folder, filename)
                 if os.path.exists(filepath):
-                    if self.File_Hash_Validation("md5",filepath, expected_hash,self.log_emitter,True):
-                        self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + "\nModel file found locally with valid hash.\nLoading from cache...")
-                    else:
-                        self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + 
-                                                            "\nModel file found but hash mismatch.\nRe-downloading from internet...\n" +
-                                                            "Make Sure your System Connected to the Internet\n"+
-                                                            "File is Approximately "+fileSize+"\n"+
-                                                            "It takes a while Depending on the Speed of your System and Internet!")
+                    #if self.File_Size_and_Hash_Validation("md5",filepath, expected_size,expected_hash,self.log_emitter,True):
+                        #self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + "\nModel file found locally with valid hash.\nLoading from cache...")
+                    # else:
+                    #     self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + 
+                    #                                         "\nModel file found but hash mismatch.\nRe-downloading from internet...\n" +
+                    #                                         "Make Sure your System Connected to the Internet\n"+
+                    #                                         "File is Approximately "+fileSize+"\n"+
+                    #                                         "It takes a while Depending on the Speed of your System and Internet!")
+
+                    self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + "\nModel file found locally\n Hash and Size are not Validated!\nLoading from cache...") 
+
                 else:
                     self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + 
                                                         "\nModel file not found. \nDownloading from internet...\n" + 
@@ -262,17 +258,20 @@ class DeepLearningFoundationOperations(QObject):
                                                         "File is Approximately "+fileSize+"\n"+
                                                         "It takes a while Depending on the Speed of your System and Internet!")
                     
-                    self.log_emitter.log_signal.emit("Download Url: \n" + str(models[modelType]["url"]))           
-                
-                # Only Download if File is missing or Hash is Invalid
-                if not os.path.exists(filepath) or not self.File_Hash_Validation("md5",filepath, expected_hash,self.log_emitter, False) and self._is_running:      
+                    self.log_emitter.log_signal.emit("Download Url: \n" + str(models[modelType]["url"]))   
+
+                # Only Download if File is Missing # or Hash is Invalid
+                if not os.path.exists(filepath): # or not self.File_Size_and_Hash_Validation("md5",filepath, expected_size,expected_hash,self.log_emitter, False):    
                     self.downloader = Downloader(url, filepath, modelType,imagePath,self.log_emitter, fileSize)
                     self.DownloadLogPopup.Set_Downloader(self.downloader)
                     self.downloader.Start()   
                     
                 else:
+                    # Remove below line and un-comment File_Size_and_Hash_Validation in top if condations
+                    self.File_Size_and_Hash_Validation("md5",filepath, expected_size,expected_hash,self.log_emitter,True)  
+
                     self.Loading_Model_Operation(modelType, filepath,imagePath)
-                                
+
         else:
             QMessageBox.warning(None, "No Image Selected","First, Select an Image!")
 
@@ -282,16 +281,16 @@ class DeepLearningFoundationOperations(QObject):
         match operation.strip():
             case "Image Recognition using Pre-Trained VGGNet16 Model":
                 modelType = operation.strip().split(" ")[4]
-                fileSize = "530 MB"
-                self.PreProcessImage(imagePath, modelType,fileSize)
+                self.PreProcessImage(imagePath, modelType)
 
             case "Image Recognition using Pre-Trained VGGNet19 Model":
                 modelType = operation.strip().split(" ")[4]
-                fileSize = "548 MB"
-                self.PreProcessImage(imagePath, modelType,fileSize)
+                self.PreProcessImage(imagePath, modelType)
     
-            case "Image Recognition using Pre-Trained ResNet Model":
-                print(operation)
+            case "Image Recognition using Pre-Trained ResNet50 Model":
+                modelType = operation.strip().split(" ")[4]
+                self.PreProcessImage(imagePath, modelType)
+
             case "Image Recognition using Pre-Trained Inception Model":
                 print(operation)
             case "Image Recognition using Pre-Trained Xception Model":
@@ -361,39 +360,46 @@ class DeepLearningFoundationOperations(QObject):
             self.DownloadLogPopup.Append_Log(message)
 
     # Validating Hash of Files
-    def File_Hash_Validation(self,type,path, expected_hash,log_emitter,check):
+    def File_Size_and_Hash_Validation(self,type,path,expected_size, expected_hash,log_emitter,check):
         """Check if the file's SHA256 or MD5 hash matches the expected value."""
-        match type:
-            case "sha256":
-                sha256 = hashlib.sha256()
-                try:
-                    with open(path, "rb") as f:
-                        for chunk in iter(lambda: f.read(8192), b""):
-                            sha256.update(chunk)
-                            actual_hash = sha256.hexdigest()
-                            if check:
-                                log_emitter.log_signal.emit("Expected   Hash: " + str(expected_hash))
-                                log_emitter.log_signal.emit("Downloaded Hash: " + str(actual_hash))
-                    return str(actual_hash).lower() == str(expected_hash).lower()
-                except Exception as e:
-                    log_emitter.log_signal.emit("Error:", str(e))
-                    return False
-                
-            case "md5":
-                md5 = hashlib.md5()
-                try:
-                    with open(path, "rb") as f:
-                        for chunk in iter(lambda: f.read(8192), b""):
-                            md5.update(chunk)
-                    actual_hash = md5.hexdigest()
-                    if check:
-                        log_emitter.log_signal.emit("Expected   Hash: " + str(expected_hash))
-                        log_emitter.log_signal.emit("Downloaded Hash: " + str(actual_hash))
-                    return str(actual_hash).lower() == str(expected_hash).lower()
-                except Exception as e:
-                    log_emitter.log_signal.emit("Error:", str(e))
-                    return False
-
+        if os.path.exists(path):
+            fileSize = os.path.getsize(path) or os.stat(path).st_size
+            expected_size = int(expected_size.split(" ")[0]) * (1024*1024)
+            match type:
+                case "sha256":
+                    sha256 = hashlib.sha256()
+                    try:
+                        with open(path, "rb") as f:
+                            for chunk in iter(lambda: f.read(8192), b""):
+                                sha256.update(chunk)
+                                actual_hash = sha256.hexdigest()
+                                if check:
+                                    log_emitter.log_signal.emit("Expected Hash: " + str(expected_hash))
+                                    log_emitter.log_signal.emit("File Hash: " + str(actual_hash))
+                                    log_emitter.log_signal.emit("Expected Size: " + str(expected_size) + "B")
+                                    log_emitter.log_signal.emit("File Size: " + str(fileSize) + "B")
+                        return str(actual_hash).lower() == str(expected_hash).lower() and fileSize == expected_size
+                    except Exception as e:
+                        log_emitter.log_signal.emit("Error:", str(e))
+                        return False
+                    
+                case "md5":
+                    md5 = hashlib.md5()
+                    try:
+                        with open(path, "rb") as f:
+                            for chunk in iter(lambda: f.read(8192), b""):
+                                md5.update(chunk)
+                        actual_hash = md5.hexdigest()
+                        if check:
+                            log_emitter.log_signal.emit("Expected Hash: " + str(expected_hash))
+                            log_emitter.log_signal.emit("File Hash: " + str(actual_hash))
+                            log_emitter.log_signal.emit("Expected Size: " + str(expected_size) + "B")
+                            log_emitter.log_signal.emit("File Size: " + str(fileSize) + "B")
+                        return str(actual_hash).lower() == str(expected_hash).lower() and fileSize == expected_size
+                    except Exception as e:
+                        log_emitter.log_signal.emit("Error:", str(e))
+                        return False
+                                
 # Signal emitter for Thread-Safe logging
 class LogEmitter(QObject):
     log_signal = pyqtSignal(str) # All Communications, Updates and Text Messages
@@ -565,9 +571,9 @@ class Downloader(QObject):
         with open(self.filepath, 'wb') as f:
             f.write(data)
        
-        # validate file size 
+        # validate file size with 10 mb telorance
         actual_size = os.path.getsize(self.filepath)
-        expected_size = int(self.fileSize.split(" ")[0]) * (1024*1024)
+        expected_size = int(self.fileSize.split(" ")[0]) -10 * (1024*1024)
         if actual_size < expected_size:  # reject files smaller than fileSize
             self.log_emitter.log_signal.emit(
                 f"Downloaded file too small ({actual_size} < {expected_size}). Attempt {self.fallback_attempts + 1}/{self.max_fallback_attempts}"
@@ -617,9 +623,9 @@ class Downloader(QObject):
                                 self.log_emitter.progressbar_signal.emit(percent)
                                 self.log_emitter.log_signal.emit(progress_text)
 
-                # Validate file size
+                # validate file size with 10 mb telorance
                 actual_size = os.path.getsize(self.filepath)
-                expected_size = int(self.fileSize.split(" ")[0]) * (1024 * 1024)
+                expected_size = int(self.fileSize.split(" ")[0]) -10  * (1024 * 1024)
 
                 if actual_size < expected_size:
                     self.log_emitter.log_signal.emit(

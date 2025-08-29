@@ -27,24 +27,25 @@ import os
 from os.path import isfile, join
 import time
 try:
-    import numpy as np
-except:
-    print("You Should Install numpy Library")
-try:
+    os.environ["KERAS_BACKEND"] = "tensorflow"  # or "jax", "torch"
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-    #import tensorflow as tf
+    os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1' # '0' or '1' 1 activate intel speed support
     # print(tf.config.list_physical_devices('GPU'))
     import keras
+    from keras import callbacks
+    from keras.callbacks import Callback
     from keras.datasets import mnist 
     from keras.utils import to_categorical
     from keras.models import Sequential
     from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
     from keras import backend as K
-    from keras import callbacks
-    from keras.callbacks import Callback
     from keras.optimizers import SGD 
 except:
     print("Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
+try:
+    import numpy as np
+except:
+    print("You Should Install numpy Library")
 try:
     import cv2
     from cv2_enumerate_cameras import enumerate_cameras
@@ -590,7 +591,7 @@ class SignalEmitter(QObject):
     modelTrainedSignal = pyqtSignal(object,object) 
 
 # Custom callback to Simulating Keras Console Output Log
-class ConsoleCallback(keras.callbacks.Callback):
+class ConsoleCallback(Callback):
     def __init__(self, _is_running,signal_emitter, steps_per_epoch, total_epochs):
         super().__init__()
         self.signal_emitter = signal_emitter
