@@ -10,8 +10,8 @@ class ScrollableMessageBox(QDialog):
     def __init__(self, title, message, parent=None):
         super().__init__(parent)
         self.setWindowTitle(title)
-        self.resize(680, 600)
-
+        #self.resize(680, 600)
+        
         layout = QVBoxLayout(self)
 
         # Scroll area setup
@@ -37,7 +37,9 @@ class ScrollableMessageBox(QDialog):
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok)
         buttons.accepted.connect(self.accept)
         layout.addWidget(buttons)
-
+        self.setMinimumWidth(content.geometry().width() + 50)
+        self.setMinimumHeight(600)
+      
 def show_scrollable_message(title, message):
     dialog = ScrollableMessageBox(title, message)
     #dialog.show()

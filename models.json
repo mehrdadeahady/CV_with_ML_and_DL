@@ -22,5 +22,11 @@
         "name": "inception_v3_weights.h5",
         "size": "92 MB",
         "md5hash": "9a0d58056eeedaa3f26cb7ebd46da564"
+    },
+    "Xception": {
+    "url": "https://storage.googleapis.com/tensorflow/keras-applications/xception/xception_weights_tf_dim_ordering_tf_kernels.h5",
+    "name": "xception_weights.h5",
+    "size": "91 MB",
+    "md5hash": "b0042744bf5b25fce3cb969f33bebb97"
     }
 }

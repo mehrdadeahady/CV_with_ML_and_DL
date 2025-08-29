@@ -478,35 +478,36 @@ class MainWindow(QMainWindow):
           if file_paths:
                # Copy each file
                for path in file_paths:
-                    file_name = os.path.basename(path)
+                    if not path.__contains__(destination_folder):
+                        file_name = os.path.basename(path)
 
-                    if sender.__contains__("UploadModels"):
-                        if self.Is_Valid_Extension(file_name.strip(),"model"):
-                           destination_folder = os.path.normpath(join("resources","models"))
-                        else:
-                            QMessageBox.critical(None, "Model Extension Error: " + file_name, "Valid Extensions: " + " keras , h5 ")
-                            continue
-                        
-                    if sender.__contains__("UploadImages"):
-                        if self.Is_Valid_Extension(file_name.strip(),"image"):
-                           destination_folder = os.path.normpath(join("resources","images"))
-                        else:
-                            QMessageBox.critical(None, "Image Extension Error: " + file_name, "Valid Extensions: " + " jpg , jpeg , png , gif , bmp , psd ")
-                            continue
+                        if sender.__contains__("UploadModels"):
+                            if self.Is_Valid_Extension(file_name.strip(),"model"):
+                               destination_folder = os.path.normpath(join("resources","models"))
+                            else:
+                                QMessageBox.critical(None, "Model Extension Error: " + file_name, "Valid Extensions: " + " keras , h5 ")
+                                continue
+                            
+                        if sender.__contains__("UploadImages"):
+                            if self.Is_Valid_Extension(file_name.strip(),"image"):
+                               destination_folder = os.path.normpath(join("resources","images"))
+                            else:
+                                QMessageBox.critical(None, "Image Extension Error: " + file_name, "Valid Extensions: " + " jpg , jpeg , png , gif , bmp , psd ")
+                                continue
 
-                    if sender.__contains__("UploadStyles"):
-                        destination_folder = os.path.normpath(join("resources","styles"))
+                        if sender.__contains__("UploadStyles"):
+                            destination_folder = os.path.normpath(join("resources","styles"))
 
-                    if sender.__contains__("UploadVideos"):
-                        if self.Is_Valid_Extension(file_name.strip(),"video"):
-                           destination_folder = os.path.normpath(join("resources","Videos"))
-                        else:
-                            QMessageBox.critical(None, "Video Extension Error: " + file_name, "Valid Extensions: " + " avi , mp4 , mpg , mpeg , mov , wmv , mkv , flv ")
-                            continue
+                        if sender.__contains__("UploadVideos"):
+                            if self.Is_Valid_Extension(file_name.strip(),"video"):
+                               destination_folder = os.path.normpath(join("resources","Videos"))
+                            else:
+                                QMessageBox.critical(None, "Video Extension Error: " + file_name, "Valid Extensions: " + " avi , mp4 , mpg , mpeg , mov , wmv , mkv , flv ")
+                                continue
 
-                    dest_path = os.path.join(destination_folder, file_name)
-                    if destination_folder != os.path.normpath("resources"):
-                       shutil.copy2(path, dest_path)
+                        dest_path = os.path.join(destination_folder, file_name)
+                        if destination_folder != os.path.normpath("resources"):
+                           shutil.copy2(path, dest_path)
 
                self.LoadResources()
                #print(f"Selected file: {file_paths}")
@@ -686,6 +687,8 @@ class MainWindow(QMainWindow):
                 self.LoadFramePdf("ResNet50.pdf")
             if "Inception_v3" in operation:
                 self.LoadFramePdf("Inception_v3.pdf")
+            if "Xception" in operation:
+                self.LoadFramePdf("Xception.pdf")
                 
             self.DLOperationsHandler.SelectDeepLearningOperations(operation,imagePath)                     
             

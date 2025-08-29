@@ -21,10 +21,12 @@ try:
     from keras.applications import VGG19
     from keras.applications import ResNet50
     from keras.applications import InceptionV3
+    from keras.applications import Xception
     from keras.applications.vgg16 import VGG16
     from keras.applications.vgg19 import VGG19
     from keras.applications.resnet50 import ResNet50
     from keras.applications.inception_v3 import InceptionV3
+    from keras.applications.xception import Xception
     from keras.applications import imagenet_utils
     from keras.applications.imagenet_utils import preprocess_input
     from keras.preprocessing.image import img_to_array, load_img
@@ -153,13 +155,13 @@ class DeepLearningFoundationOperations(QObject):
         actual_prediction = imagenet_utils.decode_predictions(prediction)
         # # Display the Result of Prediction in a Window on Top of Image
         if self.DownloadLogPopup:
-           self.log_emitter.log_signal.emit("\n***********************\nDetection Result\n\nPredicted Object is:\n" + str(actual_prediction[0][0][1]).title() + "\nWith Accuracy:\n" + str(actual_prediction[0][0][2]*100) +"\n***********************")
-        else:
-            msgBox = QMessageBox(parent=None)
-            msgBox.setWindowTitle("Detection Result")
-            msgBox.setText("Predicted Object is:\n" + str(actual_prediction[0][0][1]).title() + "\nWith Accuracy:\n" + str(actual_prediction[0][0][2]*100))
-            msgBox.setWindowFlags(msgBox.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
-            msgBox.exec()
+           self.log_emitter.log_signal.emit("***********************\nDetection Result\n\nPredicted Object: \t" + str(actual_prediction[0][0][1]).title() + "\nStated Accuracy: \t" + str(actual_prediction[0][0][2]*100) +"\n***********************")
+
+        msgBox = QMessageBox(parent=None)
+        msgBox.setWindowTitle("Detection Result")
+        msgBox.setText("Predicted Object: \t" + str(actual_prediction[0][0][1]).title() + "\nStated Accuracy: \t" + str(actual_prediction[0][0][2]*100))
+        msgBox.setWindowFlags(msgBox.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
+        msgBox.exec()
        
     # Loading Downloaded or Existing Pre-Trained Model and Complete the Operation
     def Loading_Model_Operation(self,modelType, filepath, imagePath):
@@ -190,7 +192,7 @@ class DeepLearningFoundationOperations(QObject):
                     by_name and skip_mismatch arguments:
                     These optional arguments can be used to control how weights are loaded, particularly when dealing with minor architectural differences or partial weight loading. by_name=True loads weights based on layer names, while skip_mismatch=True allows loading even if some layers don't have matching weights. 
                     '''
-                    # Creating an empty VGG16 Model
+                    # Creating an empty VGGNet16 Model
                     model = VGG16(weights=None)
                     # Loding Pre-Trained Weights into the Model
                     model.load_weights(filepath)
@@ -205,7 +207,7 @@ class DeepLearningFoundationOperations(QObject):
                     # This is a command for Download/Load with Tracing only in Console Not UI
                     # model = VGG19(weights="imagenet") 
 
-                    # Creating an empty VGG19 Model
+                    # Creating an empty VGGNet19 Model
                     model = VGG19(weights=None)
                     # Loding Pre-Trained Weights into the Model
                     model.load_weights(filepath)
@@ -218,9 +220,9 @@ class DeepLearningFoundationOperations(QObject):
 
                 case "ResNet50":
                     # This is a command for Download/Load with Tracing only in Console Not UI
-                    # model = VGG19(weights="imagenet") 
+                    # model = ResNet50(weights="imagenet") 
 
-                    # Creating an empty VGG19 Model
+                    # Creating an empty ResNet50 Model
                     model = ResNet50(weights=None)
                     # Loding Pre-Trained Weights into the Model
                     model.load_weights(filepath)
@@ -233,10 +235,25 @@ class DeepLearningFoundationOperations(QObject):
 
                 case "Inception_v3":
                     # This is a command for Download/Load with Tracing only in Console Not UI
-                    # model = VGG19(weights="imagenet") 
+                    # model = InceptionV3(weights="imagenet") 
 
-                    # Creating an empty VGG19 Model
+                    # Creating an empty Inception_v3 Model
                     model = InceptionV3(weights=None)
+                    # Loding Pre-Trained Weights into the Model
+                    model.load_weights(filepath)
+                    self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
+                    # Resize the Image to 299x299 Square Shape
+                    newSize = (299,299)
+                    # Mode of Processing the Image in Keras
+                    processMode = "tf"
+                    self.ProcessImage(model,imagePath,newSize,processMode)
+ 
+                case "Xception":
+                    # This is a command for Download/Load with Tracing only in Console Not UI
+                    # model = Xception(weights="imagenet") 
+
+                    # Creating an empty Xception Model
+                    model = Xception(weights=None)
                     # Loding Pre-Trained Weights into the Model
                     model.load_weights(filepath)
                     self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
@@ -257,10 +274,10 @@ class DeepLearningFoundationOperations(QObject):
                 with open('models.json', 'r') as f:
                     models = json.load(f)
             except FileNotFoundError:
-                self.log_emitter.log_signal.emit("Error: 'models.json' not found. Please ensure the file exists in the correct directory.")
+                self.log_emitter.log_signal.emit("Error: 'models.json' not found.\nPlease ensure the file exists in the root.")
             except json.JSONDecodeError:
-                self.log_emitter.log_signal.emit("Error: Could not decode JSON from 'models.json'. Check the file's format.")
-            if len(models) > 0:                           
+                self.log_emitter.log_signal.emit("Error: Could not decode JSON from 'models.json'.\nCheck the file's format.")
+            if len(models) > 0 and models.get(modelType): 
                 self.log_emitter.log_signal.emit("Checking for existing model file...")
                 url =  models[modelType]["url"] 
                 filename = models[modelType]["name"] 
@@ -301,6 +318,9 @@ class DeepLearningFoundationOperations(QObject):
                     self.File_Size_and_Hash_Validation("md5",filepath, expected_size,expected_hash,self.log_emitter,True)  
 
                     self.Loading_Model_Operation(modelType, filepath,imagePath)
+            
+            else:
+                self.log_emitter.log_signal.emit("Error: 'models.json' not found or Not Contains Details for this Operation ( "+modelType+" ).\nPlease ensure the file exists in the root and contains Details for this Operation ( "+modelType+" ).")
 
         else:
             QMessageBox.warning(None, "No Image Selected","First, Select an Image!")
@@ -326,7 +346,9 @@ class DeepLearningFoundationOperations(QObject):
                 self.PreProcessImage(imagePath, modelType)
 
             case "Image Recognition using Pre-Trained Xception Model":
-                print(operation)
+                modelType = operation.strip().split(" ")[4]
+                self.PreProcessImage(imagePath, modelType)
+
             case "Object Detection by Pre-Trained Mobilenet SSD Model on Images":
                 print(operation)
             case "Object Detection by Pre-Trained Mobilenet SSD Model on Pre-Saved Video":
