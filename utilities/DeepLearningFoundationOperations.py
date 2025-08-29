@@ -20,10 +20,13 @@ try:
     from keras.applications import VGG16
     from keras.applications import VGG19
     from keras.applications import ResNet50
+    from keras.applications import InceptionV3
     from keras.applications.vgg16 import VGG16
     from keras.applications.vgg19 import VGG19
     from keras.applications.resnet50 import ResNet50
+    from keras.applications.inception_v3 import InceptionV3
     from keras.applications import imagenet_utils
+    from keras.applications.imagenet_utils import preprocess_input
     from keras.preprocessing.image import img_to_array, load_img
     from keras.models import load_model
     from keras.utils import get_file
@@ -65,10 +68,10 @@ class DeepLearningFoundationOperations(QObject):
     # Rest of Functions are Pre-Processor and Helpers
     
     # Processing the Operation on Pre-Trained Model
-    def ProcessImage(self,model,imagePath):
+    def ProcessImage(self,model,imagePath,newSize,processMode):
         # Show Model Architecture in A new Popup
         show_scrollable_message("Model Summary:", self.CreateSimpleCNNHandler.ModelSummaryCapture(model))
-        self.log_emitter.log_signal.emit("Do not Close the Log Window.\n Wait for Prediction Result.")
+        self.log_emitter.log_signal.emit("Do not Close the Log Window.\nWait for Prediction Result:\n")
         # ***If Selected Image not Closed Bring it to the Top***
         # imageName = self.ImagesAndColorsHandler.imageName or self.ImagesAndColorsHandler.tempImageName
         # if imageName is not None:
@@ -78,8 +81,8 @@ class DeepLearningFoundationOperations(QObject):
                
         # Loading the Image to Predict
         img = load_img(imagePath)          
-        # Resize the Image to 224x224 Square Shape
-        img = img.resize((224,224))
+        # Resize the Image to X * Y Square Shape Required for Specific Pre-Trained Model
+        img = img.resize(newSize)
         # Convert the Image to Array
         img_array = img_to_array(img)
         # Convert the Image into a 4 Dimensional Tensor
@@ -101,7 +104,7 @@ class DeepLearningFoundationOperations(QObject):
             This mode scales pixel values between 0 and 1 and then normalizes each channel using the ImageNet dataset's channel means and standard deviations.
         '''
         # Preprocess the Input Image Array
-        img_array = imagenet_utils.preprocess_input(img_array)
+        img_array = imagenet_utils.preprocess_input(img_array, mode=processMode)
         '''                    
         The model.predict() method in machine learning is used to generate predictions from a trained model on new, unseen input data.
         Functionality:
@@ -150,7 +153,7 @@ class DeepLearningFoundationOperations(QObject):
         actual_prediction = imagenet_utils.decode_predictions(prediction)
         # # Display the Result of Prediction in a Window on Top of Image
         if self.DownloadLogPopup:
-           self.log_emitter.log_signal.emit("\n******************************\nDetection Result\n\nPredicted Object is:\n" + str(actual_prediction[0][0][1]).title() + "\nWith Accuracy:\n" + str(actual_prediction[0][0][2]*100) +"\n******************************")
+           self.log_emitter.log_signal.emit("\n***********************\nDetection Result\n\nPredicted Object is:\n" + str(actual_prediction[0][0][1]).title() + "\nWith Accuracy:\n" + str(actual_prediction[0][0][2]*100) +"\n***********************")
         else:
             msgBox = QMessageBox(parent=None)
             msgBox.setWindowTitle("Detection Result")
@@ -192,7 +195,11 @@ class DeepLearningFoundationOperations(QObject):
                     # Loding Pre-Trained Weights into the Model
                     model.load_weights(filepath)
                     self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
-                    self.ProcessImage(model,imagePath)
+                    # Resize the Image to 224x224 Square Shape
+                    newSize = (224,224)
+                    # Mode of Processing the Image in Keras
+                    processMode = "caffe"
+                    self.ProcessImage(model,imagePath,newSize,processMode)
                     
                 case "VGGNet19":
                     # This is a command for Download/Load with Tracing only in Console Not UI
@@ -203,7 +210,11 @@ class DeepLearningFoundationOperations(QObject):
                     # Loding Pre-Trained Weights into the Model
                     model.load_weights(filepath)
                     self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
-                    self.ProcessImage(model,imagePath)
+                    # Resize the Image to 224x224 Square Shape
+                    newSize = (224,224)
+                    # Mode of Processing the Image in Keras
+                    processMode = "caffe"
+                    self.ProcessImage(model,imagePath,newSize,processMode)
 
                 case "ResNet50":
                     # This is a command for Download/Load with Tracing only in Console Not UI
@@ -214,7 +225,26 @@ class DeepLearningFoundationOperations(QObject):
                     # Loding Pre-Trained Weights into the Model
                     model.load_weights(filepath)
                     self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
-                    self.ProcessImage(model,imagePath)
+                    # Resize the Image to 224x224 Square Shape
+                    newSize = (224,224)
+                    # Mode of Processing the Image in Keras
+                    processMode = "caffe"
+                    self.ProcessImage(model,imagePath,newSize,processMode)
+
+                case "Inception_v3":
+                    # This is a command for Download/Load with Tracing only in Console Not UI
+                    # model = VGG19(weights="imagenet") 
+
+                    # Creating an empty VGG19 Model
+                    model = InceptionV3(weights=None)
+                    # Loding Pre-Trained Weights into the Model
+                    model.load_weights(filepath)
+                    self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
+                    # Resize the Image to 299x299 Square Shape
+                    newSize = (299,299)
+                    # Mode of Processing the Image in Keras
+                    processMode = "tf"
+                    self.ProcessImage(model,imagePath,newSize,processMode)
 
     # Check, Validation for Download and Load Pre-Trained Model                
     def PreProcessImage(self, imagePath,modelType):
@@ -291,8 +321,10 @@ class DeepLearningFoundationOperations(QObject):
                 modelType = operation.strip().split(" ")[4]
                 self.PreProcessImage(imagePath, modelType)
 
-            case "Image Recognition using Pre-Trained Inception Model":
-                print(operation)
+            case "Image Recognition using Pre-Trained Inception_v3 Model":
+                modelType = operation.strip().split(" ")[4]
+                self.PreProcessImage(imagePath, modelType)
+
             case "Image Recognition using Pre-Trained Xception Model":
                 print(operation)
             case "Object Detection by Pre-Trained Mobilenet SSD Model on Images":

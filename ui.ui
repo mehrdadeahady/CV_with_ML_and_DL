@@ -2738,7 +2738,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </item>
       <item>
        <property name="text">
-        <string>Image Recognition using Pre-Trained Inception Model</string>
+        <string>Image Recognition using Pre-Trained Inception_v3 Model</string>
        </property>
       </item>
       <item>

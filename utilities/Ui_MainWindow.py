@@ -1382,7 +1382,7 @@ class Ui_MainWindow(object):
         self.comboBox_SelectOperationDeepLearningFoundation.setItemText(1, _translate("MainWindow", "Image Recognition using Pre-Trained VGGNet16 Model"))
         self.comboBox_SelectOperationDeepLearningFoundation.setItemText(2, _translate("MainWindow", "Image Recognition using Pre-Trained VGGNet19 Model"))
         self.comboBox_SelectOperationDeepLearningFoundation.setItemText(3, _translate("MainWindow", "Image Recognition using Pre-Trained ResNet50 Model"))
-        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(4, _translate("MainWindow", "Image Recognition using Pre-Trained Inception Model"))
+        self.comboBox_SelectOperationDeepLearningFoundation.setItemText(4, _translate("MainWindow", "Image Recognition using Pre-Trained Inception_v3 Model"))
         self.comboBox_SelectOperationDeepLearningFoundation.setItemText(5, _translate("MainWindow", "Image Recognition using Pre-Trained Xception Model"))
         self.comboBox_SelectOperationDeepLearningFoundation.setItemText(6, _translate("MainWindow", "Object Detection by Pre-Trained Mobilenet SSD Model on Images"))
         self.comboBox_SelectOperationDeepLearningFoundation.setItemText(7, _translate("MainWindow", "Object Detection by Pre-Trained Mobilenet SSD Model on Pre-Saved Video"))

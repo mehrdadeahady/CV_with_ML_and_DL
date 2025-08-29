@@ -684,6 +684,8 @@ class MainWindow(QMainWindow):
                 self.LoadFramePdf("VGGNet19.pdf")
             if "ResNet50" in operation:
                 self.LoadFramePdf("ResNet50.pdf")
+            if "Inception_v3" in operation:
+                self.LoadFramePdf("Inception_v3.pdf")
                 
             self.DLOperationsHandler.SelectDeepLearningOperations(operation,imagePath)                     
             
