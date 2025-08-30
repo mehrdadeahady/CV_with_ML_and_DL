@@ -450,14 +450,14 @@ class CreateSimpleCNN(QObject):
             You can still load .h5 models using tf.keras.models.load_model() in current TensorFlow/Keras environments.
             '''
             # Depricated Legacy saving by .h5 extension below:
-            # self.model.save("mnist_simple_cnn.h5", include_optimizer=True)
+            # self.model.save("SimpleCNN.h5", include_optimizer=True)
             # New way of Saving Keras Model by .keras extension:
-            self.TrainedModel.save("resources/models/mnist_simple_cnn.keras", overwrite= True,include_optimizer=True)
+            self.TrainedModel.save("resources/models/SimpleCNN.keras", overwrite= True,include_optimizer=True)
             # Obtain accuracy score by evalute function
             score = self.TrainedModel.evaluate(self.x_test, self.y_test, verbose=1)
             QMessageBox.information(None,"Training Model Saved Successfully","Saving Path = resources/models folder in the root." + 
                                     "\nTest Loss: " +str(score[0]) + "\nTest Accuracy: " + str(score[1]) + 
-                                    "\nColors and images manipulation page using this model for image to numbers operation.") 
+                                    "\n In Colors and images manipulation page using this model for image to numbers operation.") 
 
     # Train the Model in another Thread
     def TrainModel(self,total_epochs):

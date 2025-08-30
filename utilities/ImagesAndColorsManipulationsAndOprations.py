@@ -29,6 +29,7 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
         self.tempImageName = None
         self.video = None
         self.videoCapturer = None
+        self.camera = None
     
     # Consider|Attention: 
     # Check List of Libraries to Install and Import at the End pf the Page
@@ -2097,125 +2098,129 @@ class ImagesAndColorsManipulationsAndOprations(QObject):
                        QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
                
                case "Image to Number by CNN (Convolutional Neural Network)":
-                   if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
-                     cv2.destroyAllWindows()
-                     cv2.imshow("Original", self.image) 
-                     try:
-                        # In complex apps importing tensorflow and keras must be on the top of other imports to avoid confilicts:
-                        # from keras.models import load_model
+                   if os.path.exists('resources/models/SimpleCNN.keras'):
+                     if self.image is not None and self.imageName is not None and isinstance(self.image, np.ndarray):
+                        cv2.destroyAllWindows()
+                        cv2.imshow("Original", self.image) 
+                        try:
+                           # In complex apps importing tensorflow and keras must be on the top of other imports to avoid confilicts:
+                           # from keras.models import load_model
 
-                        # Load Trained CNN (Convolutional Neural Network) Model. In next section: Create and Train this Simple  Model.
-                        classifier = load_model('resources/models/mnist_simple_cnn.keras', custom_objects=None, compile=True)
+                           # Load Trained CNN (Convolutional Neural Network) Model. In next section: Create and Train this Simple  Model.
+                           classifier = load_model('resources/models/SimpleCNN.keras', custom_objects=None, compile=True)
 
-                        # Convert to Gray Scale
-                        gray = cv2.cvtColor(self.image,cv2.COLOR_BGR2GRAY)
-                        # Blur image to decreese unwanted details
-                        blurred = cv2.GaussianBlur(gray, (5,5), 0)
-                        # Find edges using Canny
-                        edged = cv2.Canny(blurred, 50,150)                   
-                        # Find Contours (here external boundaries detected)
-                        contours, _ = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-                        #Sort contours left to right by using their x cordinates
-                        contours = sorted(contours, key = self.X_Cordinate_Contour, reverse = False)
+                           # Convert to Gray Scale
+                           gray = cv2.cvtColor(self.image,cv2.COLOR_BGR2GRAY)
+                           # Blur image to decreese unwanted details
+                           blurred = cv2.GaussianBlur(gray, (5,5), 0)
+                           # Find edges using Canny
+                           edged = cv2.Canny(blurred, 50,150)                   
+                           # Find Contours (here external boundaries detected)
+                           contours, _ = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                           #Sort contours left to right by using their x cordinates
+                           contours = sorted(contours, key = self.X_Cordinate_Contour, reverse = False)
 
-                        # Empty array to Store Detected Numbers
-                        detected_number_list = ["List of Detected Numbers:\n"]
+                           # Empty array to Store Detected Numbers
+                           detected_number_list = ["List of Detected Numbers:\n"]
 
-                        # loop over the contours
-                        for i,c in enumerate(contours):
-                           # Compute the bounding box for the rectangle
-                           (x, y, w, h) = cv2.boundingRect(c) 
-                           # Filter Size of the Text to detect
-                           if w >= 6 and h >= 12:
-                              roi = gray[y:y + h, x:x + w]
-                              ret, roi = cv2.threshold(roi, 127, 255,cv2.THRESH_BINARY_INV)
-                              roi = self.makeSquare(roi)
-                              roi = self.Resize_To_Pixel(28, roi)
-                              # cv2.imshow("ROI", roi)
-                              roi = roi / 255.0
-                              roi = roi.reshape(1,28,28,1) 
-                              '''
-                              np.argmax() is a function within the NumPy library in Python used to 
-                              find the indices of the maximum values along a specified axis in an array. 
-                              Functionality:
-                                 It takes a NumPy array as input.
-                                 By default, if no axis is specified, it returns the index of the maximum value in the flattened array 
-                                 (as if the array were a single, one-dimensional sequence).
-                                 When an axis is specified (e.g., axis=0 for columns, axis=1 for rows in a 2D array), 
-                                 it returns an array of indices corresponding to the maximum values along that specific axis.
-                                 If multiple occurrences of the maximum value exist, np.argmax() returns the index of the first occurrence.
-                              Syntax in Python:
-                                               numpy.argmax(array, axis=None, out=None, keepdims=False)
-                              Parameters:
-                                 array: The input array.
-                                 axis: (Optional) The axis along which to find the maximum values.
-                                 out: (Optional) An array in which to place the result.
-                                 keepdims: (Optional) If True, the axes which are reduced are left in the result as dimensions with size one. 
-                              '''
-                              ## Get Prediction
-                              predictions = np.argmax(classifier.predict(roi, 1, verbose = 0),axis=1)[0]
-                              '''                          
-                              classifier.predict() is a method commonly found in machine learning libraries, particularly within the context of classification models. 
-                              Its purpose is to generate class predictions for new, unseen data instances using a trained classification model.
-                              Functionality:
-                                 Input:
-                                 It takes as input one or more data instances (samples) for which class labels need to be predicted. 
-                                 This input typically comes in the form of a numerical array, where each row represents a data instance and each column represents a feature.
-                                 Prediction:
-                                 The trained classifier applies its learned patterns and decision rules to the input data.
-                                 Output:
-                                 It returns the predicted class label(s) for the input data instances. For a single input instance, it returns a single class label. 
-                                 For multiple instances, it returns an array of predicted class labels, one for each instance.
-                              Example in Scikit-learn (Python):
+                           # loop over the contours
+                           for i,c in enumerate(contours):
+                              # Compute the bounding box for the rectangle
+                              (x, y, w, h) = cv2.boundingRect(c) 
+                              # Filter Size of the Text to detect
+                              if w >= 6 and h >= 12:
+                                 roi = gray[y:y + h, x:x + w]
+                                 ret, roi = cv2.threshold(roi, 127, 255,cv2.THRESH_BINARY_INV)
+                                 roi = self.makeSquare(roi)
+                                 roi = self.Resize_To_Pixel(28, roi)
+                                 # cv2.imshow("ROI", roi)
+                                 roi = roi / 255.0
+                                 roi = roi.reshape(1,28,28,1) 
+                                 '''
+                                 np.argmax() is a function within the NumPy library in Python used to 
+                                 find the indices of the maximum values along a specified axis in an array. 
+                                 Functionality:
+                                    It takes a NumPy array as input.
+                                    By default, if no axis is specified, it returns the index of the maximum value in the flattened array 
+                                    (as if the array were a single, one-dimensional sequence).
+                                    When an axis is specified (e.g., axis=0 for columns, axis=1 for rows in a 2D array), 
+                                    it returns an array of indices corresponding to the maximum values along that specific axis.
+                                    If multiple occurrences of the maximum value exist, np.argmax() returns the index of the first occurrence.
+                                 Syntax in Python:
+                                                numpy.argmax(array, axis=None, out=None, keepdims=False)
+                                 Parameters:
+                                    array: The input array.
+                                    axis: (Optional) The axis along which to find the maximum values.
+                                    out: (Optional) An array in which to place the result.
+                                    keepdims: (Optional) If True, the axes which are reduced are left in the result as dimensions with size one. 
+                                 '''
+                                 ## Get Prediction
+                                 predictions = np.argmax(classifier.predict(roi, 1, verbose = 0),axis=1)[0]
+                                 '''                          
+                                 classifier.predict() is a method commonly found in machine learning libraries, particularly within the context of classification models. 
+                                 Its purpose is to generate class predictions for new, unseen data instances using a trained classification model.
+                                 Functionality:
+                                    Input:
+                                    It takes as input one or more data instances (samples) for which class labels need to be predicted. 
+                                    This input typically comes in the form of a numerical array, where each row represents a data instance and each column represents a feature.
+                                    Prediction:
+                                    The trained classifier applies its learned patterns and decision rules to the input data.
+                                    Output:
+                                    It returns the predicted class label(s) for the input data instances. For a single input instance, it returns a single class label. 
+                                    For multiple instances, it returns an array of predicted class labels, one for each instance.
+                                 Example in Scikit-learn (Python):
 
-                                                               from sklearn.linear_model import LogisticRegression
-                                                               import numpy as np
+                                                                  from sklearn.linear_model import LogisticRegression
+                                                                  import numpy as np
 
-                                                               # Assume X_train and y_train are your training data and labels
-                                                               # Assume X_new is your new data for prediction
+                                                                  # Assume X_train and y_train are your training data and labels
+                                                                  # Assume X_new is your new data for prediction
 
-                                                               # Train a classifier (e.g., Logistic Regression)
-                                                               model = LogisticRegression()
-                                                               model.fit(X_train, y_train)
+                                                                  # Train a classifier (e.g., Logistic Regression)
+                                                                  model = LogisticRegression()
+                                                                  model.fit(X_train, y_train)
 
-                                                               # Make predictions on new data
-                                                               ynew = model.predict(X_new)
+                                                                  # Make predictions on new data
+                                                                  ynew = model.predict(X_new)
 
-                                                               print(f"Predicted classes for new data: {ynew}")
+                                                                  print(f"Predicted classes for new data: {ynew}")
 
-                              Key Considerations:
-                                 Input Shape:
-                                 The predict() method expects the input data to have the same number of features (columns) as the data used during training.
-                                 Data Preprocessing:
-                                 The new data should undergo the same preprocessing steps (e.g., scaling, encoding) as the training data to ensure consistent feature representation.
-                                 Class Predictions vs. Probabilities:
-                                 While predict() returns the most likely class, many classifiers also offer a predict_proba() method to 
-                                 return the probability distribution over all classes for each instance. 
-                                 This can be useful for understanding the model's confidence in its predictions or for setting custom decision thresholds.
-                              '''
-                              res = str(predictions)
-                              if i < len(contours) - 1:
-                                 detected_number_list.append(res + " , ")
-                              else:
-                                  detected_number_list.append(res)
-                              cv2.rectangle(self.image, (x-5, y-5), (x + w + 5, y + h + 5), (0, 0, 255), 2)
-                              cv2.putText(self.image, res, (x + w + 8, y + h + 8), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 2)
-                              cv2.imshow("Detected Numbers Marked", self.image)   
+                                 Key Considerations:
+                                    Input Shape:
+                                    The predict() method expects the input data to have the same number of features (columns) as the data used during training.
+                                    Data Preprocessing:
+                                    The new data should undergo the same preprocessing steps (e.g., scaling, encoding) as the training data to ensure consistent feature representation.
+                                    Class Predictions vs. Probabilities:
+                                    While predict() returns the most likely class, many classifiers also offer a predict_proba() method to 
+                                    return the probability distribution over all classes for each instance. 
+                                    This can be useful for understanding the model's confidence in its predictions or for setting custom decision thresholds.
+                                 '''
+                                 res = str(predictions)
+                                 if i < len(contours) - 1:
+                                    detected_number_list.append(res + " , ")
+                                 else:
+                                    detected_number_list.append(res)
+                                 cv2.rectangle(self.image, (x-5, y-5), (x + w + 5, y + h + 5), (0, 0, 255), 2)
+                                 cv2.putText(self.image, res, (x + w + 8, y + h + 8), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 2)
+                                 cv2.imshow("Detected Numbers Marked", self.image)   
 
-                        if len(detected_number_list) < 2 and len(contours) > 1:
-                              QMessageBox.warning(None, "Font Size Setting", "Model Configured to recognize texts with font-size greater than 20 Pixel!")                           
-                        
-                        elif len(detected_number_list) > 1:
-                             QMessageBox.information(None, "Detected Numbers", ''.join(detected_number_list))
-                        
-                        else:
-                            QMessageBox.information(None, "Detected Numbers", "No Number Detected!")
+                           if len(detected_number_list) < 2 and len(contours) > 1:
+                                 QMessageBox.warning(None, "Font Size Setting", "Model Configured to recognize texts with font-size greater than 20 Pixel!")                           
+                           
+                           elif len(detected_number_list) > 1:
+                              QMessageBox.information(None, "Detected Numbers", ''.join(detected_number_list))
+                           
+                           else:
+                              QMessageBox.information(None, "Detected Numbers", "No Number Detected!")
 
-                     except:
-                            QMessageBox.critical(None, "Instalation Error", "Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
+                        except:
+                              QMessageBox.critical(None, "Instalation Error", "Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
 
+                     else:
+                           QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
+               
                    else:
-                         QMessageBox.warning(None, "No Image Selected", "First, Select an Image!")
+                        QMessageBox.information(None, "Model Not Exist", "First Create the Model from Create Simple CNN Page!")
 
 # *** PreProcessor Functions as Helpers to Processor Functions: ***
 

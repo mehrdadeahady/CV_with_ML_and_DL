@@ -53,8 +53,8 @@ except:
 class DeepLearningFoundationOperations(QObject):
     def __init__(self,ImagesAndColorsHandler,CreateSimpleCNNHandler,parent=None):
         super().__init__()
-        # Internal Variable to Access Images, Videos and Cameras inside All Functions in the Class      
-        self.camera = None
+        # Internal Variable to Access Images, Videos and Cameras inside All Functions in the Class 
+        self.models = {}     
         self.ImagesAndColorsHandler = ImagesAndColorsHandler
         self.CreateSimpleCNNHandler = CreateSimpleCNNHandler
         self.DownloadLogPopup = None
@@ -64,6 +64,7 @@ class DeepLearningFoundationOperations(QObject):
         self.log_emitter.log_signal.connect(self.Append_Log)       
         self.log_emitter.progressbar_signal.connect(self.Update_Progress)  
         self.log_emitter.finished_signal.connect(self.On_Finished)
+        self.LoadModelDetails()
         
     # Consider|Attention: 
     # Process Functions Contains Computer Vision Functions with Comments and Explanations
@@ -153,18 +154,200 @@ class DeepLearningFoundationOperations(QObject):
         '''
         # Decode the Prediction
         actual_prediction = imagenet_utils.decode_predictions(prediction)
-        # # Display the Result of Prediction in a Window on Top of Image
+        # Display the Result of Prediction in a Window on Top of Image
         if self.DownloadLogPopup:
            self.log_emitter.log_signal.emit("***********************\nDetection Result\n\nPredicted Object: \t" + str(actual_prediction[0][0][1]).title() + "\nStated Accuracy: \t" + str(actual_prediction[0][0][2]*100) +"\n***********************")
-
+        # Display the Result of Prediction in a Log Window
         msgBox = QMessageBox(parent=None)
         msgBox.setWindowTitle("Detection Result")
         msgBox.setText("Predicted Object: \t" + str(actual_prediction[0][0][1]).title() + "\nStated Accuracy: \t" + str(actual_prediction[0][0][2]*100))
         msgBox.setWindowFlags(msgBox.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
         msgBox.exec()
        
-    # Loading Downloaded or Existing Pre-Trained Model and Complete the Operation
-    def Loading_Model_Operation(self,modelType, filepath, imagePath):
+    # Processing the Operation on Mobilenet SSD Pre-Trained Model   
+    def ProcessMobilenetSSD(self,img_to_detect,mobilenetssd,class_labels):
+        # Get width, height of Image 
+        img_height , img_width = img_to_detect.shape[0:2]
+
+        # Resize to Match Input Size
+        resized_img_to_detect = cv2.resize(img_to_detect,(300,300))
+
+        # Convert to Blob to Pass into Model
+        # Recommended Scale Factor is 0.007843, width,height of blob is 300,300, mean of 255 is 127.5
+        img_blob = cv2.dnn.blobFromImage(resized_img_to_detect,0.007843,(300,300),127.5)
+
+        # Pass Blob into Model
+        mobilenetssd.setInput(img_blob)
+
+        '''
+        The mobilenetssd.forward() function is typically used in object detection pipelines involving the MobileNet-SSD model. Here's a breakdown of what it does and how it's used:
+        🧠 What forward() Does
+        - It performs inference: This method runs a forward pass through the MobileNet-SSD neural network.
+        - It returns detection results: These are usually bounding boxes, class labels, and confidence scores for objects detected in the input image.
+        
+        🛠️ Typical Usage in Python (OpenCV + Caffe)
+        net = cv2.dnn.readNetFromCaffe(prototxt_path, model_path)
+        blob = cv2.dnn.blobFromImage(image, 0.007843, (300, 300), 127.5)
+        net.setInput(blob)
+        detections = net.forward()
+        
+        📦 Output Format
+        The detections variable is usually a 4D array with shape [1, 1, N, 7], where:
+        - N is the number of detected objects
+        - Each detection has 7 values: [image_id, label, confidence, x_min, y_min, x_max, y_max]
+        
+        🔍 Example Interpretation
+        You can loop through the detections like this:
+        for i in range(detections.shape[2]):
+            confidence = detections[0, 0, i, 2]
+            if confidence > 0.5:
+                class_id = int(detections[0, 0, i, 1])
+                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+                (x1, y1, x2, y2) = box.astype("int")
+                # Draw box or label
+
+        If you're using a different framework like PyTorch or TensorFlow, the method and output might vary slightly. Want help adapting this to your specific setup?
+        '''
+        obj_detections = mobilenetssd.forward()
+
+        # Returned obj_detections[0, 0, index, 1]:
+        # 1 => will have the Prediction Class Index
+        # 2 => will have Confidence
+        # 3 to 7 => will have the Bounding Box Co-Ordinates
+        no_of_detections = obj_detections.shape[2]
+
+        # loop over the detections
+        for index in np.arange(0, no_of_detections):
+
+            prediction_confidence = obj_detections[0, 0, index, 2]
+
+            # Take only Predictions with Confidence more than 20%
+            if prediction_confidence > 0.20:
+
+                # Get the Predicted Label
+                predicted_class_index = int(obj_detections[0, 0, index, 1])
+                predicted_class_label = class_labels[predicted_class_index]     
+
+                # Obtain the Bounding Box Co-Oridnates for Actual Image from Resized Image Size
+                bounding_box = obj_detections[0, 0, index, 3:7] * np.array([img_width, img_height, img_width, img_height])
+                (start_x_pt, start_y_pt, end_x_pt, end_y_pt) = bounding_box.astype("int")
+
+                # Create Prediction Label
+                predicted_class_label = "{}: {:.2f}%".format(class_labels[predicted_class_index], prediction_confidence * 100)
+
+                # Display the Result of Prediction in Log Window if not Closed
+                if self.DownloadLogPopup:    
+                   self.log_emitter.log_signal.emit("predicted object {}: {} \t Stated Accuracy: {}".format(index +1 ,class_labels[predicted_class_index], prediction_confidence * 100) )           
+                
+                # Draw Rectangle Around Detected Object in the Image
+                cv2.rectangle(img_to_detect, (start_x_pt, start_y_pt), (end_x_pt, end_y_pt), (0,255,0), 2)
+               
+                # Put the Result of Prediction as Text on Detected Object in the Image
+                cv2.putText(img_to_detect, predicted_class_label, (start_x_pt, start_y_pt-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
+        
+        # Display the Image
+        cv2.imshow("Detection Output", img_to_detect)
+                
+    # Loading Downloaded or Existing Mobilenet SSD Pre-Trained Model
+    def PreProcessMobilenetSSD(self,imagePath,filepath,MobileNetSSD_PrototextPath,operationType):
+        '''
+        The MobileNetSSD Caffe model is a lightweight deep learning model designed for real-time object detection. 
+        It combines the efficient MobileNet architecture with the SSD (Single Shot MultiBox Detector) framework,
+          making it ideal for deployment on devices with limited computational power like Raspberry Pi or mobile platforms.
+        🔍 Key Features
+        - MobileNet: Uses depthwise separable convolutions to reduce computation.
+        - SSD: Detects objects in a single forward pass, enabling fast inference.
+        - Caffe Format: Compatible with the Caffe deep learning framework, often used in embedded systems.
+        📦 Common Files
+        - MobileNetSSD_deploy.caffemodel: Pre-trained weights.
+        - MobileNetSSD_deploy.prototxt: Network architecture definition.
+        🛠️ Use Cases
+        - Real-time object detection on edge devices.
+        - Integration with OpenVINO for Intel hardware acceleration.
+        - Robotics, surveillance, and smart cameras.
+        '''
+        MobileNetSSD_CaffeModel = filepath
+        '''
+        📄 MobileNetSSD_Prototext
+        The MobileNetSSD deploy.prototxt file—sometimes casually referred to as "MobileNetSSD_Prototext" is the architectural script that defines 
+        how the MobileNetSSD model operates within the Caffe deep learning framework. It outlines the neural network’s structure, layer by layer, 
+        and is essential for pairing with the trained weights (.caffemodel) during inference.
+        🔧 Key Components
+        - Input Layer: Accepts images, typically sized 300x300x3 (RGB).
+        - Depthwise Separable Convolutions: Core of MobileNet's efficiency, reducing computation.
+        - BatchNorm & ReLU: Stabilizes and activates the network after each convolution.
+        - SSD Detection Layers: Multi-scale feature maps for detecting objects of various sizes.
+        - PriorBox Layers: Defines anchor boxes for bounding box predictions.
+        - Softmax & DetectionOutput: Final layers that classify objects and output bounding boxes.
+
+        📦 Common Usage
+        - Used with MobileNetSSD_deploy.caffemodel for object detection tasks.
+        - Compatible with OpenCV's dnn module for fast inference.
+        - Can be customized for different input sizes or object classes.
+
+        🛠️ Example Applications
+        - Real-time detection on mobile and embedded platforms.
+        - Edge AI deployments using OpenVINO or TensorRT.
+        - Robotics, smart cameras, and IoT vision systems.
+        '''
+        # Cleaning MobileNetSSD_Prototext File
+        MobileNetSSD_Prototext = self.Clean_MobileNetSSD_Prototext(MobileNetSSD_PrototextPath)
+        
+        # Loading Pretrained Model from Prototext and Caffemodel files
+        mobilenetssd = cv2.dnn.readNetFromCaffe(MobileNetSSD_Prototext, MobileNetSSD_CaffeModel) 
+        self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
+
+         # Set of 21 Class Labels in Alphabetical Order
+        class_labels = ["background", "aeroplane", "bicycle", "bird", "boat","bottle", "bus", "car", "cat", "chair", "cow", "diningtable","dog", "horse", "motorbike", "person", "pottedplant", "sheep","sofa", "train", "tvmonitor"]
+        
+        cv2.destroyAllWindows()
+        if self.DownloadLogPopup:
+           self.log_emitter.log_signal.emit("***********************\nDetection Results\n")
+        img_to_detect = None
+
+        match operationType:
+            case "Images":
+                # Load the Image to Detect
+                img_to_detect = cv2.imread(imagePath)
+                self.ProcessMobilenetSSD(img_to_detect,mobilenetssd,class_labels)
+                
+            case "Pre-Saved":
+                # Get the Saved Video File as Stream
+                self.ImagesAndColorsHandler.videoCapturer = cv2.VideoCapture(self.ImagesAndColorsHandler.video)
+
+                # Create a While Loop until Video Still Streaming
+                while (self.ImagesAndColorsHandler.videoCapturer.isOpened):
+                    # Wait for Pressing a Keyboard Key to Exit
+                    if cv2.waitKey(1) in range(0,255):
+                            self.ImagesAndColorsHandler.videoCapturer.release()
+                            break
+                    # Get the Current Frame from Video Stream
+                    ret,current_frame = self.ImagesAndColorsHandler.videoCapturer.read()
+                    # Use Video Current Frame instead of Image
+                    if current_frame is not None and len(current_frame.shape) > 1:
+                        self.ProcessMobilenetSSD(current_frame,mobilenetssd,class_labels)             
+
+            case "Realtime":
+                # Get the Camera Video File as Stream
+                self.ImagesAndColorsHandler.videoCapturer = cv2.VideoCapture(self.ImagesAndColorsHandler.camera)
+
+                # Create a While Loop until Camera Still is Open and Video is Streaming
+                while True:
+                    # Wait for Pressing a Keyboard Key to Exit
+                    if cv2.waitKey(1) in range(0,255):
+                            self.ImagesAndColorsHandler.videoCapturer.release()
+                            break
+                    # Get the Current Frame from Camera Video Stream
+                    ret,current_frame = self.ImagesAndColorsHandler.videoCapturer.read()
+                    # Use Video Current Frame instead of Image
+                    if current_frame is not None and len(current_frame.shape) > 1:
+                        self.ProcessMobilenetSSD(current_frame,mobilenetssd,class_labels)
+                          
+        if self.DownloadLogPopup:            
+            self.log_emitter.log_signal.emit("\n***********************")
+            
+    # Loading Downloaded or Existing Pre-Trained Model
+    def Loading_Model_Operation(self,modelType, filepath, imagePath, operationType):
             self.log_emitter.log_signal.emit("Loading model weights...")
             match modelType:
                 case "VGGNet16":
@@ -263,98 +446,122 @@ class DeepLearningFoundationOperations(QObject):
                     processMode = "tf"
                     self.ProcessImage(model,imagePath,newSize,processMode)
 
-    # Check, Validation for Download and Load Pre-Trained Model                
-    def PreProcessImage(self, imagePath,modelType):
-        if self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None:      
-            models = {}
-            self.DownloadLogPopup = DownloadLogPopup(self.log_emitter)   
-            self.DownloadLogPopup.show()
-            self._is_running = True         
-            try:
-                with open('models.json', 'r') as f:
-                    models = json.load(f)
-            except FileNotFoundError:
-                self.log_emitter.log_signal.emit("Error: 'models.json' not found.\nPlease ensure the file exists in the root.")
-            except json.JSONDecodeError:
-                self.log_emitter.log_signal.emit("Error: Could not decode JSON from 'models.json'.\nCheck the file's format.")
-            if len(models) > 0 and models.get(modelType): 
+                case "MobilenetSSD":      
+                    # Check/Download required MobilenetSSD.prototxt File              
+                    folder = os.path.normpath(join("resources","models"))
+                    MobileNetSSD_Prototext_fileName = "MobilenetSSD.prototxt"
+                    MobileNetSSD_PrototextPath = os.path.join(folder, MobileNetSSD_Prototext_fileName)
+                    if not os.path.exists(MobileNetSSD_PrototextPath):
+                       modelType = "MobileNetSSDPrototxt"
+                       self.PreProcessImage(imagePath, modelType, operationType)
+                    else:
+                        self.PreProcessMobilenetSSD(imagePath,filepath,MobileNetSSD_PrototextPath,operationType)  
+
+    # Check, Validation for Downloading Pre-Trained Model                
+    def PreProcessImage(self, imagePath,modelType,operationType):
+        ConditionToCheck = None
+        ContentMessage = None
+        TitleMessage = None
+        match operationType:
+            case "Images":
+                ConditionToCheck = self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None
+                ContentMessage = "First, Select an Image!"
+                TitleMessage = "No Image Selected" 
+                
+            case "Pre-Saved":
+                ConditionToCheck = self.ImagesAndColorsHandler.video is not None and self.ImagesAndColorsHandler.Check_Camera_Availability(self.ImagesAndColorsHandler.video)
+                ContentMessage = "First, Select a Video!" 
+                TitleMessage = "No Video Selected"
+
+            case "Realtime":
+                ConditionToCheck = self.ImagesAndColorsHandler.camera is not None and self.ImagesAndColorsHandler.Check_Camera_Availability(self.ImagesAndColorsHandler.camera)
+                ContentMessage = "First, Select a Camera!" 
+                TitleMessage = "No Camera Selected"
+
+        if ConditionToCheck:              
+            if self.DownloadLogPopup == None or not self.DownloadLogPopup:
+                self.DownloadLogPopup = DownloadLogPopup(self.log_emitter)   
+                self.DownloadLogPopup.show()
+            self._is_running = True     
+            # Get Model Info
+            if len(self.models) > 0 and self.models.get(modelType): 
                 self.log_emitter.log_signal.emit("Checking for existing model file...")
-                url =  models[modelType]["url"] 
-                filename = models[modelType]["name"] 
-                fileSize = models[modelType]["size"] 
-                expected_hash = models[modelType]["md5hash"] 
+                url =  self.models[modelType]["url"] 
+                filename = self.models[modelType]["name"] 
+                fileSize = self.models[modelType]["size"] 
+                expected_hash = self.models[modelType]["md5hash"] 
                 expected_size = fileSize
                 folder = os.path.normpath(join("resources","models"))
                 filepath = os.path.join(folder, filename)
                 if os.path.exists(filepath):
-                    #if self.File_Size_and_Hash_Validation("md5",filepath, expected_size,expected_hash,self.log_emitter,True):
-                        #self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + "\nModel file found locally with valid hash.\nLoading from cache...")
-                    # else:
-                    #     self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + 
-                    #                                         "\nModel file found but hash mismatch.\nRe-downloading from internet...\n" +
-                    #                                         "Make Sure your System Connected to the Internet\n"+
-                    #                                         "File is Approximately "+fileSize+"\n"+
-                    #                                         "It takes a while Depending on the Speed of your System and Internet!")
-
-                    self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + "\nModel file found locally\n Hash and Size are not Validated!\nLoading from cache...") 
-
+                   self.log_emitter.log_signal.emit(str(self.models[modelType]["name"]) + "\nModel file found locally\n Hash and Size are not Validated!\nLoading from cache...") 
                 else:
-                    self.log_emitter.log_signal.emit(str(models[modelType]["name"]) + 
+                    self.log_emitter.log_signal.emit(str(self.models[modelType]["name"]) + 
                                                         "\nModel file not found. \nDownloading from internet...\n" + 
                                                         "Make Sure your System Connected to the Internet\n"+
                                                         "File is Approximately "+fileSize+"\n"+
                                                         "It takes a while Depending on the Speed of your System and Internet!")
                     
-                    self.log_emitter.log_signal.emit("Download Url: \n" + str(models[modelType]["url"]))   
+                    self.log_emitter.log_signal.emit("Download Url: \n" + str(self.models[modelType]["url"]))   
 
-                # Only Download if File is Missing # or Hash is Invalid
-                if not os.path.exists(filepath): # or not self.File_Size_and_Hash_Validation("md5",filepath, expected_size,expected_hash,self.log_emitter, False):    
-                    self.downloader = Downloader(url, filepath, modelType,imagePath,self.log_emitter, fileSize)
+                # Only Download if File is Missing 
+                if not os.path.exists(filepath):   
+                    self.downloader = Downloader(url, filepath, modelType,imagePath,self.log_emitter, fileSize,operationType)
                     self.DownloadLogPopup.Set_Downloader(self.downloader)
                     self.downloader.Start()   
                     
                 else:
-                    # Remove below line and un-comment File_Size_and_Hash_Validation in top if condations
+                    # You can Remove below line and run File_Size_and_Hash_Validation in if Statement for Validation
                     self.File_Size_and_Hash_Validation("md5",filepath, expected_size,expected_hash,self.log_emitter,True)  
 
-                    self.Loading_Model_Operation(modelType, filepath,imagePath)
+                    self.Loading_Model_Operation(modelType, filepath,imagePath,operationType)
             
             else:
                 self.log_emitter.log_signal.emit("Error: 'models.json' not found or Not Contains Details for this Operation ( "+modelType+" ).\nPlease ensure the file exists in the root and contains Details for this Operation ( "+modelType+" ).")
 
         else:
-            QMessageBox.warning(None, "No Image Selected","First, Select an Image!")
+            QMessageBox.warning(None, TitleMessage,ContentMessage)
 
     # Selecting Desired Operation
     def SelectDeepLearningOperations(self,operation,imagePath):
         self.DownloadLogPopup = None
+        modelTypeString = operation.strip().split(" ")
         match operation.strip():
             case "Image Recognition using Pre-Trained VGGNet16 Model":
-                modelType = operation.strip().split(" ")[4]
-                self.PreProcessImage(imagePath, modelType)
+                modelType = modelTypeString[4]
+                self.PreProcessImage(imagePath, modelType,None)
 
             case "Image Recognition using Pre-Trained VGGNet19 Model":
-                modelType = operation.strip().split(" ")[4]
-                self.PreProcessImage(imagePath, modelType)
+                modelType = modelTypeString[4]
+                self.PreProcessImage(imagePath, modelType,None)
     
             case "Image Recognition using Pre-Trained ResNet50 Model":
-                modelType = operation.strip().split(" ")[4]
-                self.PreProcessImage(imagePath, modelType)
+                modelType = modelTypeString[4]
+                self.PreProcessImage(imagePath, modelType,None)
 
             case "Image Recognition using Pre-Trained Inception_v3 Model":
-                modelType = operation.strip().split(" ")[4]
-                self.PreProcessImage(imagePath, modelType)
+                modelType = modelTypeString[4]
+                self.PreProcessImage(imagePath, modelType,None)
 
             case "Image Recognition using Pre-Trained Xception Model":
-                modelType = operation.strip().split(" ")[4]
-                self.PreProcessImage(imagePath, modelType)
+                modelType = modelTypeString[4]
+                self.PreProcessImage(imagePath, modelType,None)
 
             case "Object Detection by Pre-Trained Mobilenet SSD Model on Images":
-                print(operation)
+                modelType = modelTypeString[4] + modelTypeString[5]
+                operationType = modelTypeString[8]
+                self.PreProcessImage(imagePath, modelType, operationType)
+
             case "Object Detection by Pre-Trained Mobilenet SSD Model on Pre-Saved Video":
-                print(operation)
+                modelType = modelTypeString[4] + modelTypeString[5]
+                operationType = modelTypeString[8]
+                self.PreProcessImage(imagePath, modelType, operationType)
+
             case "Object Detection by Pre-Trained Mobilenet SSD Model on Realtime Video":
-                print(operation)
+                modelType = modelTypeString[4] + modelTypeString[5]
+                operationType = modelTypeString[8]
+                self.PreProcessImage(imagePath, modelType, operationType)
+
             case "Object Mask Implementation by Pre-Trained MaskRCNN Model on Images":
                 print(operation)
             case "Bounding Box Implementation by Pre-Trained MaskRCNN Model on Images":
@@ -387,10 +594,10 @@ class DeepLearningFoundationOperations(QObject):
     # Selecting Active Camera
     def SelectDeepLearningCamera(self,text):
         if text.strip() != "":
-           self.camera = int((text.split(",")[0]).split(":")[1].strip())
+           self.ImagesAndColorsHandler.camera = int((text.split(",")[0]).split(":")[1].strip())
     
     # Updating Logs After Download Finished
-    def On_Finished(self, success, info ,modelType,filepath, imagePath):
+    def On_Finished(self, success, info ,modelType,filepath, imagePath,operationType):
         if not success:
             log = "Download Failed.\n" + str(info)
             if not "Download Cancelled" in str(info):
@@ -401,7 +608,7 @@ class DeepLearningFoundationOperations(QObject):
                                 
         else:
             self.DownloadLogPopup.Append_Log(str(info)+"\nDownload Complete.")   
-            self.Loading_Model_Operation(modelType, filepath, imagePath)              
+            self.Loading_Model_Operation(modelType, filepath, imagePath,operationType)              
 
     # Updating ProgressBar
     def Update_Progress(self, percent):
@@ -453,12 +660,41 @@ class DeepLearningFoundationOperations(QObject):
                     except Exception as e:
                         log_emitter.log_signal.emit("Error:", str(e))
                         return False
-                                
+
+    # Loading Model Details from models.json file in the Root
+    def LoadModelDetails(self):
+        if len(self.models) <= 0:    
+            try:
+                with open('models.json', 'r') as f:
+                    self.models = json.load(f)
+            except FileNotFoundError:
+                self.log_emitter.log_signal.emit("Error: 'models.json' not found.\nPlease ensure the file exists in the root.")
+            except json.JSONDecodeError:
+                self.log_emitter.log_signal.emit("Error: Could not decode JSON from 'models.json'.\nCheck the file's format.")
+        
+    # Cleaning Downloaded MobileNetSSD Prototext file
+    def Clean_MobileNetSSD_Prototext(self,path):
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            lines = f.readlines()
+
+        cleaned_lines = []
+        for line in lines:
+            stripped = line.strip()
+            # Skip empty lines and HTML tags
+            if stripped and not stripped.startswith("<") and not stripped.endswith(">"):
+                cleaned_lines.append(stripped)
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("\n".join(cleaned_lines))
+
+        self.log_emitter.log_signal.emit(f"Cleaned MobileNetSSD Prototext file in: {path}")
+        return path
+   
 # Signal emitter for Thread-Safe logging
 class LogEmitter(QObject):
     log_signal = pyqtSignal(str) # All Communications, Updates and Text Messages
     progressbar_signal = pyqtSignal(int) #  Percent: ProgressBar Update
-    finished_signal = pyqtSignal(bool, str, str , str, str) # success ,message info [error, Cancle, success, fail] ,modelType , filepath, imagePath
+    finished_signal = pyqtSignal(bool, str, str , str, str, str) # success ,message info [error, Cancle, success, fail] ,modelType , filepath, imagePath, operationType
 
 # Dialog for showing logs During Model Download/Load and Cancle Download/Load Operation
 class DownloadLogPopup(QDialog):
@@ -505,7 +741,7 @@ class DownloadLogPopup(QDialog):
         self.downloader = downloader
 
     def Append_Log(self, message):
-        if str(message).startswith("Progress") and not "[====================]" in message:
+        if str(message).startswith("Progress") and not "[====================]" in message and not "Download Complete" in message:
             ChangedContent = ""
             lines = self.log_output.toPlainText().splitlines()
             for line in lines:
@@ -523,8 +759,9 @@ class DownloadLogPopup(QDialog):
         QApplication.processEvents()
 
     def Cancel_Download(self):
-        self.downloader.Cancle()
-        self.Append_Log("Download Cancelled by User!")
+        if self.downloader:
+            self.downloader.Cancle()
+            self.Append_Log("Download Cancelled by User!")
 
     def closeEvent(self, event):
         log = self.log_output.toPlainText()
@@ -538,7 +775,7 @@ class DownloadLogPopup(QDialog):
 
 # Downloader for Required Models   
 class Downloader(QObject):
-    def __init__(self, url: str, filepath: str,modelType: str,imagePath: str ,log_emitter,fileSize: str, parent=None):
+    def __init__(self, url: str, filepath: str,modelType: str,imagePath: str ,log_emitter,fileSize: str,operationType: str, parent=None):
         super().__init__(parent)
         self.url = QUrl(url)
         self.filepath = filepath
@@ -550,6 +787,7 @@ class Downloader(QObject):
         self.modelType = modelType
         self.imagePath = imagePath
         self.fileSize = fileSize
+        self.operationType = operationType
         self.fallback_attempts = 0
         self.max_fallback_attempts = 3
         self.user_agents = [
@@ -596,7 +834,7 @@ class Downloader(QObject):
 
     def On_Progress(self, downloaded: int, total_size: int):
         if self.cancelled:
-            self.log_emitter.finished_signal.emit(False, "Download Cancelled.","","","")
+            self.log_emitter.finished_signal.emit(False, "Download Cancelled.","","","",self.operationType)
             return
 
         elapsed = time.time() - self.start_time
@@ -612,11 +850,11 @@ class Downloader(QObject):
 
     def On_Finished(self):
         if self.cancelled:
-            self.log_emitter.finished_signal.emit(False, "Download Cancelled.","","","")
+            self.log_emitter.finished_signal.emit(False, "Download Cancelled.","","","",self.operationType)
             return
 
         if self.reply.error() != QNetworkReply.NetworkError.NoError:
-            self.log_emitter.finished_signal.emit(False, self.reply.errorString(),"","","")
+            self.log_emitter.finished_signal.emit(False, self.reply.errorString(),"","","",self.operationType)
             # Fallback to requests with streaming
             self.Fallback_Download()
             return
@@ -628,6 +866,8 @@ class Downloader(QObject):
         # validate file size with 10 mb telorance
         actual_size = os.path.getsize(self.filepath)
         expected_size = int(self.fileSize.split(" ")[0]) -10 * (1024*1024)
+        if self.modelType == "MobilenetSSD":
+            expected_size = int(self.fileSize.split(" ")[0]) -10 * (1024)
         if actual_size < expected_size:  # reject files smaller than fileSize
             self.log_emitter.log_signal.emit(
                 f"Downloaded file too small ({actual_size} < {expected_size}). Attempt {self.fallback_attempts + 1}/{self.max_fallback_attempts}"
@@ -639,11 +879,11 @@ class Downloader(QObject):
                 self.Fallback_Download()
 
             else:
-                self.log_emitter.finished_signal.emit(False, "Download failed after multiple fallback attempts.", "", "", "")
+                self.log_emitter.finished_signal.emit(False, "Download failed after multiple fallback attempts.", "", "", "",self.operationType)
 
             return
 
-        self.log_emitter.finished_signal.emit(True, "Download Success.", self.modelType, self.filepath, self.imagePath)
+        self.log_emitter.finished_signal.emit(True, "Download Success.", self.modelType, self.filepath, self.imagePath,self.operationType)
         return
 
     def Fallback_Download(self):
@@ -660,7 +900,7 @@ class Downloader(QObject):
                     with open(self.filepath, "wb") as f:
                         for chunk in response.iter_content(chunk_size=1024 * 1024):
                             if self.cancelled:
-                                self.log_emitter.finished_signal.emit(False, "Download Cancelled.", "", "", "")
+                                self.log_emitter.finished_signal.emit(False, "Download Cancelled.", "", "", "",self.operationType)
                                 return
                             if chunk:
                                 f.write(chunk)
@@ -680,7 +920,8 @@ class Downloader(QObject):
                 # validate file size with 10 mb telorance
                 actual_size = os.path.getsize(self.filepath)
                 expected_size = int(self.fileSize.split(" ")[0]) -10  * (1024 * 1024)
-
+                if self.modelType == "MobilenetSSD":
+                   expected_size = int(self.fileSize.split(" ")[0]) -10 * (1024)
                 if actual_size < expected_size:
                     self.log_emitter.log_signal.emit(
                         f"Fallback file too small ({actual_size} < {expected_size}). Retrying..."
@@ -690,7 +931,7 @@ class Downloader(QObject):
                     continue  # retry
 
                 # Success
-                self.log_emitter.finished_signal.emit(True, "Download Success (via fallback).", self.modelType, self.filepath, self.imagePath)
+                self.log_emitter.finished_signal.emit(True, "Download Success (via fallback).", self.modelType, self.filepath, self.imagePath,self.operationType)
                 return
 
             except Exception as e:
@@ -701,5 +942,5 @@ class Downloader(QObject):
                 continue  # retry
 
         # Final failure after all retries
-        self.log_emitter.finished_signal.emit(False, "Download failed after multiple fallback attempts.", "", "", "")
+        self.log_emitter.finished_signal.emit(False, "Download failed after multiple fallback attempts.", "", "", "",self.operationType)
         return

@@ -28,5 +28,17 @@
     "name": "xception_weights.h5",
     "size": "91 MB",
     "md5hash": "b0042744bf5b25fce3cb969f33bebb97"
+    },
+    "MobilenetSSD": {
+        "url": "https://github.com/chuanqi305/MobileNet-SSD/raw/master/mobilenet_iter_73000.caffemodel",
+        "name": "MobilenetSSD.caffemodel",
+        "size": "22 MB",
+        "md5hash": "b6d6c6b7f3f1c7e6e3e3f6b6d6c6b7f3"
+    },
+   "MobileNetSSDPrototxt": {
+    "url": "https://raw.githubusercontent.com/chuanqi305/MobileNet-SSD/master/deploy.prototxt",
+    "name": "MobilenetSSD.prototxt",
+    "size": "43 KB",
+    "md5hash": "Unavailable"
     }
 }

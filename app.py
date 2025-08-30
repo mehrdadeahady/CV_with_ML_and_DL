@@ -689,6 +689,8 @@ class MainWindow(QMainWindow):
                 self.LoadFramePdf("Inception_v3.pdf")
             if "Xception" in operation:
                 self.LoadFramePdf("Xception.pdf")
+            if "Mobilenet SSD" in operation:
+                self.LoadFramePdf("MobilenetSSD.pdf")
                 
             self.DLOperationsHandler.SelectDeepLearningOperations(operation,imagePath)                     
             
@@ -1072,7 +1074,7 @@ class MainWindow(QMainWindow):
         self.LoadResources()
         self.FillCode(ImagesAndColorsManipulationsAndOprations,self.ui.textBrowser_ImageAndColors, 15)
         self.FillCode(CreateSimpleCNN,self.ui.textBrowser_CreateSimpleCNN, 25)
-        self.FillCode(DeepLearningFoundationOperations,self.ui.textBrowser_DeepLearningFoundation, 15)
+        self.FillCode(DeepLearningFoundationOperations,self.ui.textBrowser_DeepLearningFoundation, 16)
 
 def LunchApp():
     import sys

@@ -20,7 +20,7 @@ class ScrollableMessageBox(QDialog):
 
         # Content widget inside scroll area
         content = QLabel(message)
-        content.setWordWrap(True)
+        content.setWordWrap(False)
 
         content.setStyleSheet("""
                                 QLabel { padding: 0px; text-align: center;
