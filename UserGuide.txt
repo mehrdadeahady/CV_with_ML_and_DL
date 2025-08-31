@@ -1,0 +1,4 @@
+First Install Python Version above 3.9
+Second run app.py in the root
+Third look at Console, it tell you what Libraries required to Install
+***Check on the Internet for Compatibility of required Libraries version with your Python Version***

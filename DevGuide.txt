@@ -1,0 +1,26 @@
+Main Courses for Computer Vision have Comments for begginers and Students.
+UI Code is Clean by Naming Techniques so it does't need Comments.
+
+For extending or changing ui.ui inside qtDesigner:
+
+After change in qtDesigner run pyuic6 in terminal to convert the design to python code in qt6:
+(you can load ui but then editing will be hard)
+
+pyuic6 -x -o ./temporaryFile.py ./ui.ui
+explanation:
+pyuic6 > command
+-x parameter > making it executable
+-o parameter > taking path and name of output temporary File, here temporaryFile.py 
+   < Name of output file should be different than python files inside project to avoid overwrite >
+ui.ui > .ui is an extension for qtdesigner files, help you to change UI easily and faster.
+
+Ui_MainWindow class in temporaryFile should change as below:
+
+#**************************************************************************
+From Ui_MainWindow class in old Ui_MainWindow.py in utilities folder copy codes between below and top symbole lines (these lines have a comment like this beside self: #*******************************)
+#**************************************************************************
+(There are 3 blocks: 2 blocks in setupUi function and 1 block in retranslateUi function). 
+Replace same lines in Ui_MainWindow class in temporaryFile with copied files.
+
+Now replace old Ui_MainWindow class inside Ui_MainWindow.py with new Ui_MainWindow class in temporaryFile.py.
+You can delete aptemporaryFile.py file. 

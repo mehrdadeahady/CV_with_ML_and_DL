@@ -5,7 +5,7 @@ try:
 except:
     print("You Should Install PyQt6 Library!")
 
-class Ui_MainWindow(object):
+class UI_MainWindow(object):
     
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")

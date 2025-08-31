@@ -13,6 +13,9 @@ import traceback
 import random
 import requests
 from urllib3.exceptions import IncompleteRead
+import tarfile
+import gzip
+import shutil
 try:
     os.environ["KERAS_BACKEND"] = "tensorflow"  # or "jax", "torch"
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -65,7 +68,7 @@ class DeepLearningFoundationOperations(QObject):
         self.log_emitter.progressbar_signal.connect(self.Update_Progress)  
         self.log_emitter.finished_signal.connect(self.On_Finished)
         self.LoadModelDetails()
-        
+               
     # Consider|Attention: 
     # Process Functions Contains Computer Vision Functions with Comments and Explanations
     # Rest of Functions are Pre-Processor and Helpers
@@ -216,7 +219,7 @@ class DeepLearningFoundationOperations(QObject):
         # 3 to 7 => will have the Bounding Box Co-Ordinates
         no_of_detections = obj_detections.shape[2]
 
-        # loop over the detections
+        # loop over the Detections
         for index in np.arange(0, no_of_detections):
 
             prediction_confidence = obj_detections[0, 0, index, 2]
@@ -248,8 +251,84 @@ class DeepLearningFoundationOperations(QObject):
         # Display the Image
         cv2.imshow("Detection Output", img_to_detect)
                 
-    # Loading Downloaded or Existing Mobilenet SSD Pre-Trained Model
-    def PreProcessMobilenetSSD(self,imagePath,filepath,MobileNetSSD_PrototextPath,operationType):
+    # Processing the Operation on Mobilenet SSD Pre-Trained Model 
+    def ProcessMaskRCNN(self,img_to_detect,maskrcnn,class_labels):
+
+        # Resize Image to Smaller to Speed up Detection but Decrease Accuracy
+        # img_to_detect = cv2.resize(img_to_detect, (640, 480))  # or even (320, 240)
+
+        # Get width, height of Image 
+        img_height , img_width = img_to_detect.shape[0:2]
+
+        # Convert to Blob to Pass into Model
+        # Swap BGR to RGB without Cropping
+        img_blob = cv2.dnn.blobFromImage(img_to_detect,swapRB=True,crop=False)
+        
+        # Pass Blob into Model
+        maskrcnn.setInput(img_blob)
+        
+        '''
+        maskrcnn.forward refers to the forward pass function of a Mask R-CNN model, used to compute predictions from input data.
+        🔍 What It Does
+        The forward method:
+        - Takes an input image (or batch of images)
+        - Passes it through the Mask R-CNN network
+        - Returns outputs such as:
+        - Region Proposal Network (RPN) scores
+        - Bounding box predictions
+        - Class scores
+        - Segmentation masks
+        🧪 Example (PyTorch)
+        In PyTorch, if you're using torchvision.models.detection.maskrcnn_resnet50_fpn, the forward pass looks like:
+        outputs = model(images)
+        Internally, this calls forward() and returns a list of dictionaries with keys like 'boxes', 'labels', and 'masks'.
+        🧠 MATLAB Variant
+        In MATLAB, maskrcnn.forward(detector, dlX) returns multiple outputs:
+        [dlRPNScores, dlRPNReg, dlProposals, dlBoxScores, dlBoxReg, dlMasks] = forward(detector, dlX)
+        This is part of the Computer Vision Toolbox for Mask R-CNN.
+        '''
+        (obj_detections_boxes,obj_detections_masks)  = maskrcnn.forward(["detection_out_final","detection_masks"])
+
+        # Returned obj_detections[0, 0, index, 1]:
+        # 1 => will have the Prediction Class Index
+        # 2 => will have Confidence
+        # 3 to 7 => will have the Bounding Box Co-Ordinates
+        no_of_detections = obj_detections_boxes.shape[2]
+
+         # loop over the Detections
+        for index in np.arange(0, no_of_detections):
+
+            prediction_confidence = obj_detections_boxes[0, 0, index, 2]
+
+            # Take only Predictions with Confidence more than 20%
+            if prediction_confidence > 0.20:
+
+                # Get the Predicted Label
+                predicted_class_index = int(obj_detections_boxes[0, 0, index, 1])
+                predicted_class_label = class_labels[predicted_class_index]     
+
+                # Obtain the Bounding Box Co-Oridnates for Actual Image from Resized Image Size
+                bounding_box = obj_detections_boxes[0, 0, index, 3:7] * np.array([img_width, img_height, img_width, img_height])
+                (start_x_pt, start_y_pt, end_x_pt, end_y_pt) = bounding_box.astype("int")
+
+                # Create Prediction Label
+                predicted_class_label = "{}: {:.2f}%".format(class_labels[predicted_class_index], prediction_confidence * 100)
+
+                # Display the Result of Prediction in Log Window if not Closed
+                if self.DownloadLogPopup:    
+                   self.log_emitter.log_signal.emit("predicted object {}: {} \t Stated Accuracy: {}".format(index +1 ,class_labels[predicted_class_index], prediction_confidence * 100) )           
+                
+                # Draw Rectangle Around Detected Object in the Image
+                cv2.rectangle(img_to_detect, (start_x_pt, start_y_pt), (end_x_pt, end_y_pt), (0,255,0), 2)
+               
+                # Put the Result of Prediction as Text on Detected Object in the Image
+                cv2.putText(img_to_detect, predicted_class_label, (start_x_pt, start_y_pt-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
+        
+        # Display the Image
+        cv2.imshow("Detection Output", img_to_detect)
+
+    # Loading Mobilenet SSD Pre-Trained Model
+    def PreProcessMobilenetSSD(self,imagePath,filepath,MobileNetSSD_Prototext_Path,operationType):
         '''
         The MobileNetSSD Caffe model is a lightweight deep learning model designed for real-time object detection. 
         It combines the efficient MobileNet architecture with the SSD (Single Shot MultiBox Detector) framework,
@@ -270,7 +349,7 @@ class DeepLearningFoundationOperations(QObject):
         '''
         📄 MobileNetSSD_Prototext
         The MobileNetSSD deploy.prototxt file—sometimes casually referred to as "MobileNetSSD_Prototext" is the architectural script that defines 
-        how the MobileNetSSD model operates within the Caffe deep learning framework. It outlines the neural network’s structure, layer by layer, 
+        how the MobileNetSSD model operates within the Caffe deep learning framework. It outlines the neural network's structure, layer by layer, 
         and is essential for pairing with the trained weights (.caffemodel) during inference.
         🔧 Key Components
         - Input Layer: Accepts images, typically sized 300x300x3 (RGB).
@@ -291,18 +370,40 @@ class DeepLearningFoundationOperations(QObject):
         - Robotics, smart cameras, and IoT vision systems.
         '''
         # Cleaning MobileNetSSD_Prototext File
-        MobileNetSSD_Prototext = self.Clean_MobileNetSSD_Prototext(MobileNetSSD_PrototextPath)
-        
+        MobileNetSSD_Prototext = MobileNetSSD_Prototext_Path
+        '''
+        cv2.dnn.readNetFromCaffe is a function in OpenCV's Deep Neural Network (DNN) module that allows you to load a pre-trained Caffe model for inference.
+        🧠 What It Does
+        This function reads:
+        - A .prototxt file: Defines the model architecture (layers, connections, etc.)
+        - A .caffemodel file: Contains the trained weights
+        Together, these files represent a complete neural network that can be used to make predictions on new data.
+        🧪 Syntax
+        net = cv2.dnn.readNetFromCaffe(prototxt_path, caffemodel_path)
+
+        📦 Example Use Case
+        Suppose you want to run object detection using a MobileNet SSD model trained in Caffe:
+        net = cv2.dnn.readNetFromCaffe("deploy.prototxt", "mobilenet.caffemodel")
+
+        Once loaded, you can pass input images to the network using net.forward() after preprocessing them with cv2.dnn.blobFromImage.
+        🔍 Why Use It?
+        - It's lightweight and fast for inference
+        - Great for deploying models without needing full deep learning frameworks
+        - Compatible with CPU and GPU backends in OpenCV
+        '''
         # Loading Pretrained Model from Prototext and Caffemodel files
         mobilenetssd = cv2.dnn.readNetFromCaffe(MobileNetSSD_Prototext, MobileNetSSD_CaffeModel) 
+        
         self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
 
-         # Set of 21 Class Labels in Alphabetical Order
+        # Set of 21 Class Labels in Alphabetical Order
         class_labels = ["background", "aeroplane", "bicycle", "bird", "boat","bottle", "bus", "car", "cat", "chair", "cow", "diningtable","dog", "horse", "motorbike", "person", "pottedplant", "sheep","sofa", "train", "tvmonitor"]
         
         cv2.destroyAllWindows()
+
         if self.DownloadLogPopup:
            self.log_emitter.log_signal.emit("***********************\nDetection Results\n")
+
         img_to_detect = None
 
         match operationType:
@@ -346,6 +447,127 @@ class DeepLearningFoundationOperations(QObject):
         if self.DownloadLogPopup:            
             self.log_emitter.log_signal.emit("\n***********************")
             
+    # Loading MaskRCNN Pre-Trained Model
+    def PreProcessMaskRCNN(self,imagePath,filepath,MaskRCNN_Pbtxt_Path,operationType):
+        '''
+        📁 maskrcnn_buffermodel.pb — What It Is
+        This file is likely a TensorFlow frozen model for Mask R-CNN, saved in Protocol Buffers (.pb) format. It contains:
+        - The graph definition (i.e. the structure of the neural network)
+        - The trained weights for inference
+        - Everything needed to run the model on new images (but not to train it further)
+        🧩 Why “BufferModel”?
+        The name buffermodel suggests it might be:
+        - A preprocessed or optimized version of the original model
+        - Possibly used in streaming or buffered inference, where input data is processed in chunks
+        - Or simply a naming convention used by the developers
+        🛠️ Typical Use Case
+        You'd use this .pb file to:
+        - Load the model in TensorFlow (usually with tf.import_graph_def)
+        - Run inference on images to detect and segment objects
+        - Integrate it into an application for real-time or batch image analysis
+        '''
+        MaskRCNN_BufferModel = filepath
+        '''
+        MaskRCNN_BufferConfig.pbtxt is a text-based configuration file used with OpenCV's Deep Neural Network (DNN) module 
+        to define the structure of a Mask R-CNN model. It's written in Protocol Buffers Text Format (pbtxt), 
+        which is a human-readable version of the binary .pb model file.
+        📄 What's Inside MaskRCNN.pbtxt?
+        This file contains:
+        - Layer definitions: Each node (layer) in the neural network, including its type (e.g., Conv2D, Relu, MaxPool)
+        - Input/output specifications: Like image_tensor as the input placeholder
+        - Operations and parameters: Such as strides, padding, dilation, and data formats
+        It's essentially a blueprint that tells OpenCV how to interpret and run the frozen .pb model file.
+        🧠 Why It's Needed
+        When using OpenCV's cv2.dnn.readNetFromTensorflow, you typically need:
+        net = cv2.dnn.readNetFromTensorflow("frozen_inference_graph.pb", "mask_rcnn.pbtxt")
+
+        - The .pb file contains the trained weights and graph
+        - The .pbtxt file describes the graph structure in a readable format
+        🔍 Example Use Case
+        You might use it for:
+        - Object detection and instance segmentation in images or video
+        - Running inference with OpenCV without needing TensorFlow directly
+        '''
+         # Cleaning MaskRCNN_BufferConfig File
+        MaskRCNN_BufferConfig = MaskRCNN_Pbtxt_Path
+        '''
+        cv2.dnn.readNetFromTensorflow is an OpenCV function used to load a TensorFlow model for inference using the Deep Neural Network (DNN) module.
+        🧠 What It Does
+        It reads:
+        - A .pb file: The frozen TensorFlow model containing the graph and weights.
+        - An optional .pbtxt file: A text version of the graph structure, often required for complex models like Mask R-CNN.
+        🧪 Syntax
+        net = cv2.dnn.readNetFromTensorflow(modelPath, configPath)
+        - modelPath: Path to the .pb file.
+        - configPath: Path to the .pbtxt file (optional but often needed).
+        📦 Example
+        net = cv2.dnn.readNetFromTensorflow("frozen_inference_graph.pb", "mask_rcnn.pbtxt")
+        This loads the model into OpenCV so you can run inference on images using net.forward() after preparing input with cv2.dnn.blobFromImage.
+        '''
+        # Loading Pretrained Model from BufferConfig and BufferModel files
+        maskrcnn = cv2.dnn.readNetFromTensorflow(MaskRCNN_BufferModel,MaskRCNN_BufferConfig)
+
+        self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
+
+        # Set of 90 Class Labels in Predefined Order
+        class_labels = ["person","bicycle","car","motorbike","aeroplane","bus","train","truck","boat","traffic light",
+                        "fire hydrant","street sign","stop sign","parking meter","bench","bird","cat","dog","horse",
+                        "sheep","cow","elephant","bear","zebra","giraffe","hat","backpack","umbrella","shoe","eye glasses",
+                        "handbag","tie","suitcase","frisbee","skis","snowboard","sports ball","kite","baseball bat","baseball glove",
+                        "skateboard","surfboard","tennis racket","bottle","plate","wine glass","cup","fork","knife",
+                        "spoon","bowl","banana","apple","sandwich","orange","broccoli","carrot","hot dog","pizza","donut",
+                        "cake","chair","sofa","pottedplant","bed","mirror","diningtable","window","desk","toilet","door","tv",
+                        "laptop","mouse","remote","keyboard","cell phone","microwave","oven","toaster","sink","refrigerator",
+                        "blender","book","clock","vase","scissors","teddy bear","hair drier","toothbrush"]
+        
+        cv2.destroyAllWindows()
+
+        if self.DownloadLogPopup:
+           self.log_emitter.log_signal.emit("***********************\nDetection Results\n")
+
+        img_to_detect = None
+
+        match operationType:
+            case  "BoundingBoxImages" | "ObjectMaskImages":
+                # Load the Image to Detect
+                img_to_detect = cv2.imread(imagePath)
+                self.ProcessMaskRCNN(img_to_detect,maskrcnn,class_labels)
+                
+            case "Pre-Saved":
+                # Get the Saved Video File as Stream
+                self.ImagesAndColorsHandler.videoCapturer = cv2.VideoCapture(self.ImagesAndColorsHandler.video)
+
+                # Create a While Loop until Video Still Streaming
+                while (self.ImagesAndColorsHandler.videoCapturer.isOpened):
+                    # Wait for Pressing a Keyboard Key to Exit
+                    if cv2.waitKey(1) in range(0,255):
+                            self.ImagesAndColorsHandler.videoCapturer.release()
+                            break
+                    # Get the Current Frame from Video Stream
+                    ret,current_frame = self.ImagesAndColorsHandler.videoCapturer.read()
+                    # Use Video Current Frame instead of Image
+                    if current_frame is not None and len(current_frame.shape) > 1:
+                        self.ProcessMaskRCNN(current_frame,maskrcnn,class_labels)             
+
+            case "Realtime":
+                # Get the Camera Video File as Stream
+                self.ImagesAndColorsHandler.videoCapturer = cv2.VideoCapture(self.ImagesAndColorsHandler.camera)
+
+                # Create a While Loop until Camera Still is Open and Video is Streaming
+                while True:
+                    # Wait for Pressing a Keyboard Key to Exit
+                    if cv2.waitKey(1) in range(0,255):
+                            self.ImagesAndColorsHandler.videoCapturer.release()
+                            break
+                    # Get the Current Frame from Camera Video Stream
+                    ret,current_frame = self.ImagesAndColorsHandler.videoCapturer.read()
+                    # Use Video Current Frame instead of Image
+                    if current_frame is not None and len(current_frame.shape) > 1:
+                        self.ProcessMaskRCNN(current_frame,maskrcnn,class_labels)
+                          
+        if self.DownloadLogPopup:            
+            self.log_emitter.log_signal.emit("\n***********************")
+
     # Loading Downloaded or Existing Pre-Trained Model
     def Loading_Model_Operation(self,modelType, filepath, imagePath, operationType):
             self.log_emitter.log_signal.emit("Loading model weights...")
@@ -446,16 +668,27 @@ class DeepLearningFoundationOperations(QObject):
                     processMode = "tf"
                     self.ProcessImage(model,imagePath,newSize,processMode)
 
-                case "MobilenetSSD":      
+                case "MobilenetSSD" | "MobileNetSSDPrototxt":      
                     # Check/Download required MobilenetSSD.prototxt File              
                     folder = os.path.normpath(join("resources","models"))
                     MobileNetSSD_Prototext_fileName = "MobilenetSSD.prototxt"
-                    MobileNetSSD_PrototextPath = os.path.join(folder, MobileNetSSD_Prototext_fileName)
-                    if not os.path.exists(MobileNetSSD_PrototextPath):
+                    MobileNetSSD_Prototext_Path = os.path.join(folder, MobileNetSSD_Prototext_fileName)
+                    if not os.path.exists(MobileNetSSD_Prototext_Path):
                        modelType = "MobileNetSSDPrototxt"
                        self.PreProcessImage(imagePath, modelType, operationType)
                     else:
-                        self.PreProcessMobilenetSSD(imagePath,filepath,MobileNetSSD_PrototextPath,operationType)  
+                        self.PreProcessMobilenetSSD(imagePath,filepath,MobileNetSSD_Prototext_Path,operationType) 
+
+                case "MaskRCNN" | "MaskRCNNPbtxt": 
+                     # Check/Download required MaskRCNN.pbtxt File              
+                    folder = os.path.normpath(join("resources","models"))
+                    MaskRCNN_Pbtxt_fileName = "MaskRCNN.pbtxt"
+                    MaskRCNN_Pbtxt_Path = os.path.join(folder, MaskRCNN_Pbtxt_fileName)
+                    if not os.path.exists(MaskRCNN_Pbtxt_Path):
+                       modelType = "MaskRCNNPbtxt"
+                       self.PreProcessImage(imagePath, modelType, operationType)
+                    else:
+                        self.PreProcessMaskRCNN(imagePath,filepath,MaskRCNN_Pbtxt_Path,operationType) 
 
     # Check, Validation for Downloading Pre-Trained Model                
     def PreProcessImage(self, imagePath,modelType,operationType):
@@ -463,7 +696,7 @@ class DeepLearningFoundationOperations(QObject):
         ContentMessage = None
         TitleMessage = None
         match operationType:
-            case "Images":
+            case "Images" | "BoundingBoxImages" | "ObjectMaskImages":
                 ConditionToCheck = self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None
                 ContentMessage = "First, Select an Image!"
                 TitleMessage = "No Image Selected" 
@@ -511,8 +744,8 @@ class DeepLearningFoundationOperations(QObject):
                     self.downloader.Start()   
                     
                 else:
-                    # You can Remove below line and run File_Size_and_Hash_Validation in if Statement for Validation
-                    self.File_Size_and_Hash_Validation("md5",filepath, expected_size,expected_hash,self.log_emitter,True)  
+                    # You can Remove below line and run FileSize_and_Hash_Validation in if Statement for Validation
+                    self.FileSize_and_Hash_Validation("md5",filepath, expected_size,expected_hash,self.log_emitter,True)  
 
                     self.Loading_Model_Operation(modelType, filepath,imagePath,operationType)
             
@@ -525,51 +758,63 @@ class DeepLearningFoundationOperations(QObject):
     # Selecting Desired Operation
     def SelectDeepLearningOperations(self,operation,imagePath):
         self.DownloadLogPopup = None
-        modelTypeString = operation.strip().split(" ")
+        operationString = operation.strip().split(" ")
         match operation.strip():
             case "Image Recognition using Pre-Trained VGGNet16 Model":
-                modelType = modelTypeString[4]
+                modelType = operationString[4]
                 self.PreProcessImage(imagePath, modelType,None)
 
             case "Image Recognition using Pre-Trained VGGNet19 Model":
-                modelType = modelTypeString[4]
+                modelType = operationString[4]
                 self.PreProcessImage(imagePath, modelType,None)
     
             case "Image Recognition using Pre-Trained ResNet50 Model":
-                modelType = modelTypeString[4]
+                modelType = operationString[4]
                 self.PreProcessImage(imagePath, modelType,None)
 
             case "Image Recognition using Pre-Trained Inception_v3 Model":
-                modelType = modelTypeString[4]
+                modelType = operationString[4]
                 self.PreProcessImage(imagePath, modelType,None)
 
             case "Image Recognition using Pre-Trained Xception Model":
-                modelType = modelTypeString[4]
+                modelType = operationString[4]
                 self.PreProcessImage(imagePath, modelType,None)
 
             case "Object Detection by Pre-Trained Mobilenet SSD Model on Images":
-                modelType = modelTypeString[4] + modelTypeString[5]
-                operationType = modelTypeString[8]
+                modelType = operationString[4] + operationString[5]
+                operationType = operationString[8]
                 self.PreProcessImage(imagePath, modelType, operationType)
 
             case "Object Detection by Pre-Trained Mobilenet SSD Model on Pre-Saved Video":
-                modelType = modelTypeString[4] + modelTypeString[5]
-                operationType = modelTypeString[8]
+                modelType = operationString[4] + operationString[5]
+                operationType = operationString[8]
                 self.PreProcessImage(imagePath, modelType, operationType)
 
             case "Object Detection by Pre-Trained Mobilenet SSD Model on Realtime Video":
-                modelType = modelTypeString[4] + modelTypeString[5]
-                operationType = modelTypeString[8]
+                modelType = operationString[4] + operationString[5]
+                operationType = operationString[8]
                 self.PreProcessImage(imagePath, modelType, operationType)
 
             case "Object Mask Implementation by Pre-Trained MaskRCNN Model on Images":
-                print(operation)
+                modelType = operationString[5]
+                operationType = operationString[0] + operationString[1] + operationString[8]
+                self.PreProcessImage(imagePath, modelType, operationType)
+
             case "Bounding Box Implementation by Pre-Trained MaskRCNN Model on Images":
-                print(operation)
+                modelType = operationString[5]
+                operationType = operationString[0] + operationString[1] + operationString[8]
+                self.PreProcessImage(imagePath, modelType, operationType)
+
             case "Object Detection by Pre-Trained MaskRCNN Model on Pre-Saved Video":
-                print(operation)
+                modelType = operationString[4]
+                operationType = operationString[7]
+                self.PreProcessImage(imagePath, modelType, operationType)
+
             case "Object Detection by Pre-Trained MaskRCNN Model on Realtime Video":
-                print(operation)
+                modelType = operationString[4]
+                operationType = operationString[7]
+                self.PreProcessImage(imagePath, modelType, operationType)
+
             case "Object Detection by Pre-Trained Tiny YOLO Model on Images":
                 print(operation)
             case "Object Detection by Pre-Trained Tiny YOLO Model on Pre-Saved Video":
@@ -621,11 +866,24 @@ class DeepLearningFoundationOperations(QObject):
             self.DownloadLogPopup.Append_Log(message)
 
     # Validating Hash of Files
-    def File_Size_and_Hash_Validation(self,type,path,expected_size, expected_hash,log_emitter,check):
+    def FileSize_and_Hash_Validation(self,type,path,expected_size, expected_hash,log_emitter,check):
         """Check if the file's SHA256 or MD5 hash matches the expected value."""
         if os.path.exists(path):
             fileSize = os.path.getsize(path) or os.stat(path).st_size
-            expected_size = int(expected_size.split(" ")[0]) * (1024*1024)
+            expected_size = 0
+            try:
+                value, unit = self.fileSize.split()
+                value = float(value)
+                unit = unit.upper()
+                if unit == "KB":
+                    expected_size = int(value * 1024)
+                elif unit == "MB":
+                    expected_size = int(value * 1024 * 1024)
+                else:
+                    expected_size = int(value)
+            except:
+                expected_size = 0
+
             match type:
                 case "sha256":
                     sha256 = hashlib.sha256()
@@ -672,8 +930,8 @@ class DeepLearningFoundationOperations(QObject):
             except json.JSONDecodeError:
                 self.log_emitter.log_signal.emit("Error: Could not decode JSON from 'models.json'.\nCheck the file's format.")
         
-    # Cleaning Downloaded MobileNetSSD Prototext file
-    def Clean_MobileNetSSD_Prototext(self,path):
+    # Cleaning Downloaded Text Prototext file
+    def Clean_TXT_Prototext(self,path):
         with open(path, "r", encoding="utf-8", errors="ignore") as f:
             lines = f.readlines()
 
@@ -687,7 +945,7 @@ class DeepLearningFoundationOperations(QObject):
         with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(cleaned_lines))
 
-        self.log_emitter.log_signal.emit(f"Cleaned MobileNetSSD Prototext file in: {path}")
+        self.log_emitter.log_signal.emit(f"Cleaned Text Prototext file in: {path}")
         return path
    
 # Signal emitter for Thread-Safe logging
@@ -741,14 +999,15 @@ class DownloadLogPopup(QDialog):
         self.downloader = downloader
 
     def Append_Log(self, message):
-        if str(message).startswith("Progress") and not "[====================]" in message and not "Download Complete" in message:
-            ChangedContent = ""
+        if str(message).startswith("Progress"):
+           # ChangedContent = ""
             lines = self.log_output.toPlainText().splitlines()
-            for line in lines:
-                if not line.strip().startswith("Progress"):
-                    ChangedContent += line + "\n"
-            ChangedContent += message
-            self.log_output.setText(ChangedContent)
+            if  lines[-1].strip().startswith("Progress"):
+                lines[-1] = message
+                message = "\n".join(lines)
+                self.log_output.setText(message)
+            else:
+                self.log_output.append(message)
         else:
             self.log_output.append(message)
         self.scroll_area.verticalScrollBar().setValue(self.scroll_area.verticalScrollBar().minimum()) 
@@ -775,12 +1034,13 @@ class DownloadLogPopup(QDialog):
 
 # Downloader for Required Models   
 class Downloader(QObject):
-    def __init__(self, url: str, filepath: str,modelType: str,imagePath: str ,log_emitter,fileSize: str,operationType: str, parent=None):
+    def __init__(self, url: str, filepath: str,modelType: str,imagePath: str ,log_emitter,fileSize: str,operationType: str,archive_model_filename: str = "frozen_inference_graph.pb", parent=None):
         super().__init__(parent)
         self.url = QUrl(url)
         self.filepath = filepath
         self.log_emitter = log_emitter
         self.manager = QNetworkAccessManager(self)
+        self.archive_model_filename = archive_model_filename
         self.start_time = None
         self.reply = None
         self.cancelled = False
@@ -812,7 +1072,7 @@ class Downloader(QObject):
             # Chrome on Chromebook
             b"Mozilla/5.0 (X11; CrOS x86_64 14526.83.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
         ]
-    
+
     def Start(self):
         request = QNetworkRequest(self.url)
         random_user_agent = random.choice(self.user_agents)
@@ -856,35 +1116,34 @@ class Downloader(QObject):
         if self.reply.error() != QNetworkReply.NetworkError.NoError:
             self.log_emitter.finished_signal.emit(False, self.reply.errorString(),"","","",self.operationType)
             # Fallback to requests with streaming
+            if os.path.exists(self.filepath):
+               os.remove(self.filepath)
+            self.log_emitter.progressbar_signal.emit(0)
             self.Fallback_Download()
             return
+
 
         data = self.reply.readAll().data()
         with open(self.filepath, 'wb') as f:
             f.write(data)
-       
-        # validate file size with 10 mb telorance
-        actual_size = os.path.getsize(self.filepath)
-        expected_size = int(self.fileSize.split(" ")[0]) -10 * (1024*1024)
-        if self.modelType == "MobilenetSSD":
-            expected_size = int(self.fileSize.split(" ")[0]) -10 * (1024)
-        if actual_size < expected_size:  # reject files smaller than fileSize
-            self.log_emitter.log_signal.emit(
-                f"Downloaded file too small ({actual_size} < {expected_size}). Attempt {self.fallback_attempts + 1}/{self.max_fallback_attempts}"
-            )
-            os.remove(self.filepath)
-            self.fallback_attempts += 1
 
-            if self.fallback_attempts < self.max_fallback_attempts:
-                self.Fallback_Download()
+        if not self.ValidateSize():
+            if os.path.exists(self.filepath):
+               os.remove(self.filepath)
+           # self.fallback_attempts += 1
+            self.log_emitter.progressbar_signal.emit(0)
+            # if self.fallback_attempts < self.max_fallback_attempts:
+            #     self.log_emitter.log_signal.emit(f"Download Attempt {self.fallback_attempts + 1}/{self.max_fallback_attempts}")
+            #     self.Fallback_Download()
 
-            else:
-                self.log_emitter.finished_signal.emit(False, "Download failed after multiple fallback attempts.", "", "", "",self.operationType)
-
+            # else:
+            #     self.log_emitter.finished_signal.emit(False, "Download failed after multiple fallback attempts.", "", "", "",self.operationType)
+            self.Fallback_Download()
             return
 
-        self.log_emitter.finished_signal.emit(True, "Download Success.", self.modelType, self.filepath, self.imagePath,self.operationType)
-        return
+        self.Handle_Archive_Files()
+        self.log_emitter.finished_signal.emit(True, "Download Success.", self.modelType, self.filepath, self.imagePath, self.operationType)
+        return True
 
     def Fallback_Download(self):
         headers = { "User-Agent": random.choice(self.user_agents).decode("utf-8") }
@@ -892,7 +1151,7 @@ class Downloader(QObject):
             self.fallback_attempts += 1
             self.log_emitter.log_signal.emit(f"Fallback attempt {self.fallback_attempts}/{self.max_fallback_attempts}")
             try:
-                with requests.get(self.url.toString(), headers=headers, stream=True, timeout=60) as response:
+                with requests.get(self.url.toString(), headers=headers, stream=True, timeout=10) as response:
                     response.raise_for_status()
                     total_size = int(response.headers.get("Content-Length", 0))
                     downloaded = 0
@@ -917,22 +1176,15 @@ class Downloader(QObject):
                                 self.log_emitter.progressbar_signal.emit(percent)
                                 self.log_emitter.log_signal.emit(progress_text)
 
-                # validate file size with 10 mb telorance
-                actual_size = os.path.getsize(self.filepath)
-                expected_size = int(self.fileSize.split(" ")[0]) -10  * (1024 * 1024)
-                if self.modelType == "MobilenetSSD":
-                   expected_size = int(self.fileSize.split(" ")[0]) -10 * (1024)
-                if actual_size < expected_size:
-                    self.log_emitter.log_signal.emit(
-                        f"Fallback file too small ({actual_size} < {expected_size}). Retrying..."
-                    )
+                if not self.ValidateSize():
                     os.remove(self.filepath)
                     time.sleep(2)
                     continue  # retry
 
+                self.Handle_Archive_Files()
                 # Success
                 self.log_emitter.finished_signal.emit(True, "Download Success (via fallback).", self.modelType, self.filepath, self.imagePath,self.operationType)
-                return
+                return True
 
             except Exception as e:
                 self.log_emitter.log_signal.emit(f"Fallback error:\n {str(e)}. Retrying...")
@@ -944,3 +1196,77 @@ class Downloader(QObject):
         # Final failure after all retries
         self.log_emitter.finished_signal.emit(False, "Download failed after multiple fallback attempts.", "", "", "",self.operationType)
         return
+    
+    def Handle_Archive_Files(self):
+        try:
+            if self.Is_TarGz_File(self.filepath):
+                # Step 1: Extract archive
+                extract_dir = os.path.splitext(os.path.splitext(self.filepath)[0])[0]
+                self.log_emitter.log_signal.emit(f"Extracting to: {extract_dir}")
+                with tarfile.open(self.filepath, "r:gz") as tar:
+                    tar.extractall(path=extract_dir)
+
+                # Step 2: Locate frozen_inference_graph.pb
+                found_pb = None
+                for root, dirs, files in os.walk(extract_dir):
+                    for file in files:
+                        if file == "frozen_inference_graph.pb":
+                            found_pb = os.path.join(root, file)
+                            break
+                    if found_pb:
+                        break
+
+                if found_pb:
+                    # Step 3: Move .pb file to final location
+                    final_pb_path = os.path.join(os.path.dirname(self.filepath), "MaskRCNN.pb")
+                    shutil.move(found_pb, final_pb_path)
+                    self.filepath = final_pb_path
+                    self.log_emitter.log_signal.emit(f"Model file extracted and renamed to: {final_pb_path}")
+
+                    # Step 4: Clean up extracted folder
+                    shutil.rmtree(extract_dir)
+                    self.log_emitter.log_signal.emit(f"Cleaned up extracted folder: {extract_dir}")
+                else:
+                    self.log_emitter.log_signal.emit("Extraction succeeded, but frozen_inference_graph.pb not found.")
+            else:
+                self.log_emitter.log_signal.emit("Downloaded file is not a valid tar.gz archive.")
+        except Exception as e:
+            self.log_emitter.log_signal.emit(f"Archive extraction failed: {str(e)}")
+
+    def Is_TarGz_File(self,filepath):
+        return tarfile.is_tarfile(filepath)
+
+    def Is_Zip_File(self, filepath):
+        try:
+            with open(filepath, 'rb') as f:
+                signature = f.read(4)
+                return signature == b'PK\x03\x04'
+        except Exception as e:
+            self.log_emitter.log_signal.emit(f"Error reading file: {e}")
+            return False
+
+    def ValidateSize(self):
+        actual_size = os.path.getsize(self.filepath) or os.stat(self.filepath).st_size
+        try:
+            value, unit = self.fileSize.split()
+            value = float(value)
+            unit = unit.upper()
+            if unit == "KB":
+                expected_size = int(value * 1024)
+            elif unit == "MB":
+                expected_size = int(value * 1024 * 1024)
+            else:
+                expected_size = int(value)
+        except:
+            expected_size = 0
+
+        tolerance = 10 * 1024 * 1024
+        if self.modelType in ["MobileNetSSDPrototxt", "MaskRCNNPbtxt"]:
+            tolerance = 10 * 1024
+
+        if actual_size < expected_size - tolerance:
+            self.log_emitter.log_signal.emit(f"Downloaded file too small ({actual_size} < {expected_size - tolerance})")
+            os.remove(self.filepath)
+            return False
+        return True
+

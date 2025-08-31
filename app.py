@@ -5,7 +5,7 @@
 from utilities.ImagesAndColorsManipulationsAndOprations import ImagesAndColorsManipulationsAndOprations
 from utilities.CreateSimpleCNN import CreateSimpleCNN
 from utilities.DeepLearningFoundationOperations import DeepLearningFoundationOperations
-from utilities.Ui_MainWindow import Ui_MainWindow
+from utilities.UI_MainWindow import UI_MainWindow
 import os
 from os import path, listdir
 from os.path import isfile, join
@@ -29,7 +29,7 @@ try:
     from PyQt6.QtWidgets import QVBoxLayout,QMenu, QMainWindow, QApplication, QWidget, QMessageBox, QFileDialog
     from PyQt6.QtPdf import QPdfDocument
     from PyQt6.QtPdfWidgets import QPdfView
-    from PyQt6.QtGui import QDesktopServices, QCloseEvent
+    from PyQt6.QtGui import QDesktopServices, QCloseEvent,QFont
     from PyQt6.QtWebEngineWidgets import QWebEngineView
     from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
     from PyQt6.QtCore import QUrl, Qt
@@ -42,7 +42,7 @@ class MainWindow(QMainWindow):
     
     def __init__(self):
         super().__init__()
-        self.ui = Ui_MainWindow()
+        self.ui = UI_MainWindow()
         self.ui.setupUi(self)    
         self.ManualSetup()
         self.SetupUi(self)
@@ -527,7 +527,7 @@ class MainWindow(QMainWindow):
              case "haarcascade":
                   valid_extensions = {'.xml'}
              case "model":
-                  valid_extensions = {'.h5','.keras'}
+                  valid_extensions = {'.h5','.keras', "caffemodel",".pb","prototxt","pbtxt"}
         return any(file_name.lower().endswith(extension) for extension in valid_extensions)
     
     def Pdf_In_Browser(self,pdf_path,local):
@@ -691,6 +691,8 @@ class MainWindow(QMainWindow):
                 self.LoadFramePdf("Xception.pdf")
             if "Mobilenet SSD" in operation:
                 self.LoadFramePdf("MobilenetSSD.pdf")
+            if "MaskRCNN" in operation:
+                self.LoadFramePdf("MaskRCNN.pdf")
                 
             self.DLOperationsHandler.SelectDeepLearningOperations(operation,imagePath)                     
             
@@ -1079,6 +1081,7 @@ class MainWindow(QMainWindow):
 def LunchApp():
     import sys
     app = QApplication(sys.argv)
+    # app.setFont(QFont("Arial", 10))
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
