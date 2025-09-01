@@ -251,6 +251,90 @@ class DeepLearningFoundationOperations(QObject):
         # Display the Image
         cv2.imshow("Detection Output", img_to_detect)
                 
+     # Processing the Operation on Mobilenet SSD Pre-Trained Model   
+    
+    # Processing the Operation on Mobilenet SSD Pre-Trained Model
+    def ProcessTinyYOLO(self,img_to_detect,TinyYOLO,class_labels,class_colors,yolo_output_layer):
+        # Get width, height of Image 
+        img_height , img_width = img_to_detect.shape[0:2]
+
+        # Convert to Blob to Pass into Model
+        # Recommended by yolo Authors: 
+        # Scale Factor is 0.003922=1/255, 
+        # width,height of blob is 320,320
+        # Accepted sizes are 320×320, 416×416, 608×608. Bigger size means Higher Accuracy but Smaller Speed
+        img_blob = cv2.dnn.blobFromImage(img_to_detect, 0.003922, (416, 416), swapRB=True, crop=False)
+        
+        # Pass Blob into Model
+        TinyYOLO.setInput(img_blob)
+        '''
+        The TinyYOLO.forward method refers to the forward pass of the TinyYOLO neural network model—typically implemented in frameworks like PyTorch or TensorFlow. 
+        This method defines how input data (usually an image) flows through the network to produce predictions.
+        🧠 What happens in forward?
+        - The input image is passed through a series of convolutional layers, activation functions, and pooling layers.
+        - Intermediate feature maps are generated and refined.
+        - The final output is a set of bounding boxes, class probabilities, and confidence scores for detected objects.
+        📦 In PyTorch, for example:
+        def forward(self, x):
+            x = self.conv1(x)
+            x = self.pool(x)
+            x = self.conv2(x)
+            ...
+            return detections
+        🔍 Output format
+        - A tensor containing object detection results
+        - Each detection includes coordinates (x, y, width, height), objectness score, and class probabilities
+        '''
+        # Obtain the Detection Layers by Forwarding Model through till the Output Layer
+        obj_detection_layers = TinyYOLO.forward(yolo_output_layer)
+
+        # Loop over each of the layer outputs
+        for indexA, object_detection_layer in enumerate(obj_detection_layers):
+            # Loop over the detections
+            for indexB,object_detection in enumerate(object_detection_layer):
+                
+                # obj_detections[1 to 4] => will have the two center points, box width and box height
+                # obj_detections[5] => will have scores for all objects within bounding box
+                all_scores = object_detection[5:]
+                predicted_class_id = np.argmax(all_scores)
+                prediction_confidence = all_scores[predicted_class_id]
+            
+                # Take only Predictions with Confidence Above 70%
+                if prediction_confidence > 0.70:
+
+                    # Get the predicted label
+                    predicted_class_label = class_labels[predicted_class_id]
+
+                    # Obtain the bounding box co-oridnates for actual image from resized image size
+                    bounding_box = object_detection[0:4] * np.array([img_width, img_height, img_width, img_height])
+                    (box_center_x_pt, box_center_y_pt, box_width, box_height) = bounding_box.astype("int")
+                    start_x_pt = int(box_center_x_pt - (box_width / 2))
+                    start_y_pt = int(box_center_y_pt - (box_height / 2))
+                    end_x_pt = start_x_pt + box_width
+                    end_y_pt = start_y_pt + box_height
+                    
+                    # Get a random mask color from the numpy array of colors
+                    box_color = class_colors[predicted_class_id]
+                    
+                    # Convert the color numpy array as a list and apply to text and box
+                    box_color = [int(c) for c in box_color]
+
+                    # Create Prediction Label
+                    predicted_class_label = "{}: {:.2f}%".format(predicted_class_label, prediction_confidence * 100)
+                             
+                    # Display the Result of Prediction in Log Window if not Closed
+                    if self.DownloadLogPopup:    
+                       self.log_emitter.log_signal.emit("predicted object {}: {} \t Stated Accuracy: {}".format( (indexA,indexB) ,predicted_class_label, prediction_confidence * 100) )           
+                    
+                    # Draw Rectangle Around Detected Object in the Image
+                    cv2.rectangle(img_to_detect, (start_x_pt, start_y_pt), (end_x_pt, end_y_pt), box_color, 1)
+                
+                    # Put the Result of Prediction as Text on Detected Object in the Image
+                    cv2.putText(img_to_detect, predicted_class_label, (start_x_pt, start_y_pt-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, box_color, 1)
+        
+        # Display the Image
+        cv2.imshow("Detection Output", img_to_detect)     
+
     # Processing the Operation on Mobilenet SSD Pre-Trained Model 
     def ProcessMaskRCNN(self,img_to_detect,maskrcnn,class_labels):
 
@@ -391,7 +475,7 @@ class DeepLearningFoundationOperations(QObject):
         - Great for deploying models without needing full deep learning frameworks
         - Compatible with CPU and GPU backends in OpenCV
         '''
-        # Loading Pretrained Model from Prototext and Caffemodel files
+        # Loading Pre-Trained Model from Prototext and Caffemodel files
         mobilenetssd = cv2.dnn.readNetFromCaffe(MobileNetSSD_Prototext, MobileNetSSD_CaffeModel) 
         
         self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
@@ -420,13 +504,14 @@ class DeepLearningFoundationOperations(QObject):
                 while (self.ImagesAndColorsHandler.videoCapturer.isOpened):
                     # Wait for Pressing a Keyboard Key to Exit
                     if cv2.waitKey(1) in range(0,255):
-                            self.ImagesAndColorsHandler.videoCapturer.release()
-                            break
+                       break
                     # Get the Current Frame from Video Stream
                     ret,current_frame = self.ImagesAndColorsHandler.videoCapturer.read()
                     # Use Video Current Frame instead of Image
                     if current_frame is not None and len(current_frame.shape) > 1:
                         self.ProcessMobilenetSSD(current_frame,mobilenetssd,class_labels)             
+                
+                self.ImagesAndColorsHandler.videoCapturer.release()
 
             case "Realtime":
                 # Get the Camera Video File as Stream
@@ -436,13 +521,14 @@ class DeepLearningFoundationOperations(QObject):
                 while True:
                     # Wait for Pressing a Keyboard Key to Exit
                     if cv2.waitKey(1) in range(0,255):
-                            self.ImagesAndColorsHandler.videoCapturer.release()
-                            break
+                       break
                     # Get the Current Frame from Camera Video Stream
                     ret,current_frame = self.ImagesAndColorsHandler.videoCapturer.read()
                     # Use Video Current Frame instead of Image
                     if current_frame is not None and len(current_frame.shape) > 1:
                         self.ProcessMobilenetSSD(current_frame,mobilenetssd,class_labels)
+
+                self.ImagesAndColorsHandler.videoCapturer.release()
                           
         if self.DownloadLogPopup:            
             self.log_emitter.log_signal.emit("\n***********************")
@@ -504,7 +590,7 @@ class DeepLearningFoundationOperations(QObject):
         net = cv2.dnn.readNetFromTensorflow("frozen_inference_graph.pb", "mask_rcnn.pbtxt")
         This loads the model into OpenCV so you can run inference on images using net.forward() after preparing input with cv2.dnn.blobFromImage.
         '''
-        # Loading Pretrained Model from BufferConfig and BufferModel files
+        # Loading Pre-Trained Model from BufferConfig and BufferModel files
         maskrcnn = cv2.dnn.readNetFromTensorflow(MaskRCNN_BufferModel,MaskRCNN_BufferConfig)
 
         self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
@@ -541,13 +627,14 @@ class DeepLearningFoundationOperations(QObject):
                 while (self.ImagesAndColorsHandler.videoCapturer.isOpened):
                     # Wait for Pressing a Keyboard Key to Exit
                     if cv2.waitKey(1) in range(0,255):
-                            self.ImagesAndColorsHandler.videoCapturer.release()
-                            break
+                       break
                     # Get the Current Frame from Video Stream
                     ret,current_frame = self.ImagesAndColorsHandler.videoCapturer.read()
                     # Use Video Current Frame instead of Image
                     if current_frame is not None and len(current_frame.shape) > 1:
-                        self.ProcessMaskRCNN(current_frame,maskrcnn,class_labels)             
+                        self.ProcessMaskRCNN(current_frame,maskrcnn,class_labels) 
+
+                self.ImagesAndColorsHandler.videoCapturer.release()            
 
             case "Realtime":
                 # Get the Camera Video File as Stream
@@ -557,16 +644,164 @@ class DeepLearningFoundationOperations(QObject):
                 while True:
                     # Wait for Pressing a Keyboard Key to Exit
                     if cv2.waitKey(1) in range(0,255):
-                            self.ImagesAndColorsHandler.videoCapturer.release()
-                            break
+                       break
                     # Get the Current Frame from Camera Video Stream
                     ret,current_frame = self.ImagesAndColorsHandler.videoCapturer.read()
                     # Use Video Current Frame instead of Image
                     if current_frame is not None and len(current_frame.shape) > 1:
                         self.ProcessMaskRCNN(current_frame,maskrcnn,class_labels)
+
+                self.ImagesAndColorsHandler.videoCapturer.release()
                           
         if self.DownloadLogPopup:            
             self.log_emitter.log_signal.emit("\n***********************")
+
+     # Loading MaskRCNN Pre-Trained Model
+
+    # Loading Tiny YOLO Pre-Trained Model
+    def PreProcessTinyYOLO(self,imagePath,filepath,TinyYOLO_CFG_Path,operationType):
+        '''
+        The yolov4-tiny.weights file contains the pre-trained weights for the YOLOv4-Tiny object detection model. 
+        Think of it as the "learned knowledge" from training the model on a large dataset—typically the COCO dataset, 
+        which includes 80 common object classes like people, cars, dogs, and more.
+        🔍 What's inside?
+        - Numerical values for each layer in the neural network (e.g., convolutional filters, biases)
+        - These values were learned during training and are used to make predictions on new images
+        ⚙️ How is it used?
+        - Paired with the yolov4-tiny.cfg file (which defines the model architecture)
+        - Loaded into frameworks like Darknet, OpenCV, or TensorFlow to perform real-time object detection
+        - Enables fast inference on devices with limited computing power (e.g., Raspberry Pi, Jetson Nano)
+        🧠 Why it matters Without the .weights file, the model would be like a brain with no memories—it knows how to process data, 
+        but not what to look for. The weights give it the ability to recognize patterns and objects.
+        If you're planning to train your own model, you can start with these weights and fine-tune them on your custom dataset—a process called transfer learning. 
+        '''
+        TinyYOLO_Weights = filepath
+        '''
+        The yolov4-tiny.cfg file is a configuration file used in the YOLO (You Only Look Once) object detection framework, 
+        specifically for the YOLOv4-Tiny model. Here's what it does:
+        🔧 Purpose
+        It defines the architecture of the neural network—layer by layer—including:
+        - Input dimensions (e.g. width, height, channels)
+        - Convolutional layers and their parameters (filters, kernel size, stride)
+        - Activation functions (like Leaky ReLU)
+        - YOLO detection layers and anchor boxes
+        ⚡ Why “Tiny”?
+        YOLOv4-Tiny is a lightweight version of YOLOv4, optimized for speed and efficiency. It's ideal for:
+        - Real-time detection on edge devices (like Raspberry Pi or mobile)
+        - Scenarios where computational resources are limited
+        📁 Usage
+        This .cfg file is typically used with:
+        - yolov4-tiny.weights (pre-trained weights)
+        - A class names file (e.g. coco.names)
+        - Frameworks like Darknet, OpenCV, or PyTorch implementations
+        '''
+         # Cleaning MaskRCNN_BufferConfig File
+        TinyYOLO_Config = TinyYOLO_CFG_Path
+        '''
+        cv2.dnn.readNetFromTensorflow is an OpenCV function used to load a TensorFlow model for inference using the Deep Neural Network (DNN) module.
+        🧠 What It Does
+        It reads:
+        - A .pb file: The frozen TensorFlow model containing the graph and weights.
+        - An optional .pbtxt file: A text version of the graph structure, often required for complex models like Mask R-CNN.
+        🧪 Syntax
+        net = cv2.dnn.readNetFromTensorflow(modelPath, configPath)
+        - modelPath: Path to the .pb file.
+        - configPath: Path to the .pbtxt file (optional but often needed).
+        📦 Example
+        net = cv2.dnn.readNetFromTensorflow("frozen_inference_graph.pb", "mask_rcnn.pbtxt")
+        This loads the model into OpenCV so you can run inference on images using net.forward() after preparing input with cv2.dnn.blobFromImage.
+        '''
+        # Loading Pretrained Model from TinyYOLO_Weights and TinyYOLO_Config files
+        TinyYOLO = cv2.dnn.readNetFromDarknet(TinyYOLO_Config,TinyYOLO_Weights)
+
+        self.log_emitter.log_signal.emit("Pre-Trained Weight Loaded into the Model successfully.")
+
+        # Set of 80 Class Labels in Pre-Defined Order
+        class_labels = ["person","bicycle","car","motorcycle","airplane","bus","train","truck","boat",
+                        "trafficlight","firehydrant","stopsign","parkingmeter","bench","bird","cat",
+                        "dog","horse","sheep","cow","elephant","bear","zebra","giraffe","backpack",
+                        "umbrella","handbag","tie","suitcase","frisbee","skis","snowboard","sportsball",
+                        "kite","baseballbat","baseballglove","skateboard","surfboard","tennisracket",
+                        "bottle","wineglass","cup","fork","knife","spoon","bowl","banana","apple",
+                        "sandwich","orange","broccoli","carrot","hotdog","pizza","donut","cake","chair",
+                        "sofa","pottedplant","bed","diningtable","toilet","tvmonitor","laptop","mouse",
+                        "remote","keyboard","cellphone","microwave","oven","toaster","sink","refrigerator",
+                        "book","clock","vase","scissors","teddybear","hairdrier","toothbrush"]
+        
+         # Declare List of Colors as an Array: Green, Blue, Red, cyan, yellow, purple
+        
+        # Split by seperator ',' and for each split, Change Type to int
+        # Convert that to a numpy Array to apply Color Mask to the Image numpy Array
+        class_colors = ["0,255,0","0,0,255","255,0,0","255,255,0","0,255,255"]
+        class_colors = [np.array(every_color.split(",")).astype("int") for every_color in class_colors]
+        class_colors = np.array(class_colors)
+        class_colors = np.tile(class_colors,(16,1))
+        
+        # Get all Layers from the yolo Network
+        # Loop and find the last Layer (Output Layer) of the yolo Network 
+        yolo_layers = TinyYOLO.getLayerNames()
+
+        # It returns the layer numbers (not names) of the network’s output layers. 
+        # These are the layers where YOLO generates its predictions—bounding boxes, class scores, and confidence values.
+        unconnected_out_layers = TinyYOLO.getUnconnectedOutLayers()
+
+        yolo_output_layer = None
+
+        # Check Old Version to Retrieve yolo_output_layer or New Version
+        if isinstance(unconnected_out_layers[0], (list, tuple, np.ndarray)):
+            yolo_output_layer = [yolo_layers[i[0] - 1] for i in unconnected_out_layers]
+        else:
+            yolo_output_layer = [yolo_layers[i - 1] for i in unconnected_out_layers]
+
+        cv2.destroyAllWindows()
+
+        if self.DownloadLogPopup:
+           self.log_emitter.log_signal.emit("***********************\nDetection Results\n")
+
+        img_to_detect = None
+
+        match operationType:
+            case  "Images":
+                # Load the Image to Detect
+                img_to_detect = cv2.imread(imagePath)
+                self.ProcessTinyYOLO(img_to_detect,TinyYOLO,class_labels,class_colors,yolo_output_layer)
+                
+            case "Pre-Saved":
+                # Get the Saved Video File as Stream
+                self.ImagesAndColorsHandler.videoCapturer = cv2.VideoCapture(self.ImagesAndColorsHandler.video)
+
+                # Create a While Loop until Video Still Streaming
+                while (self.ImagesAndColorsHandler.videoCapturer.isOpened):
+                    # Wait for Pressing a Keyboard Key to Exit
+                    if cv2.waitKey(1) in range(0,255):
+                       break
+                    # Get the Current Frame from Video Stream
+                    ret,current_frame = self.ImagesAndColorsHandler.videoCapturer.read()
+                    # Use Video Current Frame instead of Image
+                    if current_frame is not None and len(current_frame.shape) > 1:
+                        self.ProcessTinyYOLO(current_frame,TinyYOLO,class_labels,class_colors,yolo_output_layer) 
+
+                self.ImagesAndColorsHandler.videoCapturer.release()            
+
+            case "Realtime":
+                # Get the Camera Video File as Stream
+                self.ImagesAndColorsHandler.videoCapturer = cv2.VideoCapture(self.ImagesAndColorsHandler.camera)
+
+                # Create a While Loop until Camera Still is Open and Video is Streaming
+                while True:
+                    # Wait for Pressing a Keyboard Key to Exit
+                    if cv2.waitKey(1) in range(0,255):
+                       break
+                    # Get the Current Frame from Camera Video Stream
+                    ret,current_frame = self.ImagesAndColorsHandler.videoCapturer.read()
+                    # Use Video Current Frame instead of Image
+                    if current_frame is not None and len(current_frame.shape) > 1:
+                        self.ProcessTinyYOLO(current_frame,TinyYOLO,class_labels,class_colors,yolo_output_layer)
+
+                self.ImagesAndColorsHandler.videoCapturer.release()
+                          
+        if self.DownloadLogPopup:            
+           self.log_emitter.log_signal.emit("\n***********************")
 
     # Loading Downloaded or Existing Pre-Trained Model
     def Loading_Model_Operation(self,modelType, filepath, imagePath, operationType):
@@ -670,29 +905,33 @@ class DeepLearningFoundationOperations(QObject):
 
                 case "MobilenetSSD" | "MobileNetSSDPrototxt":      
                     # Check/Download required MobilenetSSD.prototxt File              
-                    folder = os.path.normpath(join("resources","models"))
-                    MobileNetSSD_Prototext_fileName = "MobilenetSSD.prototxt"
-                    MobileNetSSD_Prototext_Path = os.path.join(folder, MobileNetSSD_Prototext_fileName)
+                    MobileNetSSD_Prototext_Path = os.path.splitext(filepath)[0] + ".prototxt"
                     if not os.path.exists(MobileNetSSD_Prototext_Path):
                        modelType = "MobileNetSSDPrototxt"
                        self.PreProcessImage(imagePath, modelType,operationType)
                     else:
-                        folder = os.path.normpath(join("resources","models"))
-                        filepath = os.path.join(folder, "MobilenetSSD.caffemodel")
+                        filepath = os.path.splitext(filepath)[0] + ".caffemodel"
                         self.PreProcessMobilenetSSD(imagePath,filepath,MobileNetSSD_Prototext_Path,operationType) 
 
                 case "MaskRCNN" | "MaskRCNNPbtxt": 
-                     # Check/Download required MaskRCNN.pbtxt File              
-                    folder = os.path.normpath(join("resources","models"))
-                    MaskRCNN_Pbtxt_fileName = "MaskRCNN.pbtxt"
-                    MaskRCNN_Pbtxt_Path = os.path.join(folder, MaskRCNN_Pbtxt_fileName)
+                    # Check/Download required MaskRCNN.pbtxt File              
+                    MaskRCNN_Pbtxt_Path = os.path.splitext(filepath)[0] + ".pbtxt"
                     if not os.path.exists(MaskRCNN_Pbtxt_Path):
                        modelType = "MaskRCNNPbtxt"
                        self.PreProcessImage(imagePath, modelType, operationType)
                     else:
-                        folder = os.path.normpath(join("resources","models"))
-                        filepath = os.path.join(folder, "MaskRCNN.pb")
+                        filepath = os.path.splitext(filepath)[0] + ".pb"
                         self.PreProcessMaskRCNN(imagePath,filepath,MaskRCNN_Pbtxt_Path,operationType) 
+                
+                case "TinyYOLO" | "TinyYOLOCFG":
+                    # Check/Download required TinyYOLO.cfg File              
+                    TinyYOLO_CFG_Path = os.path.splitext(filepath)[0] + ".cfg"
+                    if not os.path.exists(TinyYOLO_CFG_Path):
+                       modelType = "TinyYOLOCFG"
+                       self.PreProcessImage(imagePath, modelType, operationType)
+                    else:
+                        filepath = os.path.splitext(filepath)[0] + ".weights"
+                        self.PreProcessTinyYOLO(imagePath,filepath,TinyYOLO_CFG_Path,operationType) 
 
     # Check, Validation for Downloading Pre-Trained Model                
     def PreProcessImage(self, imagePath,modelType,operationType):
@@ -819,11 +1058,20 @@ class DeepLearningFoundationOperations(QObject):
                 self.PreProcessImage(imagePath, modelType, operationType)
 
             case "Object Detection by Pre-Trained Tiny YOLO Model on Images":
-                print(operation)
+                modelType = operationString[4] + operationString[5]
+                operationType = operationString[8]
+                self.PreProcessImage(imagePath, modelType, operationType)
+
             case "Object Detection by Pre-Trained Tiny YOLO Model on Pre-Saved Video":
-                print(operation)
+                modelType = operationString[4] + operationString[5]
+                operationType = operationString[8]
+                self.PreProcessImage(imagePath, modelType, operationType)
+
             case "Object Detection by Pre-Trained Tiny YOLO Model on Realtime Video":
-                print(operation)
+                modelType = operationString[4] + operationString[5]
+                operationType = operationString[8]
+                self.PreProcessImage(imagePath, modelType, operationType)
+        
             case "Object Detection by Pre-Trained YOLO Model on Images":
                 print(operation)
             case "Object Detection by Pre-Trained Optimized YOLO Model on Images":
@@ -926,6 +1174,9 @@ class DeepLearningFoundationOperations(QObject):
             tolerance = 10 * 1024 * 1024
             if modelType in ["MobileNetSSDPrototxt", "MaskRCNNPbtxt"]:
                tolerance = 10 * 1024
+            if modelType in ["TinyYOLOCFG"]:
+               tolerance = 1 * 1024
+               
             return fileSize > (expected_size - tolerance)
         
     # Loading Model Details from models.json file in the Root
@@ -1292,6 +1543,8 @@ class Downloader(QObject):
         tolerance = 10 * 1024 * 1024
         if self.modelType in ["MobileNetSSDPrototxt", "MaskRCNNPbtxt"]:
             tolerance = 10 * 1024
+        if self.modelType in ["TinyYOLOCFG"]:
+               tolerance = 1 * 1024
 
         if actual_size < expected_size - tolerance:
             self.log_emitter.log_signal.emit(f"Downloaded file too small ({actual_size} < {expected_size - tolerance})")

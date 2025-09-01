@@ -52,5 +52,17 @@
         "name": "MaskRCNN.pbtxt",
         "size": "179 KB",
         "md5hash": "d3c1a8f9b6e7a2c3f4b9e1d2a7c8f5e1"
+    },
+    "TinyYOLO": {
+    "url": "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights",
+    "name": "TinyYOLO.weights",
+    "size": "23 MB",
+    "md5hash": "603b0b6b7f1d0f3c4e2a5c7d9e8f0a1b"
+    },
+    "TinyYOLOCFG": {
+        "url": "https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4-tiny.cfg",
+        "name": "TinyYOLO.cfg",
+        "size": "3 KB",
+        "md5hash": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
     }
 }
