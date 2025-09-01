@@ -675,8 +675,10 @@ class DeepLearningFoundationOperations(QObject):
                     MobileNetSSD_Prototext_Path = os.path.join(folder, MobileNetSSD_Prototext_fileName)
                     if not os.path.exists(MobileNetSSD_Prototext_Path):
                        modelType = "MobileNetSSDPrototxt"
-                       self.PreProcessImage(imagePath, modelType, operationType)
+                       self.PreProcessImage(imagePath, modelType,operationType)
                     else:
+                        folder = os.path.normpath(join("resources","models"))
+                        filepath = os.path.join(folder, "MobilenetSSD.caffemodel")
                         self.PreProcessMobilenetSSD(imagePath,filepath,MobileNetSSD_Prototext_Path,operationType) 
 
                 case "MaskRCNN" | "MaskRCNNPbtxt": 
@@ -688,6 +690,8 @@ class DeepLearningFoundationOperations(QObject):
                        modelType = "MaskRCNNPbtxt"
                        self.PreProcessImage(imagePath, modelType, operationType)
                     else:
+                        folder = os.path.normpath(join("resources","models"))
+                        filepath = os.path.join(folder, "MaskRCNN.pb")
                         self.PreProcessMaskRCNN(imagePath,filepath,MaskRCNN_Pbtxt_Path,operationType) 
 
     # Check, Validation for Downloading Pre-Trained Model                
@@ -710,6 +714,11 @@ class DeepLearningFoundationOperations(QObject):
                 ConditionToCheck = self.ImagesAndColorsHandler.camera is not None and self.ImagesAndColorsHandler.Check_Camera_Availability(self.ImagesAndColorsHandler.camera)
                 ContentMessage = "First, Select a Camera!" 
                 TitleMessage = "No Camera Selected"
+            
+            case _: 
+                ConditionToCheck = self.ImagesAndColorsHandler.image is not None and self.ImagesAndColorsHandler.imageName is not None
+                ContentMessage = "First, Select an Image!"
+                TitleMessage = "No Image Selected" 
 
         if ConditionToCheck:              
             if self.DownloadLogPopup == None or not self.DownloadLogPopup:
@@ -726,27 +735,21 @@ class DeepLearningFoundationOperations(QObject):
                 expected_size = fileSize
                 folder = os.path.normpath(join("resources","models"))
                 filepath = os.path.join(folder, filename)
-                if os.path.exists(filepath):
-                   self.log_emitter.log_signal.emit(str(self.models[modelType]["name"]) + "\nModel file found locally\n Hash and Size are not Validated!\nLoading from cache...") 
-                else:
+                 
+                # Only Download if File is Missing or File Size is Greater than Expected Size - Tolerance 
+                # Hash Validation Is not Active to Accept Mirror Image of Models
+                if not os.path.exists(filepath) or not self.FileSize_and_Hash_Validation("md5",modelType,filepath, expected_size,expected_hash,self.log_emitter,True):  
                     self.log_emitter.log_signal.emit(str(self.models[modelType]["name"]) + 
-                                                        "\nModel file not found. \nDownloading from internet...\n" + 
-                                                        "Make Sure your System Connected to the Internet\n"+
-                                                        "File is Approximately "+fileSize+"\n"+
-                                                        "It takes a while Depending on the Speed of your System and Internet!")
-                    
-                    self.log_emitter.log_signal.emit("Download Url: \n" + str(self.models[modelType]["url"]))   
-
-                # Only Download if File is Missing 
-                if not os.path.exists(filepath):   
-                    self.downloader = Downloader(url, filepath, modelType,imagePath,self.log_emitter, fileSize,operationType)
+                                                        "\nModel file not found or  Size is not Valid! \nDownloading from internet...\nMake Sure your System Connected to the Internet\nFile is Approximately "+expected_size+"\n"+
+                                                        "It takes a while Depending on the Speed of your System and Internet!\nDownload Url: \n" + str(self.models[modelType]["url"]))
+                    if os.path.exists(filepath):
+                       os.remove(filepath) 
+                    self.downloader = Downloader(url, filepath, modelType,imagePath,self.log_emitter, expected_size,operationType,self._is_running)
                     self.DownloadLogPopup.Set_Downloader(self.downloader)
                     self.downloader.Start()   
                     
                 else:
-                    # You can Remove below line and run FileSize_and_Hash_Validation in if Statement for Validation
-                    self.FileSize_and_Hash_Validation("md5",filepath, expected_size,expected_hash,self.log_emitter,True)  
-
+                    self.log_emitter.log_signal.emit(str(self.models[modelType]["name"]) + "\nModel file found locally.\n Hash and Size are not Validated in Config!\nLoading from cache...")                   
                     self.Loading_Model_Operation(modelType, filepath,imagePath,operationType)
             
             else:
@@ -866,19 +869,20 @@ class DeepLearningFoundationOperations(QObject):
             self.DownloadLogPopup.Append_Log(message)
 
     # Validating Hash of Files
-    def FileSize_and_Hash_Validation(self,type,path,expected_size, expected_hash,log_emitter,check):
+    def FileSize_and_Hash_Validation(self,type,modelType,filepath, expected_size,expected_hash,log_emitter,check):
         """Check if the file's SHA256 or MD5 hash matches the expected value."""
-        if os.path.exists(path):
-            fileSize = os.path.getsize(path) or os.stat(path).st_size
-            expected_size = 0
+        if os.path.exists(filepath):
+            fileSize = os.path.getsize(filepath) or os.stat(filepath).st_size
             try:
-                value, unit = self.fileSize.split()
+                value, unit = expected_size.split()
                 value = float(value)
                 unit = unit.upper()
                 if unit == "KB":
                     expected_size = int(value * 1024)
                 elif unit == "MB":
                     expected_size = int(value * 1024 * 1024)
+                elif unit == "GB":
+                    expected_size = int(value * 1024 * 1024 * 1024)
                 else:
                     expected_size = int(value)
             except:
@@ -888,7 +892,7 @@ class DeepLearningFoundationOperations(QObject):
                 case "sha256":
                     sha256 = hashlib.sha256()
                     try:
-                        with open(path, "rb") as f:
+                        with open(filepath, "rb") as f:
                             for chunk in iter(lambda: f.read(8192), b""):
                                 sha256.update(chunk)
                                 actual_hash = sha256.hexdigest()
@@ -897,15 +901,15 @@ class DeepLearningFoundationOperations(QObject):
                                     log_emitter.log_signal.emit("File Hash: " + str(actual_hash))
                                     log_emitter.log_signal.emit("Expected Size: " + str(expected_size) + "B")
                                     log_emitter.log_signal.emit("File Size: " + str(fileSize) + "B")
-                        return str(actual_hash).lower() == str(expected_hash).lower() and fileSize == expected_size
+                        # return str(actual_hash).lower() == str(expected_hash).lower() and fileSize == expected_size
                     except Exception as e:
                         log_emitter.log_signal.emit("Error:", str(e))
-                        return False
+                        # return False
                     
                 case "md5":
                     md5 = hashlib.md5()
                     try:
-                        with open(path, "rb") as f:
+                        with open(filepath, "rb") as f:
                             for chunk in iter(lambda: f.read(8192), b""):
                                 md5.update(chunk)
                         actual_hash = md5.hexdigest()
@@ -914,11 +918,16 @@ class DeepLearningFoundationOperations(QObject):
                             log_emitter.log_signal.emit("File Hash: " + str(actual_hash))
                             log_emitter.log_signal.emit("Expected Size: " + str(expected_size) + "B")
                             log_emitter.log_signal.emit("File Size: " + str(fileSize) + "B")
-                        return str(actual_hash).lower() == str(expected_hash).lower() and fileSize == expected_size
+                        # return str(actual_hash).lower() == str(expected_hash).lower() and fileSize == expected_size
                     except Exception as e:
                         log_emitter.log_signal.emit("Error:", str(e))
-                        return False
-
+                        # return False
+           
+            tolerance = 10 * 1024 * 1024
+            if modelType in ["MobileNetSSDPrototxt", "MaskRCNNPbtxt"]:
+               tolerance = 10 * 1024
+            return fileSize > (expected_size - tolerance)
+        
     # Loading Model Details from models.json file in the Root
     def LoadModelDetails(self):
         if len(self.models) <= 0:    
@@ -998,20 +1007,26 @@ class DownloadLogPopup(QDialog):
     def Set_Downloader(self, downloader):
         self.downloader = downloader
 
-    def Append_Log(self, message):
+    def Append_Log(self, message):       
         if str(message).startswith("Progress"):
-           # ChangedContent = ""
             lines = self.log_output.toPlainText().splitlines()
             if  lines[-1].strip().startswith("Progress"):
                 lines[-1] = message
                 message = "\n".join(lines)
                 self.log_output.setText(message)
+                scrollBarMinimumValue = self.scroll_area.verticalScrollBar().minimum()
+                self.scroll_area.verticalScrollBar().setValue(scrollBarMinimumValue)
+                QApplication.processEvents() 
             else:
                 self.log_output.append(message)
+                scrollBarMinimumValue = self.scroll_area.verticalScrollBar().minimum()
+                self.scroll_area.verticalScrollBar().setValue(scrollBarMinimumValue)
+                QApplication.processEvents() 
         else:
             self.log_output.append(message)
-        self.scroll_area.verticalScrollBar().setValue(self.scroll_area.verticalScrollBar().minimum()) 
-        QApplication.processEvents()  
+            scrollBarMinimumValue = self.scroll_area.verticalScrollBar().minimum()
+            self.scroll_area.verticalScrollBar().setValue(scrollBarMinimumValue)
+            QApplication.processEvents()          
 
     def Update_Progress(self, percent):
         self.progress_bar.setValue(percent)
@@ -1034,19 +1049,19 @@ class DownloadLogPopup(QDialog):
 
 # Downloader for Required Models   
 class Downloader(QObject):
-    def __init__(self, url: str, filepath: str,modelType: str,imagePath: str ,log_emitter,fileSize: str,operationType: str,archive_model_filename: str = "frozen_inference_graph.pb", parent=None):
+    def __init__(self, url: str, filepath: str,modelType: str,imagePath: str ,log_emitter,expected_size: str,operationType: str,_is_running: bool, parent=None):
         super().__init__(parent)
         self.url = QUrl(url)
         self.filepath = filepath
         self.log_emitter = log_emitter
         self.manager = QNetworkAccessManager(self)
-        self.archive_model_filename = archive_model_filename
         self.start_time = None
         self.reply = None
         self.cancelled = False
+        self._is_running = _is_running
         self.modelType = modelType
         self.imagePath = imagePath
-        self.fileSize = fileSize
+        self.expected_size = expected_size
         self.operationType = operationType
         self.fallback_attempts = 0
         self.max_fallback_attempts = 3
@@ -1072,6 +1087,11 @@ class Downloader(QObject):
             # Chrome on Chromebook
             b"Mozilla/5.0 (X11; CrOS x86_64 14526.83.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36"
         ]
+        match modelType:
+            case "MaskRCNN":
+                  self.archive_model_filename = "frozen_inference_graph.pb" 
+            case _:
+                   self.archive_model_filename ="None"
 
     def Start(self):
         request = QNetworkRequest(self.url)
@@ -1091,22 +1111,26 @@ class Downloader(QObject):
         self.cancelled = True
         if self.reply:
             self.reply.abort()
+        self._is_running = False
 
     def On_Progress(self, downloaded: int, total_size: int):
         if self.cancelled:
             self.log_emitter.finished_signal.emit(False, "Download Cancelled.","","","",self.operationType)
             return
 
-        elapsed = time.time() - self.start_time
-        percent = int(downloaded * 100 / total_size) if total_size > 0 else 0
-        speed = downloaded / (1024 * 1024) / elapsed if elapsed > 0 else float('inf')
-        speed_text = f"{speed:.2f} MB/s" if speed > 1 else f"{speed * 1024:.2f} KB/s"
-        time_str = time.strftime("%M:%S", time.gmtime(elapsed))
-        bar = '=' * (percent // 5) + '-' * (20 - (percent // 5))
-        progress_text = f"Progress: {downloaded} B from {total_size} B [{bar}] {time_str} {speed_text}"
+        if self._is_running:
+            elapsed = time.time() - self.start_time
+            percent = int(downloaded * 100 / total_size) if total_size > 0 else 0
+            speed = downloaded / (1024 * 1024) / elapsed if elapsed > 0 else float('inf')
+            speed_text = f"{speed:.2f} MB/s" if speed > 1 else f"{speed * 1024:.2f} KB/s"
+            time_str = time.strftime("%M:%S", time.gmtime(elapsed))
+            bar = '=' * (percent // 5) + '-' * (20 - (percent // 5))
+            progress_text = f"Progress: {downloaded} B from {total_size} B [{bar}] {time_str} {speed_text}"
 
-        self.log_emitter.progressbar_signal.emit(percent)
-        self.log_emitter.log_signal.emit(progress_text)
+            self.log_emitter.progressbar_signal.emit(percent)
+            self.log_emitter.log_signal.emit(progress_text)
+        else:
+            return
 
     def On_Finished(self):
         if self.cancelled:
@@ -1143,6 +1167,7 @@ class Downloader(QObject):
 
         self.Handle_Archive_Files()
         self.log_emitter.finished_signal.emit(True, "Download Success.", self.modelType, self.filepath, self.imagePath, self.operationType)
+        self._is_running = False
         return True
 
     def Fallback_Download(self):
@@ -1184,6 +1209,7 @@ class Downloader(QObject):
                 self.Handle_Archive_Files()
                 # Success
                 self.log_emitter.finished_signal.emit(True, "Download Success (via fallback).", self.modelType, self.filepath, self.imagePath,self.operationType)
+                self._is_running = False
                 return True
 
             except Exception as e:
@@ -1192,9 +1218,12 @@ class Downloader(QObject):
                     os.remove(self.filepath)
                 time.sleep(2)
                 continue  # retry
-
+        
         # Final failure after all retries
         self.log_emitter.finished_signal.emit(False, "Download failed after multiple fallback attempts.", "", "", "",self.operationType)
+        self._is_running = False
+        if os.path.exists(self.filepath):
+               os.remove(self.filepath)
         return
     
     def Handle_Archive_Files(self):
@@ -1210,7 +1239,7 @@ class Downloader(QObject):
                 found_pb = None
                 for root, dirs, files in os.walk(extract_dir):
                     for file in files:
-                        if file == "frozen_inference_graph.pb":
+                        if file == self.archive_model_filename: # "frozen_inference_graph.pb":
                             found_pb = os.path.join(root, file)
                             break
                     if found_pb:
@@ -1218,7 +1247,7 @@ class Downloader(QObject):
 
                 if found_pb:
                     # Step 3: Move .pb file to final location
-                    final_pb_path = os.path.join(os.path.dirname(self.filepath), "MaskRCNN.pb")
+                    final_pb_path = os.path.join(os.path.dirname(self.filepath), os.path.basename(self.filepath)) # "MaskRCNN.pb")
                     shutil.move(found_pb, final_pb_path)
                     self.filepath = final_pb_path
                     self.log_emitter.log_signal.emit(f"Model file extracted and renamed to: {final_pb_path}")
@@ -1248,7 +1277,7 @@ class Downloader(QObject):
     def ValidateSize(self):
         actual_size = os.path.getsize(self.filepath) or os.stat(self.filepath).st_size
         try:
-            value, unit = self.fileSize.split()
+            value, unit = self.expected_size.split()
             value = float(value)
             unit = unit.upper()
             if unit == "KB":
