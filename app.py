@@ -693,7 +693,7 @@ class MainWindow(QMainWindow):
                 self.LoadFramePdf("MobilenetSSD.pdf")
             if "MaskRCNN" in operation:
                 self.LoadFramePdf("MaskRCNN.pdf")
-            if "TinyYOLO" in operation:
+            if "Tiny YOLO" in operation:
                 self.LoadFramePdf("TinyYOLO.pdf")
                 
             self.DLOperationsHandler.SelectDeepLearningOperations(operation,imagePath)                     

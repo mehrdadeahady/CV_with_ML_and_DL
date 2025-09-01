@@ -299,8 +299,8 @@ class DeepLearningFoundationOperations(QObject):
                 predicted_class_id = np.argmax(all_scores)
                 prediction_confidence = all_scores[predicted_class_id]
             
-                # Take only Predictions with Confidence Above 70%
-                if prediction_confidence > 0.70:
+                # Take only Predictions with Confidence Above 40%
+                if prediction_confidence > 0.40:
 
                     # Get the predicted label
                     predicted_class_label = class_labels[predicted_class_id]
