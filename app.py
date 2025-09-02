@@ -695,6 +695,10 @@ class MainWindow(QMainWindow):
                 self.LoadFramePdf("MaskRCNN.pdf")
             if "Tiny YOLO" in operation:
                 self.LoadFramePdf("TinyYOLO.pdf")
+            if "YOLO" in operation and not "Tiny YOLO" in operation and not "Optimized YOLO" in operation:
+                self.LoadFramePdf("YOLO.pdf")
+            if "Optimized YOLO" in operation:
+                self.LoadFramePdf("OptimizedYOLO.pdf")
                 
             self.DLOperationsHandler.SelectDeepLearningOperations(operation,imagePath)                     
             
