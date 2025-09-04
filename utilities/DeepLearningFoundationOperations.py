@@ -73,6 +73,8 @@ class DeepLearningFoundationOperations(QObject):
     # Process Functions Contains Computer Vision Functions with Comments and Explanations
     # Rest of Functions are Pre-Processor and Helpers
     
+################################################### Processor Functions:
+    
     # Processing the Operation on Pre-Trained Model
     def ProcessImage(self,model,imagePath,newSize,processMode):
         # Show Model Architecture in A new Popup
@@ -529,6 +531,8 @@ class DeepLearningFoundationOperations(QObject):
         
         # Display the Image
         cv2.imshow("Detection Output", img_to_detect)
+
+################################################### Pre-Processor Functions:
 
     # Loading Mobilenet SSD Pre-Trained Model
     def PreProcessMobilenetSSD(self,imagePath,filepath,MobileNetSSD_Prototext_Path,operationType):
@@ -1135,9 +1139,9 @@ class DeepLearningFoundationOperations(QObject):
                 folder = os.path.normpath(join("resources","models"))
                 filepath = os.path.join(folder, filename)
                  
-                # Only Download if File is Missing or File Size is Greater than Expected Size - Tolerance 
-                # Hash Validation Is not Active to Accept Mirror Image of Models
-                if not os.path.exists(filepath) or not self.FileSize_and_Hash_Validation("md5",modelType,filepath, expected_size,expected_hash,self.log_emitter,True):  
+                # Only Download if File is Missing or File Size is Greater than Approximate Expected Size - Tolerance 
+                # Hash Validation Is not Active to Accept Mirror Image of Models, Expected Size Validation is not Active for same Reason.
+                if not os.path.exists(filepath) or not self.FileSize_Approximate_Validation("md5",modelType,filepath, expected_size,expected_hash,self.log_emitter,True):  
                     self.log_emitter.log_signal.emit(filename + "\nModel file not found or  Size is not Valid! \nDownloading from internet...\n"+
                                                      "Make Sure your System Connected to the Internet\nFile is Approximately "+expected_size+"\n"+
                                                         "It takes a while Depending on the Speed of your System and Internet!\nDownload Url: \n" + url )
@@ -1294,8 +1298,8 @@ class DeepLearningFoundationOperations(QObject):
         if self._is_running:
             self.DownloadLogPopup.Append_Log(message)
 
-    # Validating Hash of Files
-    def FileSize_and_Hash_Validation(self,type,modelType,filepath, expected_size,expected_hash,log_emitter,check):
+    # Validating Approximate Size of Files
+    def FileSize_Approximate_Validation(self,type,modelType,filepath, expected_size,expected_hash,log_emitter,check):
         """Check if the file's SHA256 or MD5 hash matches the expected value."""
         if os.path.exists(filepath):
             fileSize = os.path.getsize(filepath) or os.stat(filepath).st_size
@@ -1386,6 +1390,8 @@ class DeepLearningFoundationOperations(QObject):
         self.log_emitter.log_signal.emit(f"Cleaned Text Prototext file in: {path}")
         return path
    
+################################################### Helper Classes:
+    
 # Signal emitter for Thread-Safe logging
 class LogEmitter(QObject):
     log_signal = pyqtSignal(str) # All Communications, Updates and Text Messages
