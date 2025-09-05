@@ -1162,6 +1162,8 @@ class DeepLearningFoundationOperations(QObject):
         else:
             QMessageBox.warning(None, TitleMessage,ContentMessage)
 
+################################################### Helper Functions:
+
     # Selecting Desired Operation
     def SelectDeepLearningOperations(self,operation,imagePath):
         self.DownloadLogPopup = None

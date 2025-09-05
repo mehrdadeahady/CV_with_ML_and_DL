@@ -527,7 +527,7 @@ class MainWindow(QMainWindow):
              case "haarcascade":
                   valid_extensions = {'.xml'}
              case "model":
-                  valid_extensions = {'.h5','.keras', "caffemodel",".pb","prototxt","pbtxt"}
+                  valid_extensions = {'.h5','.keras', "caffemodel",".pb","prototxt","pbtxt","cfg","weights"}
         return any(file_name.lower().endswith(extension) for extension in valid_extensions)
     
     def Pdf_In_Browser(self,pdf_path,local):
