@@ -2856,6 +2856,134 @@ li.checked::marker { content: &quot;\2612&quot;; }
        <enum>QFrame::Shadow::Raised</enum>
       </property>
      </widget>
+     <widget class="QLabel" name="label_FilterAccuracy_DeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>261</x>
+        <y>680</y>
+        <width>391</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Before Selecting an Operation Filter Accuracy of Operation Greater than:</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_FilterAccuracy_DeepLearningFoundation">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>680</y>
+        <width>71</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>0%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>5%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>10%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>15%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>20%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>25%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>30%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>35%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>40%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>45%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>50%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>55%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>60%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>65%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>70%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>75%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>80%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>85%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>90%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>95%</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>100%</string>
+       </property>
+      </item>
+     </widget>
     </widget>
     <widget class="QWidget" name="page_AboutAuthorDeveloper">
      <widget class="QTextBrowser" name="textBrowser_AboutAuthorDeveloper">

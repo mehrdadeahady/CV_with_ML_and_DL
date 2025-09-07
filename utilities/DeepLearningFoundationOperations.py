@@ -57,7 +57,8 @@ class DeepLearningFoundationOperations(QObject):
     def __init__(self,ImagesAndColorsHandler,CreateSimpleCNNHandler,parent=None):
         super().__init__()
         # Internal Variable to Access Images, Videos and Cameras inside All Functions in the Class 
-        self.models = {}     
+        self.models = {} 
+        self.accuracy = 50    
         self.ImagesAndColorsHandler = ImagesAndColorsHandler
         self.CreateSimpleCNNHandler = CreateSimpleCNNHandler
         self.DownloadLogPopup = None
@@ -226,8 +227,8 @@ class DeepLearningFoundationOperations(QObject):
 
             prediction_confidence = obj_detections[0, 0, index, 2]
 
-            # Take only Predictions with Confidence more than 20%
-            if prediction_confidence > 0.20:
+            # Take only Predictions with Confidence more than 
+            if prediction_confidence > self.accuracy:
 
                 # Get the Predicted Label
                 predicted_class_index = int(obj_detections[0, 0, index, 1])
@@ -301,8 +302,8 @@ class DeepLearningFoundationOperations(QObject):
                 predicted_class_id = np.argmax(all_scores)
                 prediction_confidence = all_scores[predicted_class_id]
             
-                # Take only Predictions with Confidence Above 50%
-                if prediction_confidence > 0.50:
+                # Take only Predictions with Confidence Above
+                if prediction_confidence > self.accuracy:
 
                     # Get the predicted label
                     predicted_class_label = class_labels[predicted_class_id]
@@ -391,8 +392,8 @@ class DeepLearningFoundationOperations(QObject):
                 predicted_class_id = np.argmax(all_scores)
                 prediction_confidence = all_scores[predicted_class_id]
             
-                # Take only Predictions with Confidence Above 50%
-                if prediction_confidence > 0.50:
+                # Take only Predictions with Confidence Above 
+                if prediction_confidence > self.accuracy:
 
                     # Get the Predicted Label
                     predicted_class_label = class_labels[predicted_class_id]
@@ -505,8 +506,8 @@ class DeepLearningFoundationOperations(QObject):
 
             prediction_confidence = obj_detections_boxes[0, 0, index, 2]
 
-            # Take only Predictions with Confidence more than 20%
-            if prediction_confidence > 0.20:
+            # Take only Predictions with Confidence more than
+            if prediction_confidence > self.accuracy:
 
                 # Get the Predicted Label
                 predicted_class_index = int(obj_detections_boxes[0, 0, index, 1])
@@ -1165,8 +1166,10 @@ class DeepLearningFoundationOperations(QObject):
 ################################################### Helper Functions:
 
     # Selecting Desired Operation
-    def SelectDeepLearningOperations(self,operation,imagePath):
+    def SelectDeepLearningOperations(self,operation,imagePath,accuracy):
+        print(accuracy)
         self.DownloadLogPopup = None
+        self.accuracy = accuracy
         operationString = operation.strip().split(" ")
         match operation.strip():
             case "Image Recognition using Pre-Trained VGGNet16 Model":

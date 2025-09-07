@@ -699,8 +699,9 @@ class MainWindow(QMainWindow):
                 self.LoadFramePdf("YOLO.pdf")
             if "Optimized YOLO" in operation:
                 self.LoadFramePdf("OptimizedYOLO.pdf")
-                
-            self.DLOperationsHandler.SelectDeepLearningOperations(operation,imagePath)                     
+            
+            accuracy = float(self.ui.comboBox_FilterAccuracy_DeepLearningFoundation.currentText().split("%")[0])/100
+            self.DLOperationsHandler.SelectDeepLearningOperations(operation,imagePath, accuracy)                     
             
     def ResetComboBoxSelections(self, comboBox):
         self.ui.comboBox_SelectOperationDeepLearningFoundation.objectName().__contains__
@@ -1077,6 +1078,7 @@ class MainWindow(QMainWindow):
         self.ui.label_ImageWidthValue.setStyleSheet("color:red")
         self.ui.label_ImageHeightValue.setStyleSheet("color:red")
         self.ui.comboBox_Epochs_Step4CreateSimpleCNN.setCurrentIndex(1)
+        self.ui.comboBox_FilterAccuracy_DeepLearningFoundation.setCurrentIndex(12)
         self.ui.pages.setCurrentWidget(self.ui.page_AboutTool)
         self.CheckCreateDefaultFolders()
         self.LoadResources()
