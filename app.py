@@ -704,13 +704,12 @@ class MainWindow(QMainWindow):
             self.DLOperationsHandler.SelectDeepLearningOperations(operation,imagePath, accuracy)                     
             
     def ResetComboBoxSelections(self, comboBox):
-        self.ui.comboBox_SelectOperationDeepLearningFoundation.objectName().__contains__
         if not comboBox.objectName().__contains__("comboBox_SelectOperationDeepLearningFoundation"):
             self.lower()
             cv2.destroyAllWindows()
             self.comboboxes = self.findChildren(QtWidgets.QComboBox)
             for combo in self.comboboxes:
-                if combo is not comboBox:
+                if combo is not comboBox and not combo.objectName().__contains__("comboBox_FilterAccuracy_DeepLearningFoundation"):
                     combo.blockSignals(True)
                     combo.setCurrentIndex(0)
                     combo.blockSignals(False)            
