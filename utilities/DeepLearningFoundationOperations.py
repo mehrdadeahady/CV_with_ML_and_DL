@@ -1167,7 +1167,6 @@ class DeepLearningFoundationOperations(QObject):
 
     # Selecting Desired Operation
     def SelectDeepLearningOperations(self,operation,imagePath,accuracy):
-        print(accuracy)
         self.DownloadLogPopup = None
         self.accuracy = accuracy
         operationString = operation.strip().split(" ")

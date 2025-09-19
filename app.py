@@ -5,6 +5,7 @@
 from utilities.ImagesAndColorsManipulationsAndOprations import ImagesAndColorsManipulationsAndOprations
 from utilities.CreateSimpleCNN import CreateSimpleCNN
 from utilities.DeepLearningFoundationOperations import DeepLearningFoundationOperations
+from utilities.CreateHandGestureRecognitionCNN import CreateHandGestureRecognitionCNN
 from utilities.UI_MainWindow import UI_MainWindow
 import os
 from os import path, listdir
@@ -79,6 +80,7 @@ class MainWindow(QMainWindow):
         self.action_TheoreticalDeepLearningFoundation.setText(_translate("MainWindow", "֎ Theoretical"))
         self.menu_PracticalDeepLearningFoundations.setTitle(_translate("MainWindow","🛠 Practical"))
         self.action_DeepLearningFoundationOperations.setText(_translate("MainWindow","✳️ Deep Learning Foundation Operations"))
+        self.action_CreateHandGestureRecognItionCNN.setText(_translate("MainWindow","✋🏻 Create Hand Gesture RecognItion CNN"))
 
     def PrepareCancelTraining(self):
         self.CreateSimpleCNNHandler.CancelTraining()
@@ -558,6 +560,8 @@ class MainWindow(QMainWindow):
              cap = f"Index: {camera_info.index}, Name: {camera_info.name}, Backend: {camera_info.backend}"
              if self.ui.comboBox_SelectCameraDeepLearningFoundation.findText(cap) == -1 :
                   self.ui.comboBox_SelectCameraDeepLearningFoundation.addItem(cap)
+             if self.ui.comboBox_SelectCameraStep1CreateSimpleCNN2.findText(cap) == -1 :
+                  self.ui.comboBox_SelectCameraStep1CreateSimpleCNN2.addItem(cap)
 
     def FillCode(self, function, textBrowser, LineStart):
         function_code = inspect.getsource(function)
@@ -849,8 +853,17 @@ class MainWindow(QMainWindow):
         self.ui.action_StudyPlan.triggered.connect(partial(self.changePDFPage,3))
         self.ui.action_HeadingResearch.triggered.connect(partial(self.changePDFPage,4))
         self.ui.action_UserGuide.triggered.connect(partial(self.changePDFPage,5))
+
         self.ui.action_AboutTool.triggered.connect(self.changePage)
         self.ui.action_AboutAuthorDeveloper.triggered.connect(self.changePage)
+        self.action_PythonProgramming.triggered.connect(self.changePage)
+        self.action_LinearAlgebraAndCalculus.triggered.connect(self.changePage)
+        self.action_ProbabilityAndStatistics.triggered.connect(self.changePage)
+        self.action_ImagesAndColorsManipulationsAndOprations.triggered.connect(self.changePage)
+        self.action_CreateSimpleCNNConvolutionalNeuralNetwork.triggered.connect(self.changePage)
+        self.action_DeepLearningFoundationOperations.triggered.connect(self.changePage)
+        self.action_CreateHandGestureRecognItionCNN.triggered.connect(self.changePage)
+
         self.ui.action_CloseOtherWindows.triggered.connect(self.closeWindow)
         self.ui.action_CloseMainWindow.triggered.connect(self.closeWindow)
         self.ui.action_CloseAllWindows.triggered.connect(self.closeWindow)
@@ -866,6 +879,7 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_SaveCode.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_ImageAndColors))
         self.ui.pushButton_SaveCode_CreateSimpleCNN.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_CreateSimpleCNN))
         self.ui.pushButton_SaveCode_DeepLearningFoundation.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_DeepLearningFoundation))
+        self.ui.pushButton_SaveCode_CreateSimpleCNN2.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_CreateSimpleCNN2))
         self.ui.pushButton_SaveImage.clicked.connect(self.ImagesAndColorsHandler.SaveImage)
         self.ui.horizontalSlider_SkewHeight.valueChanged.connect(self.PrepareSkewImage)
         self.ui.horizontalSlider_SkewWidth.valueChanged.connect(self.PrepareSkewImage)
@@ -913,12 +927,7 @@ class MainWindow(QMainWindow):
         self.action_SeaBorn.triggered.connect(partial(self.changePDFPage,15))
         self.action_SupervisedMLProcess.triggered.connect(partial(self.changePDFPage,16))
         self.action_TheoreticalDeepLearningFoundation.triggered.connect(partial(self.changePDFPage,17)) 
-        self.action_PythonProgramming.triggered.connect(self.changePage)
-        self.action_LinearAlgebraAndCalculus.triggered.connect(self.changePage)
-        self.action_ProbabilityAndStatistics.triggered.connect(self.changePage)
-        self.action_ImagesAndColorsManipulationsAndOprations.triggered.connect(self.changePage)
-        self.action_CreateSimpleCNNConvolutionalNeuralNetwork.triggered.connect(self.changePage)
-        self.action_DeepLearningFoundationOperations.triggered.connect(self.changePage)
+       
         self.action_ProbabilityAndStatistics.triggered.connect(partial(self.Pdf_In_Browser,"https://mml-book.github.io/book/mml-book.pdf",False))
         self.action_PythonProgramming.triggered.connect(partial(self.Pdf_In_Browser,"https://www.w3schools.com/python/default.asp",False))
         self.action_LinearAlgebraAndCalculus.triggered.connect(partial(self.Pdf_In_Browser,"https://github.com/Ryota-Kawamura/Mathematics-for-Machine-Learning-and-Data-Science-Specialization",False))
@@ -939,11 +948,13 @@ class MainWindow(QMainWindow):
         self.ui.comboBox_SelectCameraDeepLearningFoundation.currentTextChanged.connect(partial(self.PrepareSelectDeepLearningCamera,self.ui.comboBox_SelectCameraDeepLearningFoundation))
         self.ui.comboBox_SelectVideo_DeepLearningFoundation.currentTextChanged.connect(partial(self.PrepareSelectVideo,self.ui.comboBox_SelectVideo_DeepLearningFoundation))
         self.ui.comboBox_SelectOperationDeepLearningFoundation.currentTextChanged.connect(partial(self.PrepareSelectDeepLearningOperations,self.ui.comboBox_SelectOperationDeepLearningFoundation))
+        self.ui.comboBox_SelectCameraStep1CreateSimpleCNN2.currentTextChanged.connect(partial(self.PrepareSelectDeepLearningCamera,self.ui.comboBox_SelectCameraStep1CreateSimpleCNN2))
 
     def ManualSetup(self):
         self.ImagesAndColorsHandler = ImagesAndColorsManipulationsAndOprations()
         self.CreateSimpleCNNHandler = CreateSimpleCNN()
         self.DLOperationsHandler = DeepLearningFoundationOperations(self.ImagesAndColorsHandler, self.CreateSimpleCNNHandler)
+        self.CreateHandGestureRecognitionCNNHandler = CreateHandGestureRecognitionCNN(self.ImagesAndColorsHandler, self.CreateSimpleCNNHandler)
         self.ColorChannelChangeCheckBoxes = [
             self.ui.checkBox_BlueChannel,
             self.ui.checkBox_GreenChannel,
@@ -1058,6 +1069,9 @@ class MainWindow(QMainWindow):
         self.action_DeepLearningFoundationOperations = QtGui.QAction(parent=self)
         self.action_DeepLearningFoundationOperations.setObjectName("action_DeepLearningFoundationOperations")
         self.menu_PracticalDeepLearningFoundations.addAction(self.action_DeepLearningFoundationOperations)
+        self.action_CreateHandGestureRecognItionCNN = QtGui.QAction(parent=self)
+        self.action_CreateHandGestureRecognItionCNN.setObjectName("action_CreateHandGestureRecognItionCNN")
+        self.menu_PracticalDeepLearningFoundations.addAction(self.action_CreateHandGestureRecognItionCNN)
         self.pdf_view = CustomPdfView(self.ui.pages)
         self.pdf_document = QPdfDocument(self.pdf_view)
         self.ui.pages.addWidget(self.pdf_view)       
@@ -1084,6 +1098,8 @@ class MainWindow(QMainWindow):
         self.FillCode(ImagesAndColorsManipulationsAndOprations,self.ui.textBrowser_ImageAndColors, 15)
         self.FillCode(CreateSimpleCNN,self.ui.textBrowser_CreateSimpleCNN, 25)
         self.FillCode(DeepLearningFoundationOperations,self.ui.textBrowser_DeepLearningFoundation, 16)
+        self.FillCode(CreateHandGestureRecognitionCNN,self.ui.textBrowser_CreateSimpleCNN2, 20)
+
 
 def LunchApp():
     import sys
