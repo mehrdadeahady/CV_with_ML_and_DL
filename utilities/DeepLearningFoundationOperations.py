@@ -1492,6 +1492,9 @@ class DownloadLogPopup(QDialog):
             elif response == QMessageBox.StandardButton.No:
                 event.ignore()
 
+    def cleanup(self):
+        self.log_output.clear()
+
 # Downloader for Required Models   
 class Downloader(QObject):
     def __init__(self, url: str, filepath: str,modelType: str,imagePath: str ,log_emitter,expected_size: str,operationType: str,_is_running: bool,Optimized= False, parent=None):

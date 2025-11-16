@@ -1200,6 +1200,20 @@ class MainWindow(QMainWindow):
         self.ConditionalGANsHandler.GenerateAndDisplayImages(sender)
 
     def ConnectActions(self):
+        self.ui.pushButton_SampleWithLowTopK_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.SampleWithTopKAndTemprature)
+        self.ui.pushButton_SampleWithLowTemperature_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.SampleWithTopKAndTemprature)
+        self.ui.pushButton_SampleWithHighTopK_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.SampleWithTopKAndTemprature)
+        self.ui.pushButton_SampleWithHighTemperature_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.SampleWithTopKAndTemprature)
+        self.ui.pushButton_SampleWithDefaultSetting_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.SampleWithDefaultSetting)
+        self.ui.pushButton_TestModel_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.TestModel)
+        self.ui.pushButton_TrainModel_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.TrainModel)
+        self.ui.pushButton_CreateModel_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.CreateModel)
+        self.ui.pushButton_PrepareSampleText_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.PrepareSampleText)
+        self.ui.pushButton_LoadSampleText_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.LoadSampleText)
+        self.ui.pushButton_CleanSampleText_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.CleanSampleText)
+        self.ui.pushButton_SubWordTockenizaion_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.SubWordTokenization)
+        self.ui.pushButton_WordTockenizaion_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.WordTokenization)
+        self.ui.pushButton_CharecterTockenizaion_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.CharacterTokenization)
         self.ui.pushButton_ManWithGlassesToManWithoutGlasses_VAE.clicked.connect(partial(self.VAEHandler.Transition, self.ui.pushButton_ManWithGlassesToManWithoutGlasses_VAE.objectName()))
         self.ui.pushButton_WomanWithoutGlassesToManWithoutGlasses_VAE.clicked.connect(partial(self.VAEHandler.Transition, self.ui.pushButton_WomanWithoutGlassesToManWithoutGlasses_VAE.objectName()))
         self.ui.pushButton_WomanWithGlassesToManWithGlasses_VAE.clicked.connect(partial(self.VAEHandler.Transition, self.ui.pushButton_WomanWithGlassesToManWithGlasses_VAE.objectName()))
@@ -1609,7 +1623,6 @@ class MainWindow(QMainWindow):
         self.action_DLbyPyTorchBinaryAndMultiCategoryClassifications.setObjectName("action_DLbyPyTorchBinaryAndMultiCategoryClassifications")
         self.menu_PracticalDeepLearningFoundations.addAction(self.action_DLbyPyTorchBinaryAndMultiCategoryClassifications)
 
-
         self.menu_TheoreticalGANs = QMenu(parent=self)
         self.menu_TheoreticalGANs.setObjectName("menu_TheoreticalGANs")
         self.ui.menu_Advanced_Generative_Models_Architectures.addMenu(self.menu_TheoreticalGANs)
@@ -1692,7 +1705,7 @@ class MainWindow(QMainWindow):
         self.FillCode(ConditionalGANs,self.ui.textBrowser_ConditionalGANs, 73)
         self.FillCode(CycleGANs,self.ui.textBrowser_CycleGANs, 63)
         self.FillCode(VariationalAutoEncoders,self.ui.textBrowser_VAE, 102)
-        self.FillCode(TextGenerationByRNN,self.ui.textBrowser_TextGenerationByRNN, 12)
+        self.FillCode(TextGenerationByRNN,self.ui.textBrowser_TextGenerationByRNN, 48)
 
 def LunchApp():
     import sys

@@ -4,6 +4,8 @@
 **Purpose:**
 -  To support BSc, MSc, and PhD students in mastering the fundamentals of Computer Vision, through the application of Machine Learning and Deep Learning and Generative adversarial networks techniques.
 
+![UI](/icons/AppUI2.jpg)
+
 **Capabilities:**
 +  📚 Interactive Learning: Guides students through key theoretical and practical concepts in computer vision.
 +  🧠 ML/DL Integration: Offers tutorials and examples that apply machine learning and deep learning to real-world vision tasks.
