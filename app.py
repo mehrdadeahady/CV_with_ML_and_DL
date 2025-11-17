@@ -107,7 +107,7 @@ class MainWindow(QMainWindow):
         self.action_SimpleGANs.setText(_translate("MainWindow","🔰 Creating 4 Simple GANs"))
         self.action_ConditionalGANs.setText(_translate("MainWindow","🐦‍🔥 Creating Conditional GANs (cGAN, wGAN)"))
         self.action_CycleGANs.setText(_translate("MainWindow","🎭 Creating Cycle GANs"))
-        self.action_VariationalAutoEncoders.setText(_translate("MainWindow","🧩 Creating Variational AutoEncoders GANs"))
+        self.action_VariationalAutoEncoders.setText(_translate("MainWindow","🧩 Creating Variational AutoEncoders"))
         self.action_TextGenerationByRNN.setText(_translate("MainWindow","🥨 Generating Text by RNNs"))
 
     def PrepareCancelTraining(self):

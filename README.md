@@ -13,9 +13,9 @@
 +  💡 Research Assistance: Provides insights and suggestions for theses or dissertation topics.
 +  🛠️ Tool Support: Compatible with libraries like OpenCV, TensorFlow, PyTorch, and scikit-learn.
 
+![UI](/icons/AppUI.jpg)
+
 **Ideal Users:**
 + Undergraduate students seeking an accessible intro to vision systems.             
 + Graduate students looking for deeper dives into model architectures and performance.       
 + PhD researchers exploring novel applications or improvements in vision-based AI.     
-
-![UI](/icons/AppUI.jpg)
