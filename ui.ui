@@ -100,7 +100,7 @@
      </size>
     </property>
     <property name="currentIndex">
-     <number>12</number>
+     <number>13</number>
     </property>
     <widget class="QWidget" name="page_ImagesAndColorsManipulationsAndOprations">
      <property name="sizePolicy">
@@ -6271,7 +6271,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
        </rect>
       </property>
       <property name="text">
-       <string>Text Generation by Recurrent Neural Network (RNN):</string>
+       <string>Text Generation by Recurrent Neural Network (RNN) LSTM:</string>
       </property>
      </widget>
      <widget class="QTextBrowser" name="textBrowser_TextGenerationByRNN">
@@ -6491,6 +6491,168 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <property name="text">
        <string>Sample with Low Top-K</string>
       </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_CreateTranslatorByTransformer">
+     <widget class="QLabel" name="label_CreateTranslatorByTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>981</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Creating an English to French Translator by Transformer Type 3 ( Encoder - Decoder ):</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_SaveCode_CreateTranslatorByTransformer">
+      <property name="geometry">
+       <rect>
+        <x>890</x>
+        <y>680</y>
+        <width>100</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save Code</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_LoadDictionary_CreateTranslatorByTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Load Dictionary</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser_CreateTranslatorByTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>180</y>
+        <width>981</width>
+        <height>501</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_TokenizingDictionary_CreateTranslatorByTransformer">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>30</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Tokenizing Dictionary</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_PreparingData_CreateTranslatorByTransformer">
+      <property name="geometry">
+       <rect>
+        <x>670</x>
+        <y>30</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Preparing Data</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_CreateModel_CreateTranslatorByTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>80</y>
+        <width>491</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Create Transformer Model</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_TrainModel_CreateTranslatorByTransformer">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>80</y>
+        <width>481</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Train Transformer Model</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_TestModel_CreateTranslatorByTransformer">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>130</y>
+        <width>481</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Test | Translate by Transformer Model</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_TestText_CreateTranslatorByTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>130</y>
+        <width>491</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="currentText">
+       <string notr="true">Today is a beautiful day!</string>
+      </property>
+      <property name="placeholderText">
+       <string notr="true"/>
+      </property>
+      <item>
+       <property name="text">
+        <string>Today is a beautiful day!</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>A little boy in jeans climbs a small tree while another child looks on.</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>I don't speak French.</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>I do not speak French.</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>I love skiing in the winter!</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>How are you?</string>
+       </property>
+      </item>
      </widget>
     </widget>
     <widget class="QWidget" name="page_AboutAuthorDeveloper">
