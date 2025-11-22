@@ -1201,7 +1201,17 @@ class MainWindow(QMainWindow):
         sender = self.sender().objectName()
         self.ConditionalGANsHandler.GenerateAndDisplayImages(sender)
 
+    def PrepareTestModelTransformerTranslator(self):
+        text = self.ui.comboBox_TestText_CreateTranslatorByTransformer.currentText()
+        self.TransformerHandler.TestModel(text) 
+
     def ConnectActions(self):
+        self.ui.pushButton_TestModel_CreateTranslatorByTransformer.clicked.connect(self.PrepareTestModelTransformerTranslator)
+        self.ui.pushButton_TrainModel_CreateTranslatorByTransformer.clicked.connect(self.TransformerHandler.TrainModel)
+        self.ui.pushButton_CreateModel_CreateTranslatorByTransformer.clicked.connect(self.TransformerHandler.CreateModel)
+        self.ui.pushButton_PreparingData_CreateTranslatorByTransformer.clicked.connect(self.TransformerHandler.PrepareData)
+        self.ui.pushButton_TokenizingDictionary_CreateTranslatorByTransformer.clicked.connect(self.TransformerHandler.SubWordTokenizingDictionary)
+        self.ui.pushButton_LoadDictionary_CreateTranslatorByTransformer.clicked.connect(self.TransformerHandler.LoadDictionary)
         self.ui.pushButton_SampleWithLowTopK_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.SampleWithTopKAndTemprature)
         self.ui.pushButton_SampleWithLowTemperature_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.SampleWithTopKAndTemprature)
         self.ui.pushButton_SampleWithHighTopK_TextGenerationByRNN.clicked.connect(self.TextGenerationByRNNHandler.SampleWithTopKAndTemprature)
@@ -1714,7 +1724,7 @@ class MainWindow(QMainWindow):
         self.FillCode(CycleGANs,self.ui.textBrowser_CycleGANs, 63)
         self.FillCode(VariationalAutoEncoders,self.ui.textBrowser_VAE, 102)
         self.FillCode(TextGenerationByRNN,self.ui.textBrowser_TextGenerationByRNN, 48)
-        self.FillCode(CreateTranslatorByTransformer,self.ui.textBrowser_CreateTranslatorByTransformer, 48)
+        self.FillCode(CreateTranslatorByTransformer,self.ui.textBrowser_CreateTranslatorByTransformer, 51)
 
 def LunchApp():
     import sys
