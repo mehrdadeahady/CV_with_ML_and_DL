@@ -17,6 +17,7 @@ from utilities.CycleGANs import CycleGANs
 from utilities.VariationalAutoEncoders import VariationalAutoEncoders
 from utilities.TextGenerationByRNN import TextGenerationByRNN
 from utilities.CreateTranslatorByTransformer import CreateTranslatorByTransformer
+from utilities.GeneratingTextByGPT2xlTransformer import GeneratingTextByGPT2xlTransformer
 from utilities.ScrollableMessageBox import show_scrollable_message
 import os
 from os import path, listdir
@@ -111,6 +112,7 @@ class MainWindow(QMainWindow):
         self.action_VariationalAutoEncoders.setText(_translate("MainWindow","🧩 Creating Variational AutoEncoders"))
         self.action_TextGenerationByRNN.setText(_translate("MainWindow","🥨 Generating Text by RNNs"))
         self.action_CreateTranslatorByTransformer.setText(_translate("MainWindow","🌀 Create a Translator by Transformer"))
+        self.action_GeneratingTextByGPT2xlTransformer.setText(_translate("MainWindow","💥 Generating Text By GPT2-xl Transformer"))
 
     def PrepareCancelTraining(self):
         self.CreateSimpleCNNHandler.CancelTraining()
@@ -1369,6 +1371,7 @@ class MainWindow(QMainWindow):
         self.action_VariationalAutoEncoders.triggered.connect(self.changePage)
         self.action_TextGenerationByRNN.triggered.connect(self.changePage)
         self.action_CreateTranslatorByTransformer.triggered.connect(self.changePage)
+        self.action_GeneratingTextByGPT2xlTransformer.triggered.connect(self.changePage)
 
         self.ui.action_CloseOtherWindows.triggered.connect(self.closeWindow)
         self.ui.action_CloseMainWindow.triggered.connect(self.closeWindow)
@@ -1401,6 +1404,7 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_SaveCode_VAE.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_VAE))
         self.ui.pushButton_SaveCode_TextGenerationByRNN.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_TextGenerationByRNN))
         self.ui.pushButton_SaveCode_CreateTranslatorByTransformer.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_CreateTranslatorByTransformer))
+        self.ui.pushButton_SaveCode_GeneratingTextByGPT2xlTransformer.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_GeneratingTextByGPT2xlTransformer))
 
         self.ui.comboBox_ColorSpaceConversion.currentTextChanged.connect(self.PrepareConvertColorSpace)
         self.ui.pushButton_SaveImage.clicked.connect(self.ImagesAndColorsHandler.SaveImage)
@@ -1507,6 +1511,7 @@ class MainWindow(QMainWindow):
         self.VAEHandler = VariationalAutoEncoders()
         self.TextGenerationByRNNHandler = TextGenerationByRNN()
         self.TransformerHandler = CreateTranslatorByTransformer()
+        self.GPT2xlTransformerHandler = GeneratingTextByGPT2xlTransformer()
         
         self.ColorChannelChangeCheckBoxes = [
             self.ui.checkBox_BlueChannel,
@@ -1678,6 +1683,9 @@ class MainWindow(QMainWindow):
         self.action_CreateTranslatorByTransformer = QtGui.QAction(parent=self)
         self.action_CreateTranslatorByTransformer.setObjectName("action_CreateTranslatorByTransformer")
         self.menu_PracticalGANs.addAction(self.action_CreateTranslatorByTransformer)
+        self.action_GeneratingTextByGPT2xlTransformer = QtGui.QAction(parent=self)
+        self.action_GeneratingTextByGPT2xlTransformer.setObjectName("action_GeneratingTextByGPT2xlTransformer")
+        self.menu_PracticalGANs.addAction(self.action_GeneratingTextByGPT2xlTransformer)
 
         self.menu_TheoreticalGANsDeploymentOptimization = QMenu(parent=self)
         self.menu_TheoreticalGANsDeploymentOptimization.setObjectName("menu_TheoreticalGANsDeploymentOptimization")
@@ -1725,6 +1733,7 @@ class MainWindow(QMainWindow):
         self.FillCode(VariationalAutoEncoders,self.ui.textBrowser_VAE, 102)
         self.FillCode(TextGenerationByRNN,self.ui.textBrowser_TextGenerationByRNN, 48)
         self.FillCode(CreateTranslatorByTransformer,self.ui.textBrowser_CreateTranslatorByTransformer, 51)
+        self.FillCode(GeneratingTextByGPT2xlTransformer,self.ui.textBrowser_GeneratingTextByGPT2xlTransformer, 51)
 
 def LunchApp():
     import sys

@@ -100,7 +100,7 @@
      </size>
     </property>
     <property name="currentIndex">
-     <number>13</number>
+     <number>14</number>
     </property>
     <widget class="QWidget" name="page_ImagesAndColorsManipulationsAndOprations">
      <property name="sizePolicy">
@@ -6653,6 +6653,317 @@ li.checked::marker { content: &quot;\2612&quot;; }
         <string>How are you?</string>
        </property>
       </item>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_GeneratingTextByGPT2xlTransformer">
+     <widget class="QPushButton" name="pushButton_SaveCode_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>890</x>
+        <y>680</y>
+        <width>100</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save Code</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_InputTensor_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>491</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Input Tensor into Query (Q), Key (K), and Value</string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowser_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>420</y>
+        <width>981</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_ReshapeTensors_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>30</y>
+        <width>491</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Reshape the Q, K, V Tensors into Multiple Attention Heads</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_ComputeScaledAttentionScores_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>70</y>
+        <width>491</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Compute the Scaled Dot-Product Attention Scores</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_ApplyCausalMaskToScaledAttentionScores_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>70</y>
+        <width>491</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Apply a Causal Mask to the Scaled Attention Scores</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_ApplySoftmaxFunctionToMaskedAttentionScores_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>110</y>
+        <width>491</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Apply the Softmax Function to the Masked Attention Scores</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_ApplyAttentionWeightsToValueTensor_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>110</y>
+        <width>491</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Apply the Attention Weights to the Value Tensor</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_TokenizingByBPEEncoder_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>150</y>
+        <width>331</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Tokenizing by BPE Encoder</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_DecodingTokensToOriginalTestxByBPE_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>150</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Decoding Tokens to Original Testx by BPE</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_TestBPEEncoder_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>150</y>
+        <width>331</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Encode-Decode by BPE Encoder</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_CompareTheReLUAndGELUActivationFunctionsByPlot_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>190</y>
+        <width>981</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Compare the ReLU and GELU Activation Functions by Plot</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_Operations_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>981</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Word Embedding and Positional Encoding and Causal Self-Attention in GPT-2:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>230</y>
+        <width>981</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Generating Texts by GPT2 Transformer Type 2 ( Only Decoder ):</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_CreateModel_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>260</y>
+        <width>331</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Create Model</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_TrainModel_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>260</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Train Model</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_DownloadLoadPreTrainedGPT2XLWeight_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>260</y>
+        <width>331</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Download | Load Pre-Trained GPT2XL Weight</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_TransfersWeights_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>300</y>
+        <width>981</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Transfers Weights from a Pretrained Hugging Face GPT-2 XL Model to the created custom GPT2XL Model</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_GenerateTextBySetting1_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>340</y>
+        <width>331</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Generate Text by Setting 1</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_GenerateTextBySetting2_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>340</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Generate Text by Setting 2</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_GenerateTextBySetting3_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>340</y>
+        <width>331</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Generate Text by Setting 3</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_GenerateTextBySetting6_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>380</y>
+        <width>331</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Generate Text by Setting 6</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_GenerateTextBySetting4_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>380</y>
+        <width>331</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Generate Text by Setting 4</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_GenerateTextBySetting5_GeneratingTextByGPT2xlTransformer">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>380</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Generate Text by Setting 5</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="page_AboutAuthorDeveloper">
