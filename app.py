@@ -1208,6 +1208,26 @@ class MainWindow(QMainWindow):
         self.TransformerHandler.TestModel(text) 
 
     def ConnectActions(self):
+        self.ui.pushButton_GenerateTextBySetting1_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.GenerateTextByModel)
+        self.ui.pushButton_GenerateTextBySetting2_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.GenerateTextByModel)
+        self.ui.pushButton_GenerateTextBySetting3_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.GenerateTextByModel)
+        self.ui.pushButton_GenerateTextBySetting4_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.GenerateTextByModel)
+        self.ui.pushButton_GenerateTextBySetting5_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.GenerateTextByModel)
+        self.ui.pushButton_GenerateTextBySetting6_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.GenerateTextByModel)
+        self.ui.pushButton_TransfersWeights_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.transfer_gpt2xl_weights)
+        self.ui.pushButton_CreateModel_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.CreateGPT2xlModel)
+        self.ui.pushButton_TrainModel_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.TrainModel)
+        self.ui.pushButton_DownloadLoadPreTrainedGPT2XLWeight_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.DownloadLoadGPT2XLWeights)
+        self.ui.pushButton_CompareTheReLUAndGELUActivationFunctionsByPlot_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.plot_relu_vs_gelu)
+        self.ui.pushButton_TestBPEEncoder_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.tokenize_and_decode_bpe)
+        self.ui.pushButton_DecodingTokensToOriginalTestxByBPE_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.decode_bpe_indices)
+        self.ui.pushButton_TokenizingByBPEEncoder_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.demonstrate_bpe_tokenization)
+        self.ui.pushButton_ApplyAttentionWeightsToValueTensor_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.apply_attention_and_reshape)
+        self.ui.pushButton_ApplySoftmaxFunctionToMaskedAttentionScores_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.apply_softmax_and_print)
+        self.ui.pushButton_ApplyCausalMaskToScaledAttentionScores_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.apply_causal_mask_and_print)
+        self.ui.pushButton_ComputeScaledAttentionScores_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.compute_scaled_dot_product_attention)
+        self.ui.pushButton_ReshapeTensors_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.reshape_into_heads_and_print)
+        self.ui.pushButton_InputTensor_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.demonstrate_qkv_projection)
         self.ui.pushButton_TestModel_CreateTranslatorByTransformer.clicked.connect(self.PrepareTestModelTransformerTranslator)
         self.ui.pushButton_TrainModel_CreateTranslatorByTransformer.clicked.connect(self.TransformerHandler.TrainModel)
         self.ui.pushButton_CreateModel_CreateTranslatorByTransformer.clicked.connect(self.TransformerHandler.CreateModel)
@@ -1733,7 +1753,7 @@ class MainWindow(QMainWindow):
         self.FillCode(VariationalAutoEncoders,self.ui.textBrowser_VAE, 102)
         self.FillCode(TextGenerationByRNN,self.ui.textBrowser_TextGenerationByRNN, 48)
         self.FillCode(CreateTranslatorByTransformer,self.ui.textBrowser_CreateTranslatorByTransformer, 51)
-        self.FillCode(GeneratingTextByGPT2xlTransformer,self.ui.textBrowser_GeneratingTextByGPT2xlTransformer, 51)
+        self.FillCode(GeneratingTextByGPT2xlTransformer,self.ui.textBrowser_GeneratingTextByGPT2xlTransformer, 50)
 
 def LunchApp():
     import sys
