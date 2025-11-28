@@ -18,6 +18,7 @@ from utilities.VariationalAutoEncoders import VariationalAutoEncoders
 from utilities.TextGenerationByRNN import TextGenerationByRNN
 from utilities.CreateTranslatorByTransformer import CreateTranslatorByTransformer
 from utilities.GeneratingTextByGPT2xlTransformer import GeneratingTextByGPT2xlTransformer
+from utilities.GeneratingTextByDownGradedGPT2Transformer import GeneratingTextByDownGradedGPT2Transformer
 from utilities.ScrollableMessageBox import show_scrollable_message
 import os
 from os import path, listdir
@@ -42,7 +43,7 @@ try:
     from PyQt6.QtWidgets import QVBoxLayout,QMenu, QMainWindow, QApplication, QWidget, QMessageBox, QFileDialog
     from PyQt6.QtPdf import QPdfDocument
     from PyQt6.QtPdfWidgets import QPdfView
-    from PyQt6.QtGui import QDesktopServices, QCloseEvent,QFont
+    from PyQt6.QtGui import QDesktopServices, QCloseEvent,QFont, QFontDatabase
     from PyQt6.QtWebEngineWidgets import QWebEngineView
     from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEnginePage
     from PyQt6.QtCore import QUrl, Qt
@@ -113,6 +114,7 @@ class MainWindow(QMainWindow):
         self.action_TextGenerationByRNN.setText(_translate("MainWindow","🥨 Generating Text by RNNs"))
         self.action_CreateTranslatorByTransformer.setText(_translate("MainWindow","🌀 Create a Translator by Transformer"))
         self.action_GeneratingTextByGPT2xlTransformer.setText(_translate("MainWindow","💥 Generating Text By GPT2-xl Transformer"))
+        self.action_GeneratingTextByDownGradedGPT2Transformer.setText(_translate("MainWindow","✴ Generating Text by DownGraded GPT2 Transformer"))
 
     def PrepareCancelTraining(self):
         self.CreateSimpleCNNHandler.CancelTraining()
@@ -1392,6 +1394,7 @@ class MainWindow(QMainWindow):
         self.action_TextGenerationByRNN.triggered.connect(self.changePage)
         self.action_CreateTranslatorByTransformer.triggered.connect(self.changePage)
         self.action_GeneratingTextByGPT2xlTransformer.triggered.connect(self.changePage)
+        self.action_GeneratingTextByDownGradedGPT2Transformer.triggered.connect(self.changePage)
 
         self.ui.action_CloseOtherWindows.triggered.connect(self.closeWindow)
         self.ui.action_CloseMainWindow.triggered.connect(self.closeWindow)
@@ -1425,6 +1428,7 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_SaveCode_TextGenerationByRNN.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_TextGenerationByRNN))
         self.ui.pushButton_SaveCode_CreateTranslatorByTransformer.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_CreateTranslatorByTransformer))
         self.ui.pushButton_SaveCode_GeneratingTextByGPT2xlTransformer.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_GeneratingTextByGPT2xlTransformer))
+        self.ui.pushButton_SaveCode_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_GeneratingTextByDownGradedGPT2Transformer))
 
         self.ui.comboBox_ColorSpaceConversion.currentTextChanged.connect(self.PrepareConvertColorSpace)
         self.ui.pushButton_SaveImage.clicked.connect(self.ImagesAndColorsHandler.SaveImage)
@@ -1532,6 +1536,7 @@ class MainWindow(QMainWindow):
         self.TextGenerationByRNNHandler = TextGenerationByRNN()
         self.TransformerHandler = CreateTranslatorByTransformer()
         self.GPT2xlTransformerHandler = GeneratingTextByGPT2xlTransformer()
+        self.DownGradedGPT2Handler = GeneratingTextByDownGradedGPT2Transformer()
         
         self.ColorChannelChangeCheckBoxes = [
             self.ui.checkBox_BlueChannel,
@@ -1706,6 +1711,9 @@ class MainWindow(QMainWindow):
         self.action_GeneratingTextByGPT2xlTransformer = QtGui.QAction(parent=self)
         self.action_GeneratingTextByGPT2xlTransformer.setObjectName("action_GeneratingTextByGPT2xlTransformer")
         self.menu_PracticalGANs.addAction(self.action_GeneratingTextByGPT2xlTransformer)
+        self.action_GeneratingTextByDownGradedGPT2Transformer = QtGui.QAction(parent=self)
+        self.action_GeneratingTextByDownGradedGPT2Transformer.setObjectName("action_GeneratingTextByDownGradedGPT2Transformer")
+        self.menu_PracticalGANs.addAction(self.action_GeneratingTextByDownGradedGPT2Transformer)
 
         self.menu_TheoreticalGANsDeploymentOptimization = QMenu(parent=self)
         self.menu_TheoreticalGANsDeploymentOptimization.setObjectName("menu_TheoreticalGANsDeploymentOptimization")
@@ -1754,6 +1762,7 @@ class MainWindow(QMainWindow):
         self.FillCode(TextGenerationByRNN,self.ui.textBrowser_TextGenerationByRNN, 48)
         self.FillCode(CreateTranslatorByTransformer,self.ui.textBrowser_CreateTranslatorByTransformer, 51)
         self.FillCode(GeneratingTextByGPT2xlTransformer,self.ui.textBrowser_GeneratingTextByGPT2xlTransformer, 50)
+        self.FillCode(GeneratingTextByDownGradedGPT2Transformer,self.ui.textBrowser_GeneratingTextByDownGradedGPT2Transformer, 50)
 
 def LunchApp():
     import sys
@@ -1762,10 +1771,9 @@ def LunchApp():
        raise Exception("You must use Python 3.10 or higher. Recommended version is Python 3.13")
     else:
         app = QApplication(sys.argv)
-        # app.setFont(QFont("Arial", 10))
         window = MainWindow()
         window.show()
         sys.exit(app.exec())
-
+      
 if __name__ == "__main__":
     LunchApp()
