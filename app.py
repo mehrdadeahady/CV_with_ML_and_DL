@@ -1210,6 +1210,17 @@ class MainWindow(QMainWindow):
         self.TransformerHandler.TestModel(text) 
 
     def ConnectActions(self):
+        self.ui.pushButton_GenerateTextBy40EpochsTrainedModelPrompt2_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.GenerateTextByModel)
+        self.ui.pushButton_GenerateTextBy40EpochsTrainedModelPrompt1_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.GenerateTextByModel)
+        self.ui.pushButton_GenerateTextBy20EpochsTrainedModelPrompt2_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.GenerateTextByModel)
+        self.ui.pushButton_GenerateTextBy20EpochsTrainedModelPrompt1_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.GenerateTextByModel)
+        self.ui.pushButton_GenerateTextBy10EpochsTrainedModelPrompt2_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.GenerateTextByModel)
+        self.ui.pushButton_GenerateTextBy10EpochsTrainedModelPrompt1_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.GenerateTextByModel)
+        self.ui.pushButton_TrainModel_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.TrainModel)
+        self.ui.pushButton_CreateModel_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.CreateModel)
+        self.ui.pushButton_CreateBaches_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.CreateBatches)
+        self.ui.pushButton_TokenizeText_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.TokenizeText)
+        self.ui.pushButton_LoadText_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.LoadText)
         self.ui.pushButton_GenerateTextBySetting1_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.GenerateTextByModel)
         self.ui.pushButton_GenerateTextBySetting2_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.GenerateTextByModel)
         self.ui.pushButton_GenerateTextBySetting3_GeneratingTextByGPT2xlTransformer.clicked.connect(self.GPT2xlTransformerHandler.GenerateTextByModel)
@@ -1761,8 +1772,8 @@ class MainWindow(QMainWindow):
         self.FillCode(VariationalAutoEncoders,self.ui.textBrowser_VAE, 102)
         self.FillCode(TextGenerationByRNN,self.ui.textBrowser_TextGenerationByRNN, 48)
         self.FillCode(CreateTranslatorByTransformer,self.ui.textBrowser_CreateTranslatorByTransformer, 51)
-        self.FillCode(GeneratingTextByGPT2xlTransformer,self.ui.textBrowser_GeneratingTextByGPT2xlTransformer, 50)
-        self.FillCode(GeneratingTextByDownGradedGPT2Transformer,self.ui.textBrowser_GeneratingTextByDownGradedGPT2Transformer, 50)
+        self.FillCode(GeneratingTextByGPT2xlTransformer,self.ui.textBrowser_GeneratingTextByGPT2xlTransformer, 60)
+        self.FillCode(GeneratingTextByDownGradedGPT2Transformer,self.ui.textBrowser_GeneratingTextByDownGradedGPT2Transformer, 46)
 
 def LunchApp():
     import sys

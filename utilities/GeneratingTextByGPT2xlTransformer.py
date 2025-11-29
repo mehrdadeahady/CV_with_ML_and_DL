@@ -136,6 +136,17 @@ class GeneratingTextByGPT2xlTransformer(QObject):
         # Flag indicating whether weights have been transferred from Hugging Face model
         self.WeightsTransfered = False
 
+        self.log_emitter = LogEmitter()
+        # Create a popup window to display training logs
+        self.DownloadLogPopup = DownloadLogPopup(
+            # Log emitter for streaming messages to the popup
+            self.log_emitter
+        )
+       
+        # Disable the cancel button during tokenization to prevent interruptions
+        self.DownloadLogPopup.cancel_button.setEnabled(False)
+
+
     # Demonstrates how to project an input tensor into query (Q), key (K), and value (V) vectors
     # using a linear transformation. Also displays the resulting tensor shapes in a message box.
     def demonstrate_qkv_projection(self):
@@ -564,12 +575,10 @@ class GeneratingTextByGPT2xlTransformer(QObject):
             QMessageBox.warning(None, "Model Already Exists", "A GPT-2 XL model has already been created.")
             return
 
+        # Show the log popup window to display progress
+        self.DownloadLogPopup.show()
         # Inform the user that model creation is starting and may take time
-        QMessageBox.information(
-            None,
-            "Creating Model...",
-            "Initializing the GPT-2 XL model.\n\nThis may take up to a minute.\nPlease close this window and wait..."
-        )
+        self.DownloadLogPopup.Append_Log("Creating Model...\nInitializing the GPT-2 XL model.\nThis may take up to a minute.\nPlease wait...")
 
         # Instantiate the GPT-2 XL model using the current configuration
         self.model = GPT2XL(self.config)
@@ -578,8 +587,8 @@ class GeneratingTextByGPT2xlTransformer(QObject):
         num = sum(p.numel() for p in self.model.transformer.parameters())
 
         # Display a scrollable message with the model summary and parameter count
-        show_scrollable_message(
-            "Model Created Successfully",
+        self.DownloadLogPopup.Append_Log(
+            "Model Created Successfully\n" +
             f"Total Parameters in the Model: {num / 1e6:.2f} million\n\nModel Architecture:\n{self.model}"
         )
 
@@ -595,7 +604,7 @@ class GeneratingTextByGPT2xlTransformer(QObject):
         QMessageBox.warning(
             None,
             "Attention",
-            "Training GPT-2 XL requires specialized hardware and is extremely time-consuming.\n\n"
+            "Training GPT-2 XL requires specialized super facilities hardware and is extremely time-consuming.\n\n"
             "It is strongly recommended to download and use pre-trained weights instead."
         )
 
@@ -618,9 +627,11 @@ class GeneratingTextByGPT2xlTransformer(QObject):
             self.model_hf = GPT2LMHeadModel.from_pretrained("gpt2xl")
             self.tokenizer_hf = GPT2Tokenizer.from_pretrained("gpt2xl")
             self.sd_hf = self.model_hf.state_dict()
-            show_scrollable_message(
-                "Weights Loaded Successfully",
-                f"Hugging Face GPT-2 XL Model:\n\n{self.model_hf}"
+            # Show the log popup window to display progress
+            self.DownloadLogPopup.show()
+            # Inform the user that model loaded successfully
+            self.DownloadLogPopup.Append_Log(
+                "\nWeights Loaded Successfully\n\n" + f"Hugging Face GPT-2 XL Model:\n{str(self.model_hf)}"
             )
 
         # Check if all required files exist in the local 'gpt2xl' folder
@@ -633,10 +644,11 @@ class GeneratingTextByGPT2xlTransformer(QObject):
             os.path.exists("gpt2xl/tokenizer_config.json") and
             os.path.exists("gpt2xl/vocab.json")
         ):
-            QMessageBox.information(
-                None,
-                "Loading Model...",
-                "Loading the GPT-2 XL model.\n\nThis may take up to 2 minutes.\nPlease close this window and wait..."
+            # Show the log popup window to display progress
+            self.DownloadLogPopup.show()
+            # Inform the user that model loading is starting and may take time
+            self.DownloadLogPopup.Append_Log(
+                "Loading Model...\nLoading the GPT-2 XL model.\nThis may take up to 2 minutes.\nPlease wait..."
             )
             LoadWeights()
             return
@@ -682,15 +694,17 @@ class GeneratingTextByGPT2xlTransformer(QObject):
             )
             return
 
+        # Show the log popup window to display progress
+        self.DownloadLogPopup.show()
         # Display the shape of a key tensor before weight transfer for verification
-        QMessageBox.information(
-            None,
-            "Inspecting Tensor Shapes",
-            "Shape of 'c_fc' weight in Hugging Face model:\n"
-            f"{self.model_hf.transformer.h[0].mlp.c_fc.weight.shape}\n\n"
-            "Shape of corresponding tensor in custom GPT2XL model:\n"
-            f"{self.model.transformer.h[0].mlp.c_fc.weight.shape}\n\n"
-            "Transferring weights...\nThis may take up to 3 minutes.\nPlease close this window and wait."
+        # Inform the user that Transfering Weights is starting and may take time
+        self.DownloadLogPopup.Append_Log(
+            "Inspecting Tensor Shapes\n" +
+            "Shape of 'c_fc' weight in Hugging Face model:\n"  +
+            f"{self.model_hf.transformer.h[0].mlp.c_fc.weight.shape}\n\n" +
+            "Shape of corresponding tensor in custom GPT2XL model:\n" +
+            f"{self.model.transformer.h[0].mlp.c_fc.weight.shape}\n\n" +
+            "Transferring weights...\nThis may take up to 3 minutes.\nPlease wait...\n"
         )
 
         # Filter out keys that are not needed for weight transfer
@@ -720,9 +734,10 @@ class GeneratingTextByGPT2xlTransformer(QObject):
 
         # Mark that weights have been successfully transferred
         self.WeightsTransfered = True
-
+        # Show the log popup window to display progress
+        self.DownloadLogPopup.show()
         # Notify the user of successful transfer
-        QMessageBox.information(None, "Weights Transferred", "Weights have been transferred successfully.")
+        self.DownloadLogPopup.Append_Log("Weights have been transferred successfully.")
 
     # Autoregressively generates tokens from the model using temperature and top-k sampling.
     def sample(self, idx, max_new_tokens, temperature=1.0, top_k=None):
@@ -802,7 +817,7 @@ class GeneratingTextByGPT2xlTransformer(QObject):
         )
 
         # Display the result in an informational message box
-        QMessageBox.information(None, "Text Generation Result", result)
+        self.DownloadLogPopup.Append_Log("Text Generation Result:\n" + result)
 
     '''
     the differences between these generate calls by focusing on how the prompt, temperature, top_k, and random seed affect the output of the sample and generate functions.
@@ -898,13 +913,11 @@ class GeneratingTextByGPT2xlTransformer(QObject):
                 "3. Transfer weights to the custom model"
             )
             return
-
+        
+        # Show the log popup window to display progress
+        self.DownloadLogPopup.show()
         # Notify the user that generation is starting and may take time
-        QMessageBox.information(
-            None,
-            "Generating Text",
-            "Text generation is in progress.\n\nThis may take up to 5 minutes.\nPlease close this window and wait..."
-        )
+        self.DownloadLogPopup.Append_Log("Text generation is in progress.\nThis may take up to 5 minutes.\nPlease wait...")
 
         # Identify which button triggered the generation
         sender = self.sender().objectName()

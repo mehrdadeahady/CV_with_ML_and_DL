@@ -1492,6 +1492,9 @@ class DownloadLogPopup(QDialog):
             elif response == QMessageBox.StandardButton.No:
                 event.ignore()
 
+        if self.downloader is None:
+            self.cleanup()
+        
     def cleanup(self):
         self.log_output.clear()
 
