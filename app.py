@@ -1212,6 +1212,12 @@ class MainWindow(QMainWindow):
         self.TransformerHandler.TestModel(text) 
 
     def ConnectActions(self):
+        self.ui.pushButton_GenerateSong_GeneratingMimickedStyleMusicByMuseGAN.clicked.connect(self.MuseGANHelper.GenerateSong)
+        self.ui.pushButton_TrainModel_GeneratingMimickedStyleMusicByMuseGAN.clicked.connect(self.MuseGANHelper.TrainModel)
+        self.ui.pushButton_CreateModel_GeneratingMimickedStyleMusicByMuseGAN.clicked.connect(self.MuseGANHelper.CreateModels)
+        self.ui.pushButton_ConvertDataToMusic_GeneratingMimickedStyleMusicByMuseGAN.clicked.connect(self.MuseGANHelper.ConvertDataToMusic)
+        self.ui.pushButton_PrepareData_GeneratingMimickedStyleMusicByMuseGAN.clicked.connect(self.MuseGANHelper.PrepareData)
+        self.ui.pushButton_LoadData_GeneratingMimickedStyleMusicByMuseGAN.clicked.connect(self.MuseGANHelper.LoadData)
         self.ui.pushButton_GenerateTextBy40EpochsTrainedModelPrompt2_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.GenerateTextByModel)
         self.ui.pushButton_GenerateTextBy40EpochsTrainedModelPrompt1_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.GenerateTextByModel)
         self.ui.pushButton_GenerateTextBy20EpochsTrainedModelPrompt2_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(self.DownGradedGPT2Handler.GenerateTextByModel)
@@ -1782,7 +1788,7 @@ class MainWindow(QMainWindow):
         self.FillCode(CreateTranslatorByTransformer,self.ui.textBrowser_CreateTranslatorByTransformer, 51)
         self.FillCode(GeneratingTextByGPT2xlTransformer,self.ui.textBrowser_GeneratingTextByGPT2xlTransformer, 60)
         self.FillCode(GeneratingTextByDownGradedGPT2Transformer,self.ui.textBrowser_GeneratingTextByDownGradedGPT2Transformer, 46)
-        self.FillCode(GeneratingMimickedStyleMusicByMuseGAN,self.ui.textBrowser_GeneratingMimickedStyleMusicByMuseGAN, 46)
+        self.FillCode(GeneratingMimickedStyleMusicByMuseGAN,self.ui.textBrowser_GeneratingMimickedStyleMusicByMuseGAN, 36)
 
 def LunchApp():
     import sys

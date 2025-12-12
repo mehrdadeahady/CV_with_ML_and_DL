@@ -1,5 +1,6 @@
-Main Courses for Computer Vision have Comments for begginers and Students.
+Main Courses for Computer Vision and AI have Comments for begginers and Students.
 UI Code is Clean by Naming Techniques so it does't need Comments.
+GAN comments refined by Copilot for Clarity.
 
 For extending or changing ui.ui inside qtDesigner:
 
@@ -24,3 +25,4 @@ Replace same lines in Ui_MainWindow class in temporaryFile with copied files.
 
 Now replace old Ui_MainWindow class inside Ui_MainWindow.py with new Ui_MainWindow class in temporaryFile.py.
 You can delete aptemporaryFile.py file. 
+
