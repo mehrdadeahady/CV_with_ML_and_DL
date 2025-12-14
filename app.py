@@ -20,6 +20,7 @@ from utilities.CreateTranslatorByTransformer import CreateTranslatorByTransforme
 from utilities.GeneratingTextByGPT2xlTransformer import GeneratingTextByGPT2xlTransformer
 from utilities.GeneratingTextByDownGradedGPT2Transformer import GeneratingTextByDownGradedGPT2Transformer
 from utilities.GeneratingMimickedStyleMusicByMuseGAN import GeneratingMimickedStyleMusicByMuseGAN
+from utilities.GeneratingMusicByGPTStyleMusicTransformer import GeneratingMusicByGPTStyleMusicTransformer
 from utilities.ScrollableMessageBox import show_scrollable_message
 import os
 from os import path, listdir
@@ -116,7 +117,8 @@ class MainWindow(QMainWindow):
         self.action_CreateTranslatorByTransformer.setText(_translate("MainWindow","🌀 Create a Translator by Transformer"))
         self.action_GeneratingTextByGPT2xlTransformer.setText(_translate("MainWindow","💥 Generating Text By GPT2-xl Transformer"))
         self.action_GeneratingTextByDownGradedGPT2Transformer.setText(_translate("MainWindow","✴ Generating Text by DownGraded GPT2 Transformer"))
-        self.action_GeneratingMimickedStyleMusicByMuseGAN.setText(_translate("MainWindow","𝄞 Generating Mimicked Style Music by MuseGAN")) # ♫
+        self.action_GeneratingMimickedStyleMusicByMuseGAN.setText(_translate("MainWindow","𝄞 Generating Mimicked Style Music by MuseGAN")) 
+        self.action_GeneratingMusicByGPTStyleMusicTransformer.setText(_translate("MainWindow","♫ Generating Music by GPT Style Music Transformer"))
 
     def PrepareCancelTraining(self):
         self.CreateSimpleCNNHandler.CancelTraining()
@@ -1415,6 +1417,7 @@ class MainWindow(QMainWindow):
         self.action_GeneratingTextByGPT2xlTransformer.triggered.connect(self.changePage)
         self.action_GeneratingTextByDownGradedGPT2Transformer.triggered.connect(self.changePage)
         self.action_GeneratingMimickedStyleMusicByMuseGAN.triggered.connect(self.changePage)
+        self.action_GeneratingMusicByGPTStyleMusicTransformer.triggered.connect(self.changePage)
 
         self.ui.action_CloseOtherWindows.triggered.connect(self.closeWindow)
         self.ui.action_CloseMainWindow.triggered.connect(self.closeWindow)
@@ -1433,6 +1436,7 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_UploadStyles_NeuralStyleTransfer.clicked.connect(self.Upload_Files)
         self.ui.action_UploadStyleTransferModels.triggered.connect(self.Upload_Files)
 
+        self.ui.pushButton_SaveCode_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_GeneratingMusicByGPTStyleMusicTransformer))
         self.ui.pushButton_SaveCode_GeneratingMimickedStyleMusicByMuseGAN.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_GeneratingMimickedStyleMusicByMuseGAN))
         self.ui.pushButton_SaveCode_TransferLearning.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_TransferLearning))
         self.ui.pushButton_SaveCode.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_ImageAndColors))
@@ -1559,6 +1563,7 @@ class MainWindow(QMainWindow):
         self.GPT2xlTransformerHandler = GeneratingTextByGPT2xlTransformer()
         self.DownGradedGPT2Handler = GeneratingTextByDownGradedGPT2Transformer()
         self.MuseGANHelper = GeneratingMimickedStyleMusicByMuseGAN()
+        self.GPTStyleMusicTransformerHandler = GeneratingMusicByGPTStyleMusicTransformer()
 
         self.ColorChannelChangeCheckBoxes = [
             self.ui.checkBox_BlueChannel,
@@ -1739,6 +1744,9 @@ class MainWindow(QMainWindow):
         self.action_GeneratingMimickedStyleMusicByMuseGAN = QtGui.QAction(parent=self)
         self.action_GeneratingMimickedStyleMusicByMuseGAN.setObjectName("action_GeneratingMimickedStyleMusicByMuseGAN")
         self.menu_PracticalGANs.addAction(self.action_GeneratingMimickedStyleMusicByMuseGAN)
+        self.action_GeneratingMusicByGPTStyleMusicTransformer = QtGui.QAction(parent=self)
+        self.action_GeneratingMusicByGPTStyleMusicTransformer.setObjectName("action_GeneratingMusicByGPTStyleMusicTransformer")
+        self.menu_PracticalGANs.addAction(self.action_GeneratingMusicByGPTStyleMusicTransformer)
 
         self.menu_TheoreticalGANsDeploymentOptimization = QMenu(parent=self)
         self.menu_TheoreticalGANsDeploymentOptimization.setObjectName("menu_TheoreticalGANsDeploymentOptimization")
@@ -1789,6 +1797,7 @@ class MainWindow(QMainWindow):
         self.FillCode(GeneratingTextByGPT2xlTransformer,self.ui.textBrowser_GeneratingTextByGPT2xlTransformer, 60)
         self.FillCode(GeneratingTextByDownGradedGPT2Transformer,self.ui.textBrowser_GeneratingTextByDownGradedGPT2Transformer, 46)
         self.FillCode(GeneratingMimickedStyleMusicByMuseGAN,self.ui.textBrowser_GeneratingMimickedStyleMusicByMuseGAN, 36)
+        self.FillCode(GeneratingMusicByGPTStyleMusicTransformer,self.ui.textBrowser_GeneratingMusicByGPTStyleMusicTransformer, 36)
 
 def LunchApp():
     import sys
