@@ -1,7 +1,5 @@
 # this file is copied from Kevin Yang's GitHub repository https://github.com/jason9693/midi-neural-processor/blob/master/processor.py
-
 import pretty_midi
-
 
 RANGE_NOTE_ON = 128
 RANGE_NOTE_OFF = 128
@@ -15,12 +13,10 @@ START_IDX = {
     'velocity': RANGE_NOTE_ON + RANGE_NOTE_OFF + RANGE_TIME_SHIFT
 }
 
-
 class SustainAdapter:
     def __init__(self, time, type):
         self.start =  time
         self.type = type
-
 
 class SustainDownManager:
     def __init__(self, start, end):
@@ -40,7 +36,6 @@ class SustainDownManager:
                 note.end = max(self.end, note.end)
             self._note_dict[note.pitch] = note.start
 
-
 # Divided note by note_on, note_off
 class SplitNote:
     def __init__(self, type, time, value, velocity):
@@ -53,7 +48,6 @@ class SplitNote:
     def __repr__(self):
         return '<[SNote] time: {} type: {}, value: {}, velocity: {}>'\
             .format(self.time, self.type, self.value, self.velocity)
-
 
 class Event:
     def __init__(self, event_type, value):
@@ -91,7 +85,6 @@ class Event:
             valid_value -= (RANGE_NOTE_ON + RANGE_NOTE_OFF + RANGE_TIME_SHIFT)
             return {'type': 'velocity', 'value': valid_value}
 
-
 def _divide_note(notes):
     result_array = []
     notes.sort(key=lambda x: x.start)
@@ -101,7 +94,6 @@ def _divide_note(notes):
         off = SplitNote('note_off', note.end, note.pitch, None)
         result_array += [on, off]
     return result_array
-
 
 def _merge_note(snote_sequence):
     note_on_dict = {}
@@ -120,9 +112,9 @@ def _merge_note(snote_sequence):
                 result = pretty_midi.Note(on.velocity, snote.value, on.time, off.time)
                 result_array.append(result)
             except:
-                print('info removed pitch: {}'.format(snote.value))
+                print()
+               # print('info removed pitch: {}'.format(snote.value))
     return result_array
-
 
 def _snote2events(snote: SplitNote, prev_vel: int):
     result = []
@@ -132,7 +124,6 @@ def _snote2events(snote: SplitNote, prev_vel: int):
             result.append(Event(event_type='velocity', value=modified_velocity))
     result.append(Event(event_type=snote.type, value=snote.value))
     return result
-
 
 def _event_seq2snote_seq(event_sequence):
     timeline = 0
@@ -149,7 +140,6 @@ def _event_seq2snote_seq(event_sequence):
             snote_seq.append(snote)
     return snote_seq
 
-
 def _make_time_sift_events(prev_time, post_time):
     time_interval = int(round((post_time - prev_time) * 100))
     results = []
@@ -160,7 +150,6 @@ def _make_time_sift_events(prev_time, post_time):
         return results
     else:
         return results + [Event(event_type='time_shift', value=time_interval-1)]
-
 
 def _control_preprocess(ctrl_changes):
     sustains = []
@@ -178,7 +167,6 @@ def _control_preprocess(ctrl_changes):
         elif ctrl.value < 64 and len(sustains) > 0:
             sustains[-1].end = ctrl.time
     return sustains
-
 
 def _note_preprocess(susteins, notes):
     note_stream = []
@@ -204,7 +192,6 @@ def _note_preprocess(susteins, notes):
 
     note_stream.sort(key= lambda x: x.start)
     return note_stream
-
 
 def encode_midi(file_path):
     events = []
@@ -236,7 +223,6 @@ def encode_midi(file_path):
 
     return [e.to_int() for e in events]
 
-
 def decode_midi(idx_array, file_path=None):
     event_sequence = [Event.from_int(idx) for idx in idx_array]
     # print(event_sequence)
@@ -254,7 +240,6 @@ def decode_midi(idx_array, file_path=None):
         mid.write(file_path)
     return mid
 
-
 if __name__ == '__main__':
     encoded = encode_midi('bin/ADIG04.mid')
     print(encoded)
@@ -266,3 +251,4 @@ if __name__ == '__main__':
     for i in ins.instruments:
         print(i.control_changes)
         print(i.notes)
+

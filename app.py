@@ -1214,6 +1214,16 @@ class MainWindow(QMainWindow):
         self.TransformerHandler.TestModel(text) 
 
     def ConnectActions(self):
+        self.ui.pushButton_GnerateMusicCase1_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.GenerateMusic)
+        self.ui.pushButton_GnerateMusicCase2_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.GenerateMusic)
+        self.ui.pushButton_GnerateMusicCase3_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.GenerateMusic)
+        self.ui.pushButton_GnerateMusicCase4_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.GenerateMusic)
+        self.ui.pushButton_TrainModel_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.TrainModel)
+        self.ui.pushButton_CreateModel_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.CreateModel)
+        self.ui.pushButton_PrepareDataset_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.PrepareData)
+        self.ui.pushButton_TokenizeDataset_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.TokenizeData)
+        self.ui.pushButton_ArrangeDataset_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.ArrangeDataset)
+        self.ui.pushButton_DownloadDataset_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.DownloadDataset)
         self.ui.pushButton_GenerateSong_GeneratingMimickedStyleMusicByMuseGAN.clicked.connect(self.MuseGANHelper.GenerateSong)
         self.ui.pushButton_TrainModel_GeneratingMimickedStyleMusicByMuseGAN.clicked.connect(self.MuseGANHelper.TrainModel)
         self.ui.pushButton_CreateModel_GeneratingMimickedStyleMusicByMuseGAN.clicked.connect(self.MuseGANHelper.CreateModels)
@@ -1797,7 +1807,7 @@ class MainWindow(QMainWindow):
         self.FillCode(GeneratingTextByGPT2xlTransformer,self.ui.textBrowser_GeneratingTextByGPT2xlTransformer, 60)
         self.FillCode(GeneratingTextByDownGradedGPT2Transformer,self.ui.textBrowser_GeneratingTextByDownGradedGPT2Transformer, 46)
         self.FillCode(GeneratingMimickedStyleMusicByMuseGAN,self.ui.textBrowser_GeneratingMimickedStyleMusicByMuseGAN, 36)
-        self.FillCode(GeneratingMusicByGPTStyleMusicTransformer,self.ui.textBrowser_GeneratingMusicByGPTStyleMusicTransformer, 36)
+        self.FillCode(GeneratingMusicByGPTStyleMusicTransformer,self.ui.textBrowser_GeneratingMusicByGPTStyleMusicTransformer, 41)
 
 def LunchApp():
     import sys
