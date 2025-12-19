@@ -7559,7 +7559,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
        <string>Generate Image Case2</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_GenerateImageCase3_TextToImageByDiffusion">
+     <widget class="QPushButton" name="pushButton_VisualizeReverseDiffusionProcess_TextToImageByDiffusion">
       <property name="geometry">
        <rect>
         <x>660</x>

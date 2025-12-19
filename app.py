@@ -24,6 +24,7 @@ from utilities.GeneratingMusicByGPTStyleMusicTransformer import GeneratingMusicB
 from utilities.TextToImageByDiffusion import TextToImageByDiffusion
 from utilities.ScrollableMessageBox import show_scrollable_message
 import os
+import json
 from os import path, listdir
 from os.path import isfile, join
 import shutil
@@ -1215,7 +1216,41 @@ class MainWindow(QMainWindow):
         text = self.ui.comboBox_TestText_CreateTranslatorByTransformer.currentText()
         self.TransformerHandler.TestModel(text) 
 
+    def PrepareConvertTextToImage(self):
+        text = self.ui.plainTextEdit_TextToImageByDiffusion.toPlainText().strip()
+        if text == "" or text is None:
+            QMessageBox.warning(None,"No Text","Enter the Text first.")
+        else:
+            _models_ = None
+            try:
+                with open('models.json', 'r') as f:
+                    _models_ = json.load(f)
+            except FileNotFoundError:
+                QMessageBox.warning(None,"No Config","Error: 'models.json' not found.\nPlease ensure the file exists in the root.")
+                return
+            except json.JSONDecodeError:
+                QMessageBox.warning(None,"Format Error","Error: Could not decode JSON from 'models.json'.\nCheck the file's format.")
+                return
+            if _models_ is not None and len(_models_) > 0 and _models_.get("OpenAI") and (_models_["OpenAI"]["SecretKey"]).strip() != "": 
+                openai_api_key =  _models_["OpenAI"]["SecretKey"] 
+            
+                if len(text) > 300:
+                   text = text[:300]
+
+                self.DiffusionHandler.ConvertTextToImage(text, openai_api_key)
+            else:
+                 QMessageBox.warning(None,"No Key","Register in OpenAI website.\nGet OpenAI api Key.\nInsert openai_api_key in models.json in the root.")
+            
     def ConnectActions(self):
+        self.ui.pushButton_ConvertTextToImage_TextToImageByDiffusion.clicked.connect(self.PrepareConvertTextToImage)        
+        self.ui.pushButton_VisualizeReverseDiffusionProcess_TextToImageByDiffusion.clicked.connect(self.DiffusionHandler.VisualizeReverseDiffusionProcess)
+        self.ui.pushButton_GenerateImageCase2_TextToImageByDiffusion.clicked.connect(self.DiffusionHandler.GenerateImage)
+        self.ui.pushButton_GenerateImageCase1_TextToImageByDiffusion.clicked.connect(self.DiffusionHandler.GenerateImage)
+        self.ui.pushButton_TrainModel_TextToImageByDiffusion.clicked.connect(self.DiffusionHandler.TrainModel)
+        self.ui.pushButton_CreateModel_TextToImageByDiffusion.clicked.connect(self.DiffusionHandler.CreateModel)
+        self.ui.pushButton_VisualizeForwardDiffusionProcess_TextToImageByDiffusion.clicked.connect(self.DiffusionHandler.VisualizeForwardDiffusionProcess)
+        self.ui.pushButton_LoadDataset_TextToImageByDiffusion.clicked.connect(self.DiffusionHandler.LoadDataset)
+        self.ui.pushButton_DownloadDataset_TextToImageByDiffusion.clicked.connect(self.DiffusionHandler.DownloadDataset)
         self.ui.pushButton_GnerateMusicCase1_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.GenerateMusic)
         self.ui.pushButton_GnerateMusicCase2_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.GenerateMusic)
         self.ui.pushButton_GnerateMusicCase3_GeneratingMusicByGPTStyleMusicTransformer.clicked.connect(self.GPTStyleMusicTransformerHandler.GenerateMusic)
@@ -1816,7 +1851,7 @@ class MainWindow(QMainWindow):
         self.FillCode(GeneratingTextByDownGradedGPT2Transformer,self.ui.textBrowser_GeneratingTextByDownGradedGPT2Transformer, 46)
         self.FillCode(GeneratingMimickedStyleMusicByMuseGAN,self.ui.textBrowser_GeneratingMimickedStyleMusicByMuseGAN, 36)
         self.FillCode(GeneratingMusicByGPTStyleMusicTransformer,self.ui.textBrowser_GeneratingMusicByGPTStyleMusicTransformer, 41)
-        self.FillCode(TextToImageByDiffusion,self.ui.textBrowser_TextToImageByDiffusion, 41)
+        self.FillCode(TextToImageByDiffusion,self.ui.textBrowser_TextToImageByDiffusion, 44)
 
 def LunchApp():
     import sys

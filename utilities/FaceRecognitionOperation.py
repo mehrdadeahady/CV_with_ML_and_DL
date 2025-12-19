@@ -195,7 +195,7 @@ class FaceRecognitionOperation(QObject):
         else:
             QMessageBox.warning(None,"Weights not Found","Failed Loading weights.")
 
-    # Chheck if VGGFace Weights not exist then Download it
+    # Check if VGGFace Weights not exist then Download it
     def CheckVGGFaceModel(self):
         # Open Log Popup
         self.DownloadLogPopup = DownloadLogPopup(self.log_emitter)   

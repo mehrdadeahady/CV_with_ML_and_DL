@@ -82,5 +82,8 @@
         "name": "vgg_face_weights.h5",
         "size": "553 MB",
         "md5hash": "unknown"
+    },
+    "OpenAI": {
+        "SecretKey": "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"
     }
 }
