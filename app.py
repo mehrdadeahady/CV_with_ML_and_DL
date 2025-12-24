@@ -22,6 +22,7 @@ from utilities.GeneratingTextByDownGradedGPT2Transformer import GeneratingTextBy
 from utilities.GeneratingMimickedStyleMusicByMuseGAN import GeneratingMimickedStyleMusicByMuseGAN
 from utilities.GeneratingMusicByGPTStyleMusicTransformer import GeneratingMusicByGPTStyleMusicTransformer
 from utilities.TextToImageByDiffusion import TextToImageByDiffusion
+from utilities.OpenAIPromptEngineeringLangChain import OpenAIPromptEngineeringLangChain
 from utilities.ScrollableMessageBox import show_scrollable_message
 import os
 import json
@@ -122,6 +123,7 @@ class MainWindow(QMainWindow):
         self.action_GeneratingMimickedStyleMusicByMuseGAN.setText(_translate("MainWindow","𝄞 Generating Mimicked Style Music by MuseGAN")) 
         self.action_GeneratingMusicByGPTStyleMusicTransformer.setText(_translate("MainWindow","♫ Generating Music by GPT Style Music Transformer"))
         self.action_TextToImageByDiffusion.setText(_translate("MainWindow","♻ Convert Text to Image by Diffusion Transformer"))
+        self.action_OpenAIPromptEngineeringLangChain.setText(_translate("MainWindow","⛓️ OpenAI Prompt Engineering and LangChain"))
 
     def PrepareCancelTraining(self):
         self.CreateSimpleCNNHandler.CancelTraining()
@@ -1466,6 +1468,7 @@ class MainWindow(QMainWindow):
         self.action_GeneratingTextByDownGradedGPT2Transformer.triggered.connect(self.changePage)
         self.action_GeneratingMimickedStyleMusicByMuseGAN.triggered.connect(self.changePage)
         self.action_GeneratingMusicByGPTStyleMusicTransformer.triggered.connect(self.changePage)
+        self.action_OpenAIPromptEngineeringLangChain.triggered.connect(self.changePage)
 
         self.ui.action_CloseOtherWindows.triggered.connect(self.closeWindow)
         self.ui.action_CloseMainWindow.triggered.connect(self.closeWindow)
@@ -1503,6 +1506,7 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_SaveCode_CreateTranslatorByTransformer.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_CreateTranslatorByTransformer))
         self.ui.pushButton_SaveCode_GeneratingTextByGPT2xlTransformer.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_GeneratingTextByGPT2xlTransformer))
         self.ui.pushButton_SaveCode_GeneratingTextByDownGradedGPT2Transformer.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_GeneratingTextByDownGradedGPT2Transformer))
+        self.ui.pushButton_SaveCode_OpenAIPromptEngineeringLangChain.clicked.connect(partial(self.SaveCode,self.ui.textBrowser_OpenAIPromptEngineeringLangChain))
 
         self.ui.comboBox_ColorSpaceConversion.currentTextChanged.connect(self.PrepareConvertColorSpace)
         self.ui.pushButton_SaveImage.clicked.connect(self.ImagesAndColorsHandler.SaveImage)
@@ -1614,6 +1618,7 @@ class MainWindow(QMainWindow):
         self.MuseGANHelper = GeneratingMimickedStyleMusicByMuseGAN()
         self.GPTStyleMusicTransformerHandler = GeneratingMusicByGPTStyleMusicTransformer()
         self.DiffusionHandler = TextToImageByDiffusion()
+        self.OpenAILangChainHandler = OpenAIPromptEngineeringLangChain()
 
         self.ColorChannelChangeCheckBoxes = [
             self.ui.checkBox_BlueChannel,
@@ -1800,6 +1805,9 @@ class MainWindow(QMainWindow):
         self.action_TextToImageByDiffusion = QtGui.QAction(parent=self)
         self.action_TextToImageByDiffusion.setObjectName("action_TextToImageByDiffusion")
         self.menu_PracticalGANs.addAction(self.action_TextToImageByDiffusion)
+        self.action_OpenAIPromptEngineeringLangChain = QtGui.QAction(parent=self)
+        self.action_OpenAIPromptEngineeringLangChain.setObjectName("action_OpenAIPromptEngineeringLangChain")
+        self.menu_PracticalGANs.addAction(self.action_OpenAIPromptEngineeringLangChain)
 
         self.menu_TheoreticalGANsDeploymentOptimization = QMenu(parent=self)
         self.menu_TheoreticalGANsDeploymentOptimization.setObjectName("menu_TheoreticalGANsDeploymentOptimization")
@@ -1852,6 +1860,7 @@ class MainWindow(QMainWindow):
         self.FillCode(GeneratingMimickedStyleMusicByMuseGAN,self.ui.textBrowser_GeneratingMimickedStyleMusicByMuseGAN, 36)
         self.FillCode(GeneratingMusicByGPTStyleMusicTransformer,self.ui.textBrowser_GeneratingMusicByGPTStyleMusicTransformer, 41)
         self.FillCode(TextToImageByDiffusion,self.ui.textBrowser_TextToImageByDiffusion, 44)
+        self.FillCode(OpenAIPromptEngineeringLangChain,self.ui.textBrowser_OpenAIPromptEngineeringLangChain, 44)
 
 def LunchApp():
     import sys
