@@ -1218,32 +1218,101 @@ class MainWindow(QMainWindow):
         text = self.ui.comboBox_TestText_CreateTranslatorByTransformer.currentText()
         self.TransformerHandler.TestModel(text) 
 
+    def GetSecretKeys(self):
+        _models_ = None
+        keys = {"openai_api_key":None, "WolframAlpha_api_key":None, "LangChain_api_key":None}
+        try:
+            with open('models.json', 'r') as f:
+                _models_ = json.load(f)
+        except FileNotFoundError:
+            QMessageBox.warning(None,"No Config","Error: 'models.json' not found.\nPlease ensure the file exists in the root.")
+            return False
+        except json.JSONDecodeError:
+            QMessageBox.warning(None,"Format Error","Error: Could not decode JSON from 'models.json'.\nCheck the file's format.")
+            return False
+        if _models_ is not None and len(_models_) > 0:
+            if _models_.get("OpenAI") and (_models_["OpenAI"]["SecretKey"]).strip() != "": 
+                openai_api_key =  _models_["OpenAI"]["SecretKey"] 
+                keys.update({"openai_api_key": openai_api_key}) 
+
+            if _models_.get("WolframAlpha") and (_models_["WolframAlpha"]["AppID"]).strip() != "": 
+                WolframAlpha_api_key =  _models_["WolframAlpha"]["AppID"] 
+                keys.update({"WolframAlpha_api_key": WolframAlpha_api_key}) 
+
+            if _models_.get("LangChain") and (_models_["LangChain"]["APIkey"]).strip() != "": 
+                LangChain_api_key =  _models_["LangChain"]["APIkey"] 
+                keys.update({"LangChain_api_key": LangChain_api_key}) 
+
+            return keys
+        else:    
+            QMessageBox.warning(None,"No Config","Error: 'models.json' not found.\nPlease ensure the file exists in the root.")
+            return False          
+
     def PrepareConvertTextToImage(self):
         text = self.ui.plainTextEdit_TextToImageByDiffusion.toPlainText().strip()
         if text == "" or text is None:
             QMessageBox.warning(None,"No Text","Enter the Text first.")
         else:
-            _models_ = None
-            try:
-                with open('models.json', 'r') as f:
-                    _models_ = json.load(f)
-            except FileNotFoundError:
-                QMessageBox.warning(None,"No Config","Error: 'models.json' not found.\nPlease ensure the file exists in the root.")
-                return
-            except json.JSONDecodeError:
-                QMessageBox.warning(None,"Format Error","Error: Could not decode JSON from 'models.json'.\nCheck the file's format.")
-                return
-            if _models_ is not None and len(_models_) > 0 and _models_.get("OpenAI") and (_models_["OpenAI"]["SecretKey"]).strip() != "": 
-                openai_api_key =  _models_["OpenAI"]["SecretKey"] 
-            
-                if len(text) > 300:
+            if len(text) > 300:
                    text = text[:300]
-
-                self.DiffusionHandler.ConvertTextToImage(text, openai_api_key)
+            keys = self.GetSecretKeys()
+            if keys != False:
+                openai_api_key = keys["openai_api_key"]
+                if openai_api_key is not None:
+                    self.DiffusionHandler.ConvertTextToImage(text, openai_api_key)  
+                else:
+                    QMessageBox.warning(None,"No Key","Register in OpenAI website.\nGet OpenAI api Key.\nInsert openai_api_key in models.json in the root.")
             else:
-                 QMessageBox.warning(None,"No Key","Register in OpenAI website.\nGet OpenAI api Key.\nInsert openai_api_key in models.json in the root.")
-            
+                return False
+         
+    def PrepareGenerateByLLM(self, type):
+        text = self.ui.comboBox_OpenAIPromptEngineeringLangChain.currentText().strip()
+        kind = self.ui.comboBox_SelectToolType_OpenAIPromptEngineeringLangChain.currentText().strip()
+        systemRole = self.ui.plainTextEdit_SystemRole_OpenAIPromptEngineeringLangChain.toPlainText().strip()
+        prompt = self.ui.plainTextEdit_Prompt_OpenAIPromptEngineeringLangChain.toPlainText().strip()
+        if prompt == "":
+           QMessageBox.warning(None, "No Prompt","Fill the prompt first.\nWhat do you want from AI?")
+           return False
+        openai_api_key = None
+        keys = self.GetSecretKeys()
+        if keys == False:
+           return 
+        openai_api_key = keys["openai_api_key"]
+        WolframAlpha_api_key =  keys["WolframAlpha_api_key"]
+        LangChain_api_key = keys["LangChain_api_key"]
+
+        if openai_api_key is None:
+            QMessageBox.warning(None,"No Key","Register in OpenAI website.\nGet OpenAI api Key.\nInsert openai_api_key in models.json in the root.")
+            return
+        if WolframAlpha_api_key is None:
+            QMessageBox.warning(None,"No Key","Register in WolframAlpha website.\nGet AppID.\nInsert WolframAlpha_api_key in models.json in the root.")
+            return
+        
+        if LangChain_api_key is None:
+            QMessageBox.warning(None,"No Key","Register in LangChain website.\nGet api Key.\nInsert LangChain_api_key in models.json in the root.")
+            return
+
+        match type:
+            case "genBYllm":
+                self.OpenAILangChainHandler.GenerateByLLM(text, openai_api_key, systemRole, prompt)
+            case "ans1":
+                self.OpenAILangChainHandler.OpenAIinLangChain(openai_api_key, prompt)
+            case "ans2":
+                self.OpenAILangChainHandler.WolframAlphaInLangChain(WolframAlpha_api_key, prompt) 
+            case "ans3":
+                self.OpenAILangChainHandler.WikipediaQueryInLangChain(prompt)
+            case "ans4":
+                self.OpenAILangChainHandler.AgentInLangChain(WolframAlpha_api_key,LangChain_api_key, openai_api_key, prompt)                       
+            case "genBYlangchain":
+                self.OpenAILangChainHandler.GenerateByLangChain(WolframAlpha_api_key, LangChain_api_key, kind, openai_api_key, prompt)
+
     def ConnectActions(self):
+        self.ui.pushButton_Ans1LangChain_OpenAIPromptEngineeringLangChain.clicked.connect(partial(self.PrepareGenerateByLLM, "ans1"))
+        self.ui.pushButton_Ans2LangChain_OpenAIPromptEngineeringLangChain.clicked.connect(partial(self.PrepareGenerateByLLM, "ans2"))
+        self.ui.pushButton_Ans3LangChain_OpenAIPromptEngineeringLangChain.clicked.connect(partial(self.PrepareGenerateByLLM, "ans3"))
+        self.ui.pushButton_Ans4LangChain_OpenAIPromptEngineeringLangChain.clicked.connect(partial(self.PrepareGenerateByLLM, "ans4"))
+        self.ui.pushButton_GenerateByLLM_OpenAIPromptEngineeringLangChain.clicked.connect(partial(self.PrepareGenerateByLLM, "genBYllm")) 
+        self.ui.pushButton_GenerateByToolInLangChain_OpenAIPromptEngineeringLangChain.clicked.connect(partial(self.PrepareGenerateByLLM, "genBYlangchain"))
         self.ui.pushButton_ConvertTextToImage_TextToImageByDiffusion.clicked.connect(self.PrepareConvertTextToImage)        
         self.ui.pushButton_VisualizeReverseDiffusionProcess_TextToImageByDiffusion.clicked.connect(self.DiffusionHandler.VisualizeReverseDiffusionProcess)
         self.ui.pushButton_GenerateImageCase2_TextToImageByDiffusion.clicked.connect(self.DiffusionHandler.GenerateImage)
@@ -1860,7 +1929,7 @@ class MainWindow(QMainWindow):
         self.FillCode(GeneratingMimickedStyleMusicByMuseGAN,self.ui.textBrowser_GeneratingMimickedStyleMusicByMuseGAN, 36)
         self.FillCode(GeneratingMusicByGPTStyleMusicTransformer,self.ui.textBrowser_GeneratingMusicByGPTStyleMusicTransformer, 41)
         self.FillCode(TextToImageByDiffusion,self.ui.textBrowser_TextToImageByDiffusion, 44)
-        self.FillCode(OpenAIPromptEngineeringLangChain,self.ui.textBrowser_OpenAIPromptEngineeringLangChain, 44)
+        self.FillCode(OpenAIPromptEngineeringLangChain,self.ui.textBrowser_OpenAIPromptEngineeringLangChain, 18)
 
 def LunchApp():
     import sys

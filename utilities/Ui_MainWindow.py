@@ -6,7 +6,7 @@ except:
     print("You Should Install PyQt6 Library!")
 
 class UI_MainWindow(object):
-    
+   
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1024, 768)
@@ -2245,8 +2245,17 @@ class UI_MainWindow(object):
         self.label_GenerateByToolInLangChain_OpenAIPromptEngineeringLangChain.setGeometry(QtCore.QRect(10, 340, 441, 41))
         self.label_GenerateByToolInLangChain_OpenAIPromptEngineeringLangChain.setObjectName("label_GenerateByToolInLangChain_OpenAIPromptEngineeringLangChain")
         self.pushButton_GenerateByToolInLangChain_OpenAIPromptEngineeringLangChain = QtWidgets.QPushButton(parent=self.page_OpenAIPromptEngineeringLangChain)
-        self.pushButton_GenerateByToolInLangChain_OpenAIPromptEngineeringLangChain.setGeometry(QtCore.QRect(450, 340, 171, 41))
+        self.pushButton_GenerateByToolInLangChain_OpenAIPromptEngineeringLangChain.setGeometry(QtCore.QRect(600, 340, 171, 41))
         self.pushButton_GenerateByToolInLangChain_OpenAIPromptEngineeringLangChain.setObjectName("pushButton_GenerateByToolInLangChain_OpenAIPromptEngineeringLangChain")
+        self.comboBox_SelectToolType_OpenAIPromptEngineeringLangChain = QtWidgets.QComboBox(parent=self.page_OpenAIPromptEngineeringLangChain)
+        self.comboBox_SelectToolType_OpenAIPromptEngineeringLangChain.setGeometry(QtCore.QRect(520, 340, 71, 41))
+        self.comboBox_SelectToolType_OpenAIPromptEngineeringLangChain.setObjectName("comboBox_SelectToolType_OpenAIPromptEngineeringLangChain")
+        self.comboBox_SelectToolType_OpenAIPromptEngineeringLangChain.addItem("")
+        self.comboBox_SelectToolType_OpenAIPromptEngineeringLangChain.addItem("")
+        self.comboBox_SelectToolType_OpenAIPromptEngineeringLangChain.addItem("")
+        self.label_SelectType_SelectToolType_OpenAIPromptEngineeringLangChain = QtWidgets.QLabel(parent=self.page_OpenAIPromptEngineeringLangChain)
+        self.label_SelectType_SelectToolType_OpenAIPromptEngineeringLangChain.setGeometry(QtCore.QRect(450, 340, 71, 41))
+        self.label_SelectType_SelectToolType_OpenAIPromptEngineeringLangChain.setObjectName("label_SelectType_SelectToolType_OpenAIPromptEngineeringLangChain")
         self.pages.addWidget(self.page_OpenAIPromptEngineeringLangChain)
         self.page_AboutAuthorDeveloper = QtWidgets.QWidget()
         self.page_AboutAuthorDeveloper.setObjectName("page_AboutAuthorDeveloper")
@@ -3046,6 +3055,10 @@ class UI_MainWindow(object):
         self.pushButton_Ans4LangChain_OpenAIPromptEngineeringLangChain.setText(_translate("MainWindow", "Answer"))
         self.label_GenerateByToolInLangChain_OpenAIPromptEngineeringLangChain.setText(_translate("MainWindow", "Use tools by using OpenAI GPTs to generate text, code and image in LangChain:"))
         self.pushButton_GenerateByToolInLangChain_OpenAIPromptEngineeringLangChain.setText(_translate("MainWindow", "Generate"))
+        self.comboBox_SelectToolType_OpenAIPromptEngineeringLangChain.setItemText(0, _translate("MainWindow", "Text"))
+        self.comboBox_SelectToolType_OpenAIPromptEngineeringLangChain.setItemText(1, _translate("MainWindow", "Image"))
+        self.comboBox_SelectToolType_OpenAIPromptEngineeringLangChain.setItemText(2, _translate("MainWindow", "Code"))
+        self.label_SelectType_SelectToolType_OpenAIPromptEngineeringLangChain.setText(_translate("MainWindow", "Select Type:"))
         self.menuTopics.setTitle(_translate("MainWindow", "Topics"))
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
         self.menuControls.setTitle(_translate("MainWindow", "Controls"))
@@ -3082,3 +3095,4 @@ class UI_MainWindow(object):
         self.action_UploadVideos.setText(_translate("MainWindow", "📤 Upload Videos"))
         self.action_UploadClassifiers.setText(_translate("MainWindow", "⏏️ Upload Classifiers"))
         self.action_UploadStyleTransferModels.setText(_translate("MainWindow", "🔽 Upload Style Transfer Models"))
+

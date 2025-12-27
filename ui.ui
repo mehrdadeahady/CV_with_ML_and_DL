@@ -7868,7 +7868,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <widget class="QPushButton" name="pushButton_GenerateByToolInLangChain_OpenAIPromptEngineeringLangChain">
       <property name="geometry">
        <rect>
-        <x>450</x>
+        <x>600</x>
         <y>340</y>
         <width>171</width>
         <height>41</height>
@@ -7876,6 +7876,44 @@ li.checked::marker { content: &quot;\2612&quot;; }
       </property>
       <property name="text">
        <string>Generate</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_SelectToolType_OpenAIPromptEngineeringLangChain">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>340</y>
+        <width>71</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Text</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Image</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Code</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLabel" name="label_SelectType_SelectToolType_OpenAIPromptEngineeringLangChain">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>340</y>
+        <width>71</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Select Type:</string>
       </property>
      </widget>
     </widget>

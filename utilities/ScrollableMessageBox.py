@@ -1,9 +1,9 @@
 try:
     from PyQt6.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel,QScrollArea, QPushButton, QDialogButtonBox
     from PyQt6.QtCore import QUrl, Qt
+    from PyQt6.QtGui import QFontMetrics
 except:
     print("You Should Install PyQt6 Library!")
-
 import sys
 
 class ScrollableMessageBox(QDialog):
@@ -20,8 +20,9 @@ class ScrollableMessageBox(QDialog):
 
         # Content widget inside scroll area
         content = QLabel(message)
-        content.setWordWrap(False)
-
+        content.setWordWrap(True)
+        content.setMaximumWidth(1200)  # Set your desired max width here
+        #content.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
         content.setStyleSheet("""
                                 QLabel { padding: 0px; text-align: center;
                                 }
