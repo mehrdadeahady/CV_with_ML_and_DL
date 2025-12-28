@@ -1,4 +1,7 @@
-First Install Python Version above 3.9
-Second run app.py in the root
-Third look at Console, it tell you what Libraries required to Install, Be patient and install all required libraries, it takes minutes.
+1) First Install Python Version above > 3.9
+
+2) Second run *** pip install -r requirements.txt *** to install required external third party libraries.
+
+3)Third run app.py in the root and look at Console, Install all required libraries that are not installed in the second step.
+
 *** Check on the Internet for Compatibility of required Libraries version with your Python Version ***
