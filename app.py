@@ -123,7 +123,7 @@ class MainWindow(QMainWindow):
         self.action_GeneratingMimickedStyleMusicByMuseGAN.setText(_translate("MainWindow","𝄞 Generating Mimicked Style Music by MuseGAN")) 
         self.action_GeneratingMusicByGPTStyleMusicTransformer.setText(_translate("MainWindow","♫ Generating Music by GPT Style Music Transformer"))
         self.action_TextToImageByDiffusion.setText(_translate("MainWindow","♻ Convert Text to Image by Diffusion Transformer"))
-        self.action_OpenAIPromptEngineeringLangChain.setText(_translate("MainWindow","⛓️ OpenAI Prompt Engineering and LangChain"))
+        self.action_OpenAIPromptEngineeringLangChain.setText(_translate("MainWindow","⛓️ Prompt Engineering in OpenAI API and LangChain"))
 
     def PrepareCancelTraining(self):
         self.CreateSimpleCNNHandler.CancelTraining()
