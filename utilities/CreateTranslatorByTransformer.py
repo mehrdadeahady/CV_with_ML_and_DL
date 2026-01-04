@@ -2,6 +2,7 @@ import io
 import sys
 import contextlib
 import os
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
 from os.path import isfile, join
 import time
 import pickle
@@ -92,8 +93,21 @@ class CreateTranslatorByTransformer(QObject):
         # Initialize a custom signal emitter for logging messages to the UI
         self.log_emitter = LogEmitter()
 
-        # Load a pre-trained multilingual tokenizer from the XLM model family
-        self.tokenizer = XLMTokenizer.from_pretrained("xlm-clm-enfr-1024")
+        # Define a local directory to store the model/tokenizer
+        local_dir = "temp/xlm-clm-enfr-1024"
+
+        if os.path.exists(local_dir):
+           try:
+               # Load the tokenizer from local directory
+               self.tokenizer = XLMTokenizer.from_pretrained(local_dir, local_files_only=True)
+           except Exception as e:
+                QMessageBox.critical(None,"Error","Couldn't download XLMTokenizer.\n"+e)
+        else:
+            # Download/Load a pre-trained multilingual tokenizer from the XLM model family
+            self.tokenizer = XLMTokenizer.from_pretrained("xlm-clm-enfr-1024")
+
+            # Save the tokenizer files to disk
+            self.tokenizer.save_pretrained(local_dir)
 
         # Placeholder for the input DataFrame containing training data
         self.df = None

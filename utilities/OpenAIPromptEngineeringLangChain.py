@@ -91,9 +91,11 @@ except:
      print("You Should Install openai Library!")
 try:
     import langchain
+    from langchain.chat_models import init_chat_model
     from langchain.tools import BaseTool
     from langchain_classic.agents import  Tool, AgentExecutor, create_react_agent
     from langchain_core.prompts import PromptTemplate
+    from langchain_core.messages import AIMessage
     from langchain_classic.chains import LLMChain
     from langchain_classic import hub
 except:
@@ -125,6 +127,11 @@ try:
 except:
      print("You Should Install langchain_community Library!")
 try:
+   from langchain_ollama.llms import OllamaLLM
+   from langchain_ollama.chat_models import ChatOllama
+except:
+     print("You Should Install langchain_ollama Library!")
+try:
    import wikipedia
 except:
      print("You Should Install wikipedia Library!")
@@ -132,7 +139,7 @@ try:
     from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
     from PyQt6.QtGui import  QTextCursor   
     from PyQt6.QtCore import QObject, pyqtSignal, QThread, Qt, QUrl
-    from PyQt6.QtWidgets import QMessageBox,QTextEdit, QWidget, QVBoxLayout, QPushButton, QLabel, QDialog, QTextEdit,QScrollArea,QMainWindow,QApplication
+    from PyQt6.QtWidgets import QInputDialog, QLineEdit, QMessageBox, QTextEdit, QWidget, QVBoxLayout, QPushButton, QLabel, QDialog, QTextEdit,QScrollArea,QMainWindow,QApplication
 except:
     print("You Should Install PyQt6 Library!")
 
@@ -191,7 +198,7 @@ class OpenAIPromptEngineeringLangChain(QObject):
                     )
 
                     # Append the generated response to the log popup
-                    self.DownloadLogPopup.Append_Log("Result | Answer:\n" + str(completion.choices[0].message.content))
+                    self.DownloadLogPopup.Append_Log("Response:\n" + str(completion.choices[0].message.content))
 
                 # Case 2: Generate an image using DALL·E
                 case "Image":
@@ -286,7 +293,7 @@ class OpenAIPromptEngineeringLangChain(QObject):
             res = llm.invoke(prompt)
 
             # Append the model's response to the log popup for user visibility
-            self.DownloadLogPopup.Append_Log("Result | Answer:\n" + str(res))
+            self.DownloadLogPopup.Append_Log("Response:\n" + str(res))
 
         # Handle any exceptions that occur during model invocation or UI updates
         except Exception as e:
@@ -319,7 +326,7 @@ class OpenAIPromptEngineeringLangChain(QObject):
             result = wolfram.run(prompt)
 
             # Append the result to the log popup so the user can see the answer
-            self.DownloadLogPopup.Append_Log("Result | Answer:\n" + str(result))
+            self.DownloadLogPopup.Append_Log("Response:\n" + str(result))
 
         # Handle any exceptions that occur during tool initialization or execution
         except Exception as e:
@@ -355,7 +362,7 @@ class OpenAIPromptEngineeringLangChain(QObject):
             res = wikipedia.run(prompt)
 
             # Append the retrieved result to the log popup for user visibility
-            self.DownloadLogPopup.Append_Log("Result | Answer:\n" + str(res))
+            self.DownloadLogPopup.Append_Log("Response:\n" + str(res))
 
         # Handle any exceptions that occur during tool initialization or execution
         except Exception as e:
@@ -571,6 +578,139 @@ class OpenAIPromptEngineeringLangChain(QObject):
                 f"An error occurred:\n{str(e)}"  # Display the error message
             )
 
+    # Define a private method to set an environment variable if it's not already set
+    def _set_env(self, var: str):
+        # Check if the environment variable is not already defined
+        if not os.environ.get(var):
+            # Create a new input dialog with no parent widget
+            dialog = QInputDialog(None)
+            # Set the dialog window title to prompt for the variable
+            dialog.setWindowTitle(f"Enter {var}")
+            # Set the label text to instruct the user to input the variable's value
+            dialog.setLabelText(f"Please enter the value for {var}:")
+            # Mask the input text for privacy (e.g., for passwords or tokens)
+            dialog.setTextEchoMode(QLineEdit.EchoMode.Password)
+            # Resize the dialog to a fixed width while keeping the current height
+            dialog.resize(700, dialog.height())
+            # Execute the dialog and check if the user confirmed input
+            if dialog.exec():
+                # Retrieve the text entered by the user
+                value = dialog.textValue()
+                # If a value was entered, set it as an environment variable
+                if value:
+                    os.environ[var] = value
+
+    # Define a method to send a prompt to an OpenAI chat model via LangChain and display the response
+    def AddChatOpenAIModelToLangChain(self, prompt):
+        # Ensure the OpenAI API key is set in the environment variables
+        self._set_env("OPENAI_API_KEY")
+
+        # Disable the cancel button in the log popup to prevent user interruption during processing
+        self.DownloadLogPopup.cancel_button.setEnabled(False)
+
+        # Show the log popup window to indicate that processing has started
+        self.DownloadLogPopup.show()
+
+        # Log a message to inform the user that the prompt has been sent and a response is pending
+        self.DownloadLogPopup.Append_Log("Prompt sent.\nIt takes minutes\nPlease wait for answer...")
+
+        try:
+            # Initialize the OpenAI chat model using LangChain with the specified model name and provider
+            llm = init_chat_model("gpt-4o-mini", model_provider="openai")
+
+            # Send the prompt to the model and retrieve the response
+            response = llm.invoke(prompt)
+
+            # Display the model's response in the log popup for the user to see
+            self.DownloadLogPopup.Append_Log("Response:\n" + str(response.content))
+
+        # Handle any exceptions that occur during model interaction or UI updates
+        except Exception as e:
+            # Close the log popup window in case of an error
+            self.DownloadLogPopup.close()
+            # Show a critical error message box with the exception details
+            QMessageBox.critical(
+                None,                      # No parent widget
+                "Operation Failed",        # Title of the error message box
+                f"An error occurred:\n{str(e)}"  # Display the error message
+            )
+
+    # Define a method to send a prompt to an Anthropic chat model via LangChain and display the response
+    def AddChatAnthropicModelToLangChain(self, prompt):
+        # Ensure the Anthropic API key is set in the environment variables
+        self._set_env("ANTHROPIC_API_KEY")
+
+        # Disable the cancel button in the log popup to prevent user interruption during processing
+        self.DownloadLogPopup.cancel_button.setEnabled(False)
+
+        # Show the log popup window to indicate that processing has started
+        self.DownloadLogPopup.show()
+
+        # Log a message to inform the user that the prompt has been sent and a response is pending
+        self.DownloadLogPopup.Append_Log("Prompt sent.\nIt takes minutes\nPlease wait for answer...")
+
+        try:
+            # Initialize the Anthropic chat model using LangChain with the specified model name and provider
+            llm = init_chat_model("claude-3-5-sonnet-latest", model_provider="anthropic")
+
+            # Send the prompt to the model and retrieve the response
+            response = llm.invoke(prompt)
+
+            # Display the model's response in the log popup for the user to see
+            self.DownloadLogPopup.Append_Log("Response:\n" + str(response.content))
+
+        # Handle any exceptions that occur during model interaction or UI updates
+        except Exception as e:
+            # Close the log popup window in case of an error
+            self.DownloadLogPopup.close()
+            # Show a critical error message box with the exception details
+            QMessageBox.critical(
+                None,                      # No parent widget
+                "Operation Failed",        # Title of the error message box
+                f"An error occurred:\n{str(e)}"  # Display the error message
+            )
+
+    # Define a method to send a prompt to an Ollama chat model via LangChain and display the response
+    def AddChatOllamaModelToLangChain(self, prompt, systemRole):
+        # Disable the cancel button in the log popup to prevent user interruption during processing
+        self.DownloadLogPopup.cancel_button.setEnabled(False)
+
+        # Show the log popup window to indicate that processing has started
+        self.DownloadLogPopup.show()
+
+        # Log a message to inform the user that the prompt has been sent and a response is pending
+        self.DownloadLogPopup.Append_Log("Prompt sent.\nIt takes minutes\nPlease wait for answer...")
+
+        try:
+            # Initialize the Ollama chat model with specified parameters
+            llm = ChatOllama(
+                model="gemma3:1b",  # Specify the model to use
+                temperature=0,      # Set temperature for deterministic output
+                # other params...
+            )
+
+            # Construct the message sequence with system and user roles
+            messages = [
+                ("system", systemRole),  # Define the system's role or behavior
+                ("human", prompt),       # Provide the user's prompt
+            ]
+
+            # Send the message sequence to the model and retrieve the response
+            response = llm.invoke(messages)
+
+            # Display the model's response in the log popup for the user to see
+            self.DownloadLogPopup.Append_Log("Response:\n" + str(response.content))
+
+        # Handle any exceptions that occur during model interaction or UI updates
+        except Exception as e:
+            # Close the log popup window in case of an error
+            self.DownloadLogPopup.close()
+            # Show a critical error message box with the exception details
+            QMessageBox.critical(
+                None,                      # No parent widget
+                "Operation Failed",        # Title of the error message box
+                f"An error occurred:\n{str(e)}"  # Display the error message
+            )
 
 # Define a custom LangChain tool for querying Wolfram Alpha
 # Inherits from BaseTool to integrate with LangChain's tool interface

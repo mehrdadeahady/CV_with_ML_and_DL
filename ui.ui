@@ -7628,7 +7628,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
        <rect>
         <x>600</x>
         <y>100</y>
-        <width>171</width>
+        <width>101</width>
         <height>41</height>
        </rect>
       </property>
@@ -7640,9 +7640,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>390</y>
+        <y>300</y>
         <width>981</width>
-        <height>291</height>
+        <height>381</height>
        </rect>
       </property>
      </widget>
@@ -7752,9 +7752,9 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>140</y>
+        <y>200</y>
         <width>171</width>
-        <height>41</height>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
@@ -7764,10 +7764,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <widget class="QPushButton" name="pushButton_Ans1LangChain_OpenAIPromptEngineeringLangChain">
       <property name="geometry">
        <rect>
-        <x>210</x>
-        <y>140</y>
-        <width>171</width>
-        <height>41</height>
+        <x>170</x>
+        <y>200</y>
+        <width>81</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
@@ -7777,36 +7777,36 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <widget class="QLabel" name="label_Ans2LangChain_OpenAIPromptEngineeringLangChain">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>190</y>
-        <width>201</width>
-        <height>41</height>
+        <x>500</x>
+        <y>200</y>
+        <width>181</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>Use Wolfram Alpha API in LangChain:</string>
+       <string>Wolfram Alpha API in LangChain:</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_Ans3LangChain_OpenAIPromptEngineeringLangChain">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>240</y>
-        <width>181</width>
-        <height>41</height>
+        <x>260</x>
+        <y>200</y>
+        <width>151</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>Use Wikipedia API in LangChain:</string>
+       <string>Wikipedia API in LangChain:</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButton_Ans2LangChain_OpenAIPromptEngineeringLangChain">
       <property name="geometry">
        <rect>
-        <x>210</x>
-        <y>190</y>
-        <width>171</width>
-        <height>41</height>
+        <x>680</x>
+        <y>200</y>
+        <width>81</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
@@ -7816,10 +7816,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <widget class="QPushButton" name="pushButton_Ans3LangChain_OpenAIPromptEngineeringLangChain">
       <property name="geometry">
        <rect>
-        <x>210</x>
-        <y>240</y>
-        <width>171</width>
-        <height>41</height>
+        <x>410</x>
+        <y>200</y>
+        <width>81</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
@@ -7829,10 +7829,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <widget class="QLabel" name="label_Ans4LangChain_OpenAIPromptEngineeringLangChain">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>290</y>
-        <width>171</width>
-        <height>41</height>
+        <x>770</x>
+        <y>200</y>
+        <width>151</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
@@ -7842,10 +7842,10 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <widget class="QPushButton" name="pushButton_Ans4LangChain_OpenAIPromptEngineeringLangChain">
       <property name="geometry">
        <rect>
-        <x>210</x>
-        <y>290</y>
-        <width>171</width>
-        <height>41</height>
+        <x>910</x>
+        <y>200</y>
+        <width>81</width>
+        <height>31</height>
        </rect>
       </property>
       <property name="text">
@@ -7856,7 +7856,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>340</y>
+        <y>240</y>
         <width>441</width>
         <height>41</height>
        </rect>
@@ -7869,8 +7869,8 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <property name="geometry">
        <rect>
         <x>600</x>
-        <y>340</y>
-        <width>171</width>
+        <y>240</y>
+        <width>101</width>
         <height>41</height>
        </rect>
       </property>
@@ -7882,7 +7882,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <property name="geometry">
        <rect>
         <x>520</x>
-        <y>340</y>
+        <y>240</y>
         <width>71</width>
         <height>41</height>
        </rect>
@@ -7907,13 +7907,52 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <property name="geometry">
        <rect>
         <x>450</x>
-        <y>340</y>
+        <y>240</y>
         <width>71</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
        <string>Select Type:</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_AddAnthropicModelToLangChain_OpenAIPromptEngineeringLangChain">
+      <property name="geometry">
+       <rect>
+        <x>670</x>
+        <y>150</y>
+        <width>321</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add Anthropic Model to LangChain - Chat</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_AddOllamaModelToLangChain_OpenAIPromptEngineeringLangChain">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>150</y>
+        <width>321</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add Ollama Model to LangChain - Chat</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_AddOpenAIModelToLangChain_OpenAIPromptEngineeringLangChain">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>150</y>
+        <width>321</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Add OpenAI Model to LangChain - Chat</string>
       </property>
      </widget>
     </widget>

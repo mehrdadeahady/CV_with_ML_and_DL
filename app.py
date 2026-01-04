@@ -45,7 +45,7 @@ try:
     import PyQt6
     import PyQt6.QtCore
     from PyQt6 import QtCore, QtGui, QtWidgets
-    from PyQt6.QtWidgets import QVBoxLayout,QMenu, QMainWindow, QApplication, QWidget, QMessageBox, QFileDialog
+    from PyQt6.QtWidgets import QVBoxLayout,QMenu, QMainWindow, QApplication, QWidget, QMessageBox, QFileDialog, QInputDialog, QLineEdit
     from PyQt6.QtPdf import QPdfDocument
     from PyQt6.QtPdfWidgets import QPdfView
     from PyQt6.QtGui import QDesktopServices, QCloseEvent,QFont, QFontDatabase
@@ -1220,7 +1220,7 @@ class MainWindow(QMainWindow):
 
     def GetSecretKeys(self):
         _models_ = None
-        keys = {"openai_api_key":None, "WolframAlpha_api_key":None, "LangChain_api_key":None}
+        keys = {"openai_api_key":None, "WolframAlpha_api_key":None, "LangChain_api_key":None}        
         try:
             with open('models.json', 'r') as f:
                 _models_ = json.load(f)
@@ -1264,7 +1264,19 @@ class MainWindow(QMainWindow):
                     QMessageBox.warning(None,"No Key","Register in OpenAI website.\nGet OpenAI api Key.\nInsert openai_api_key in models.json in the root.")
             else:
                 return False
-         
+
+    def _set_env(self, var: str):
+        if not os.environ.get(var):
+            dialog = QInputDialog(None)
+            dialog.setWindowTitle(f"Enter {var}")
+            dialog.setLabelText(f"Please enter the value for {var}:")
+            dialog.setTextEchoMode(QLineEdit.EchoMode.Password)
+            dialog.resize(700, dialog.height())  
+            if dialog.exec():
+                value = dialog.textValue()
+                if value:
+                    os.environ[var] = value
+
     def PrepareGenerateByLLM(self, type):
         text = self.ui.comboBox_OpenAIPromptEngineeringLangChain.currentText().strip()
         kind = self.ui.comboBox_SelectToolType_OpenAIPromptEngineeringLangChain.currentText().strip()
@@ -1306,7 +1318,30 @@ class MainWindow(QMainWindow):
             case "genBYlangchain":
                 self.OpenAILangChainHandler.GenerateByLangChain(WolframAlpha_api_key, LangChain_api_key, kind, openai_api_key, prompt)
 
+    def PrepareChatByLLM(self):
+        prompt = self.ui.plainTextEdit_Prompt_OpenAIPromptEngineeringLangChain.toPlainText().strip()
+        systemRole = self.ui.plainTextEdit_SystemRole_OpenAIPromptEngineeringLangChain.toPlainText().strip()
+        if prompt == "":
+           QMessageBox.warning(None, "No Prompt","Fill the prompt first.\nWhat do you want from AI?")
+           return False
+        sender = self.sender().objectName().strip()
+        print(sender)
+        match sender:
+            case "pushButton_AddOpenAIModelToLangChain_OpenAIPromptEngineeringLangChain":
+                self.OpenAILangChainHandler.AddChatOpenAIModelToLangChain(prompt)
+            case "pushButton_AddAnthropicModelToLangChain_OpenAIPromptEngineeringLangChain":
+                self.OpenAILangChainHandler.AddChatAnthropicModelToLangChain(prompt)
+            case "pushButton_AddOllamaModelToLangChain_OpenAIPromptEngineeringLangChain":
+                if systemRole == "":
+                    QMessageBox.warning(None, "No system Role","Fill the system Role first.\nWhat is expertize of your AI?")
+                    return False
+                
+                self.OpenAILangChainHandler.AddChatOllamaModelToLangChain(prompt, systemRole)
+
     def ConnectActions(self):
+        self.ui.pushButton_AddOllamaModelToLangChain_OpenAIPromptEngineeringLangChain.clicked.connect(self.PrepareChatByLLM)
+        self.ui.pushButton_AddAnthropicModelToLangChain_OpenAIPromptEngineeringLangChain.clicked.connect(self.PrepareChatByLLM)
+        self.ui.pushButton_AddOpenAIModelToLangChain_OpenAIPromptEngineeringLangChain.clicked.connect(self.PrepareChatByLLM)
         self.ui.pushButton_Ans1LangChain_OpenAIPromptEngineeringLangChain.clicked.connect(partial(self.PrepareGenerateByLLM, "ans1"))
         self.ui.pushButton_Ans2LangChain_OpenAIPromptEngineeringLangChain.clicked.connect(partial(self.PrepareGenerateByLLM, "ans2"))
         self.ui.pushButton_Ans3LangChain_OpenAIPromptEngineeringLangChain.clicked.connect(partial(self.PrepareGenerateByLLM, "ans3"))
