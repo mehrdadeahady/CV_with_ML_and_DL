@@ -1,6 +1,7 @@
 import io
 from io import BytesIO
 import requests
+from uuid import uuid4
 import sys
 import contextlib
 import os
@@ -98,11 +99,12 @@ try:
     from langchain_core.messages import AIMessage
     from langchain_classic.chains import LLMChain
     from langchain_classic import hub
+    from langchain_core.documents import Document
 except:
     print("You Should Install langchain Library!")
 try:
     import langchain_openai
-    from langchain_openai import ChatOpenAI
+    from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 except:
      print("You Should Install langchain_openai Library!")
 try:
@@ -118,6 +120,8 @@ except Exception as e:
 except:
     print("You Should Install langchainhub Library!")
 try:
+    from langchain_community.docstore.in_memory import InMemoryDocstore
+    from langchain_community.vectorstores import FAISS
     from langchain_community.agent_toolkits.load_tools import load_tools
     from langchain_community.tools import WikipediaQueryRun
     from langchain_community.utilities import WikipediaAPIWrapper
@@ -131,6 +135,14 @@ try:
    from langchain_ollama.chat_models import ChatOllama
 except:
      print("You Should Install langchain_ollama Library!")
+try:
+   import chromadb
+except:
+     print("You Should Install chromadb Library!")
+try:
+   from langchain_chroma import Chroma
+except:
+     print("You Should Install langchain_chroma Library!")
 try:
    import wikipedia
 except:
@@ -182,6 +194,7 @@ class OpenAIPromptEngineeringLangChain(QObject):
 
             # Append a log message indicating that the prompt has been sent and processing is underway
             self.DownloadLogPopup.Append_Log("Prompt sent.\nIt takes minutes\nPlease wait for answer...")
+            QApplication.processEvents()
 
             # Use a match-case structure to handle different types of generation based on the 'text' parameter
             match text:
@@ -284,6 +297,7 @@ class OpenAIPromptEngineeringLangChain(QObject):
 
             # Append a log message indicating that the prompt has been sent and processing is underway
             self.DownloadLogPopup.Append_Log("Prompt sent.\nIt takes minutes\nPlease wait for answer...")
+            QApplication.processEvents()
 
             # Initialize the OpenAI language model using LangChain's OpenAI wrapper
             # This uses the provided API key to authenticate with OpenAI's API
@@ -318,6 +332,7 @@ class OpenAIPromptEngineeringLangChain(QObject):
 
             # Append a log message indicating that the prompt has been sent and processing is underway
             self.DownloadLogPopup.Append_Log("Prompt sent.\nIt takes minutes\nPlease wait for answer...")
+            QApplication.processEvents()
 
             # Initialize the Wolfram Alpha tool with the provided API key
             wolfram = WolframAlphaTool(appid=WolframAlpha_api_key)
@@ -354,6 +369,7 @@ class OpenAIPromptEngineeringLangChain(QObject):
 
             # Append a log message indicating that the prompt has been sent and processing is underway
             self.DownloadLogPopup.Append_Log("Prompt sent.\nIt takes minutes\nPlease wait for answer...")
+            QApplication.processEvents()
 
             # Initialize the Wikipedia query tool using LangChain's WikipediaAPIWrapper
             wikipedia = WikipediaQueryRun(api_wrapper=WikipediaAPIWrapper())
@@ -393,6 +409,7 @@ class OpenAIPromptEngineeringLangChain(QObject):
 
             # Append a log message indicating that the prompt has been sent and processing is underway
             self.DownloadLogPopup.Append_Log("Prompt sent.\nIt takes minutes\nPlease wait for answer...")
+            QApplication.processEvents()
 
             # Set the OpenAI API key in the environment for use by LangChain's OpenAI wrapper
             os.environ['OPENAI_API_KEY'] = openai_api_key
@@ -613,6 +630,7 @@ class OpenAIPromptEngineeringLangChain(QObject):
 
         # Log a message to inform the user that the prompt has been sent and a response is pending
         self.DownloadLogPopup.Append_Log("Prompt sent.\nIt takes minutes\nPlease wait for answer...")
+        QApplication.processEvents()
 
         try:
             # Initialize the OpenAI chat model using LangChain with the specified model name and provider
@@ -648,6 +666,7 @@ class OpenAIPromptEngineeringLangChain(QObject):
 
         # Log a message to inform the user that the prompt has been sent and a response is pending
         self.DownloadLogPopup.Append_Log("Prompt sent.\nIt takes minutes\nPlease wait for answer...")
+        QApplication.processEvents()
 
         try:
             # Initialize the Anthropic chat model using LangChain with the specified model name and provider
@@ -680,6 +699,7 @@ class OpenAIPromptEngineeringLangChain(QObject):
 
         # Log a message to inform the user that the prompt has been sent and a response is pending
         self.DownloadLogPopup.Append_Log("Prompt sent.\nIt takes minutes\nPlease wait for answer...")
+        QApplication.processEvents()
 
         try:
             # Initialize the Ollama chat model with specified parameters
@@ -710,6 +730,250 @@ class OpenAIPromptEngineeringLangChain(QObject):
                 None,                      # No parent widget
                 "Operation Failed",        # Title of the error message box
                 f"An error occurred:\n{str(e)}"  # Display the error message
+            )
+
+    # Generate a text embedding using LangChain and display the first 100 characters of the vector
+    def DoTextEmbeddingInLangChain(self, text):
+        # Set the OpenAI API key from environment variables
+        self._set_env("OPENAI_API_KEY")
+        # Disable the cancel button in the log popup to prevent user interruption during processing
+        self.DownloadLogPopup.cancel_button.setEnabled(False)
+
+        # Show the log popup window to indicate that processing has started
+        self.DownloadLogPopup.show()
+
+        # Log a message to inform the user that the prompt has been sent and a response is pending
+        self.DownloadLogPopup.Append_Log("Prompt sent.\nIt takes minutes\nPlease wait for answer...")
+        QApplication.processEvents()
+
+        try:
+            # Initialize the OpenAI embedding model
+            embeddings = OpenAIEmbeddings(
+                model="text-embedding-3-large",  # Use the large embedding model for higher dimensionality
+                # Optional: specify dimensions if needed, e.g., dimensions=1024
+            )
+
+            # Generate a single embedding vector for the input text
+            single_vector = embeddings.embed_query(text)
+
+            # Display the first 100 characters of the embedding vector in an information dialog
+            self.DownloadLogPopup.Append_Log(
+                "\nShow the first 100 characters of the vector:\n" + str(single_vector)[:100]
+            )
+
+        # Handle any exceptions that occur during embedding or UI interaction
+        except Exception as e:
+            # Close the log popup window in case of an error (if open)
+            self.DownloadLogPopup.close()
+
+            # Show a critical error message with the exception details
+            QMessageBox.critical(
+                None,                            # No parent widget
+                "Operation Failed",              # Dialog title
+                f"An error occurred:\n{str(e)}"  # Error message
+            )
+
+    # Perform full CRUD operations using a FAISS vector store with LangChain
+    def CRUDInFaissVectorStoreDatabase(self):
+        import platform
+        if platform.system() == "Windows" or os.name == "nt":
+            QMessageBox.warning(None,"Installation Error!","Can't install/run faiss on Windows")
+        else:
+            try:
+                import faiss
+            except:
+                   QMessageBox.warning(None,"Error","You should install faiss library first!")
+                   return
+
+            # Set the OpenAI API key from environment variables
+            self._set_env("OPENAI_API_KEY")
+
+            # Disable the cancel button to prevent user interruption during processing
+            self.DownloadLogPopup.cancel_button.setEnabled(False)
+
+            # Show the log popup to indicate that the operation has started
+            self.DownloadLogPopup.show()
+
+            # Log the start of the FAISS CRUD operation
+            self.DownloadLogPopup.Append_Log("CRUD operations started in FAISS Vector Data Store\nPlease wait...")
+            QApplication.processEvents()
+
+            try:
+                # Initialize the OpenAI embedding model
+                embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+                
+                # Create a FAISS index with the correct dimensionality (1536 for text-embedding-3-large)
+                index = faiss.IndexFlatL2(1536)
+
+                # Initialize the FAISS vector store with in-memory docstore and index mapping
+                vector_store = FAISS(
+                    index=index,                          # FAISS index object
+                    embedding_function=embeddings,        # Embedding function to convert text to vectors
+                    docstore=InMemoryDocstore(),          # In-memory document store
+                    index_to_docstore_id={},              # Mapping from index to document IDs
+                )
+
+                # Define a list of documents to be added
+                documents = [
+                    Document(
+                        page_content="I had chocolate chip pancakes and scrambled eggs for breakfast this morning.",
+                        metadata={"source": "tweet"},
+                    ),
+                    Document(
+                        page_content="The weather forecast for tomorrow is cloudy and overcast, with a high of 62 degrees.",
+                        metadata={"source": "news"},
+                    ),
+                ]
+
+                # Add the documents to the FAISS vector store
+                vector_store.add_documents(documents)
+
+                # Define updated versions of the documents
+                updated_documents = [
+                    Document(
+                        page_content="I had chocolate chip pancakes and fried eggs for breakfast this morning.",
+                        metadata={"source": "tweet"},
+                    ),
+                    Document(
+                        page_content="The weather forecast for tomorrow is sunny and warm, with a high of 82 degrees.",
+                        metadata={"source": "news"},
+                    ),
+                ]
+
+                # Delete the original documents (FAISS doesn't support in-place update, so we delete and re-add)
+                vector_store.delete(["0", "1"])  # Assuming default docstore IDs are "0" and "1"
+
+                # Re-add updated documents
+                vector_store.add_documents(updated_documents)
+
+                # Perform a similarity search for tweet-related content
+                results = vector_store.similarity_search(
+                    "LangChain provides abstractions to make working with LLMs easy",  # Query text
+                    k=2,                                                               # Number of top results
+                    filter={"source": "tweet"},                                        # Filter by metadata
+                )
+
+                # Log the results of the similarity search
+                for res in results:
+                    self.DownloadLogPopup.Append_Log(f"* {res.page_content} [{res.metadata}]")
+
+            # Handle any exceptions that occur during processing
+            except Exception as e:
+                # Close the log popup in case of an error
+                self.DownloadLogPopup.close()
+
+                # Display a critical error message with exception details
+                QMessageBox.critical(
+                    None,                            # No parent widget
+                    "Operation Failed",              # Dialog title
+                    f"An error occurred:\n{str(e)}"  # Error message
+                )
+
+   # Perform full CRUD operations on a Chroma vector store using LangChain
+    def CRUDInChromaVectorStoreDatabase(self):
+        # Set the OpenAI API key from environment variables
+        self._set_env("OPENAI_API_KEY")
+
+        # Disable the cancel button to prevent user interruption during processing
+        self.DownloadLogPopup.cancel_button.setEnabled(False)
+
+        # Show the log popup to indicate that the operation has started
+        self.DownloadLogPopup.show()
+
+        # Log the start of the CRUD operation
+        self.DownloadLogPopup.Append_Log("CRUD operations started in Chroma Vector Data Store\nPlease wait...")
+        QApplication.processEvents()
+
+        try:
+            # Initialize OpenAI embedding model
+            embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+
+            # Create or load a Chroma vector store with persistent storage
+            vector_store = Chroma(
+                collection_name="example_collection",               # Name of the vector collection
+                embedding_function=embeddings,                      # Embedding function to use
+                persist_directory="./chroma_langchain_db",          # Directory to persist data
+            )
+
+            # Define raw document content and metadata as tuples
+            raw_docs = [
+                ("I had chocolate chip pancakes and scrambled eggs for breakfast this morning.", "tweet"),
+                ("The weather forecast for tomorrow is cloudy and overcast, with a high of 62 degrees.", "news"),
+                ("Building an exciting new project with LangChain - come check it out!", "tweet"),
+                ("Robbers broke into the city bank and stole $1 million in cash.", "news"),
+                ("Wow! That was an amazing movie. I can't wait to see it again.", "tweet"),
+                ("Is the new iPhone worth the price? Read this review to find out.", "website"),
+                ("The top 10 soccer players in the world right now.", "website"),
+                ("LangGraph is the best framework for building stateful, agentic applications!", "tweet"),
+                ("The stock market is down 500 points today due to fears of a recession.", "news"),
+                ("I have a bad feeling I am going to get deleted :(", "tweet"),
+            ]
+
+            # Convert raw content into Document objects with metadata
+            documents = [
+                Document(page_content=content, metadata={"source": source})
+                for content, source in raw_docs
+            ]
+
+            # Generate unique UUIDs for each document
+            uuids = [str(uuid4()) for _ in documents]
+
+            # Add documents to the vector store with their corresponding UUIDs
+            vector_store.add_documents(documents=documents, ids=uuids)
+
+            # Define updated versions of the first two documents
+            updated_documents = [
+                Document(
+                    page_content="I had chocolate chip pancakes and fried eggs for breakfast this morning.",
+                    metadata={"source": "tweet"}
+                ),
+                Document(
+                    page_content="The weather forecast for tomorrow is sunny and warm, with a high of 82 degrees.",
+                    metadata={"source": "news"}
+                )
+            ]
+
+            # Update the first two documents in the vector store
+            vector_store.update_documents(ids=uuids[:2], documents=updated_documents)
+
+            # Delete the last document from the vector store
+            vector_store.delete(ids=uuids[-1])
+
+            # Perform a similarity search for tweet-related content
+            results = vector_store.similarity_search(
+                "LangChain provides abstractions to make working with LLMs easy",  # Query text
+                k=3,                                                               # Number of results
+                filter={"source": "tweet"},                                        # Filter by metadata
+            )
+
+            # Log the results of the similarity search
+            for res in results:
+                self.DownloadLogPopup.Append_Log(f"* {res.page_content} [{res.metadata}]")
+
+            # Perform a similarity search with scores for weather-related content
+            results = vector_store.similarity_search_with_score(
+                "Will it be hot tomorrow?",                                       # Query text
+                k=1,                                                               # Top result only
+                filter={"source": "news"}                                          # Filter by metadata
+            )
+
+            # Add a visual separator in the log
+            self.DownloadLogPopup.Append_Log("\n---------------------------------------------\n")
+
+            # Log the scored similarity result
+            for res, score in results:
+                self.DownloadLogPopup.Append_Log(f"* [SIM={score:3f}] {res.page_content} [{res.metadata}]")
+
+        # Handle any exceptions that occur during processing
+        except Exception as e:
+            # Close the log popup in case of an error
+            self.DownloadLogPopup.close()
+
+            # Display a critical error message with exception details
+            QMessageBox.critical(
+                None,                            # No parent widget
+                "Operation Failed",              # Dialog title
+                f"An error occurred:\n{str(e)}"  # Error message
             )
 
 # Define a custom LangChain tool for querying Wolfram Alpha

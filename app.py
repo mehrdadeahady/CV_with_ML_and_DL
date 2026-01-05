@@ -1338,7 +1338,18 @@ class MainWindow(QMainWindow):
                 
                 self.OpenAILangChainHandler.AddChatOllamaModelToLangChain(prompt, systemRole)
 
+    def PrepareTextEmbbeding(self):
+        prompt = self.ui.plainTextEdit_Prompt_OpenAIPromptEngineeringLangChain.toPlainText().strip()
+        if prompt == "":
+            QMessageBox.warning(None, "No Text","Fill the prompt as Text for Embedding(Converting to Numerical Vector) first.")
+            return False
+        
+        self.OpenAILangChainHandler.DoTextEmbeddingInLangChain(prompt)
+
     def ConnectActions(self):
+        self.ui.pushButton_CURDInChromaVectorStoreDatabase_OpenAIPromptEngineeringLangChain.clicked.connect(self.OpenAILangChainHandler.CRUDInChromaVectorStoreDatabase)
+        self.ui.pushButton_CURDInFaissVectorStoreDatabase_OpenAIPromptEngineeringLangChain.clicked.connect(self.OpenAILangChainHandler.CRUDInFaissVectorStoreDatabase)
+        self.ui.pushButton_DoTextEmbeddingInLangChain_OpenAIPromptEngineeringLangChain.clicked.connect(self.PrepareTextEmbbeding)
         self.ui.pushButton_AddOllamaModelToLangChain_OpenAIPromptEngineeringLangChain.clicked.connect(self.PrepareChatByLLM)
         self.ui.pushButton_AddAnthropicModelToLangChain_OpenAIPromptEngineeringLangChain.clicked.connect(self.PrepareChatByLLM)
         self.ui.pushButton_AddOpenAIModelToLangChain_OpenAIPromptEngineeringLangChain.clicked.connect(self.PrepareChatByLLM)
