@@ -1347,6 +1347,9 @@ class MainWindow(QMainWindow):
         self.OpenAILangChainHandler.DoTextEmbeddingInLangChain(prompt)
 
     def ConnectActions(self):
+        self.ui.pushButton_LoadHTMFileInLangChain_OpenAIPromptEngineeringLangChain.clicked.connect(self.OpenAILangChainHandler.LoadDocument)
+        self.ui.pushButton_LoadMarkDownFileInLangChain_OpenAIPromptEngineeringLangChain.clicked.connect(self.OpenAILangChainHandler.LoadDocument)
+        self.ui.pushButton_LoadPDFFileInLangChain_OpenAIPromptEngineeringLangChain.clicked.connect(self.OpenAILangChainHandler.LoadDocument)
         self.ui.pushButton_CURDInChromaVectorStoreDatabase_OpenAIPromptEngineeringLangChain.clicked.connect(self.OpenAILangChainHandler.CRUDInChromaVectorStoreDatabase)
         self.ui.pushButton_CURDInFaissVectorStoreDatabase_OpenAIPromptEngineeringLangChain.clicked.connect(self.OpenAILangChainHandler.CRUDInFaissVectorStoreDatabase)
         self.ui.pushButton_DoTextEmbeddingInLangChain_OpenAIPromptEngineeringLangChain.clicked.connect(self.PrepareTextEmbbeding)
@@ -1975,7 +1978,7 @@ class MainWindow(QMainWindow):
         self.FillCode(GeneratingMimickedStyleMusicByMuseGAN,self.ui.textBrowser_GeneratingMimickedStyleMusicByMuseGAN, 36)
         self.FillCode(GeneratingMusicByGPTStyleMusicTransformer,self.ui.textBrowser_GeneratingMusicByGPTStyleMusicTransformer, 41)
         self.FillCode(TextToImageByDiffusion,self.ui.textBrowser_TextToImageByDiffusion, 44)
-        self.FillCode(OpenAIPromptEngineeringLangChain,self.ui.textBrowser_OpenAIPromptEngineeringLangChain, 18)
+        self.FillCode(OpenAIPromptEngineeringLangChain,self.ui.textBrowser_OpenAIPromptEngineeringLangChain, 20)
 
 def LunchApp():
     import sys

@@ -120,6 +120,7 @@ except Exception as e:
 except:
     print("You Should Install langchainhub Library!")
 try:
+    from langchain_community.document_loaders import BSHTMLLoader, PyPDFLoader, UnstructuredMarkdownLoader
     from langchain_community.docstore.in_memory import InMemoryDocstore
     from langchain_community.vectorstores import FAISS
     from langchain_community.agent_toolkits.load_tools import load_tools
@@ -147,11 +148,15 @@ try:
    import wikipedia
 except:
      print("You Should Install wikipedia Library!")
+try:
+    import nltk
+except:
+    print("You Should Install nltk Library")
 try: 
     from PyQt6.QtMultimedia import QMediaPlayer, QAudioOutput
     from PyQt6.QtGui import  QTextCursor   
     from PyQt6.QtCore import QObject, pyqtSignal, QThread, Qt, QUrl
-    from PyQt6.QtWidgets import QInputDialog, QLineEdit, QMessageBox, QTextEdit, QWidget, QVBoxLayout, QPushButton, QLabel, QDialog, QTextEdit,QScrollArea,QMainWindow,QApplication
+    from PyQt6.QtWidgets import QFileDialog, QInputDialog, QLineEdit, QMessageBox, QTextEdit, QWidget, QVBoxLayout, QPushButton, QLabel, QDialog, QTextEdit,QScrollArea,QMainWindow,QApplication
 except:
     print("You Should Install PyQt6 Library!")
 
@@ -174,6 +179,8 @@ class OpenAIPromptEngineeringLangChain(QObject):
         self.DownloadLogPopup = DownloadLogPopup(
             self.log_emitter
         )
+        # Downloads the Punkt tokenizer model used by NLTK for sentence splitting and word tokenization
+        nltk.download('punkt')
 
     # Define a method to generate different types of content using OpenAI's API
     # Parameters:
@@ -975,6 +982,101 @@ class OpenAIPromptEngineeringLangChain(QObject):
                 "Operation Failed",              # Dialog title
                 f"An error occurred:\n{str(e)}"  # Error message
             )
+
+    # Method to handle loading different types of documents (HTML, Markdown, PDF) into LangChain
+    def LoadDocument(self):
+        # Get the object name of the button that triggered this method (used to determine document type)
+        DocType = self.sender().objectName().strip()
+
+        # Disable the cancel button to prevent user interruption during document processing
+        self.DownloadLogPopup.cancel_button.setEnabled(False)
+
+        # Match the button's object name to determine which document type to load
+        match DocType:
+
+            # Case: Load an HTML file using BeautifulSoup-based loader
+            case "pushButton_LoadHTMFileInLangChain_OpenAIPromptEngineeringLangChain":
+                # Open a file dialog to select an HTML file (.html or .htm)
+                file_path, _ = QFileDialog.getOpenFileName(None, "Select HTML File", "", "HTML Files (*.html *.htm)")
+
+                # Create a loader for HTML using BeautifulSoup
+                loader = BSHTMLLoader(file_path)
+
+                # Load the document(s) from the selected HTML file
+                docs = loader.load()
+
+                # Show the log popup to indicate that document loading has started
+                self.DownloadLogPopup.show()
+
+                # Log the number of documents loaded
+                self.DownloadLogPopup.Append_Log("Document Length: " + str(len(docs)))
+
+                # Log the content of the first document
+                self.DownloadLogPopup.Append_Log(str(docs[0].page_content))
+
+                # Log the metadata of the first document
+                self.DownloadLogPopup.Append_Log(str(docs[0].metadata))
+
+            # Case: Load a Markdown file using UnstructuredMarkdownLoader
+            case "pushButton_LoadMarkDownFileInLangChain_OpenAIPromptEngineeringLangChain":
+                # Open a file dialog to select a Markdown file (.md)
+                file_path, _ = QFileDialog.getOpenFileName(None, "Select Markdown File", "", "Markdown Files (*.md)")
+
+                # Create a loader for Markdown using the unstructured library
+                loader = UnstructuredMarkdownLoader(
+                    file_path,     # Path to the selected file
+                    mode="single", # Load the entire file as one document
+                    strategy="fast" # Use fast parsing strategy
+                )
+
+                # Load the document(s) from the selected Markdown file
+                docs = loader.load()
+
+                # Show the log popup to indicate that document loading has started
+                self.DownloadLogPopup.show()
+
+                # Log the number of documents loaded
+                self.DownloadLogPopup.Append_Log("Document Length: " + str(len(docs)))
+
+                # Log the content of the first document
+                self.DownloadLogPopup.Append_Log(str(docs[0].page_content))
+
+                # Log the metadata of the first document
+                self.DownloadLogPopup.Append_Log(str(docs[0].metadata))
+
+            # Case: Load a PDF file using PyPDFLoader
+            case "pushButton_LoadPDFFileInLangChain_OpenAIPromptEngineeringLangChain":
+                # Open a file dialog to select a PDF file (.pdf)
+                file_path, _ = QFileDialog.getOpenFileName(None, "Select PDF File", "", "PDF Files (*.pdf)")
+
+                # Create a loader for PDF using PyPDFLoader
+                loader = PyPDFLoader(file_path)
+
+                # Load the document(s) from the selected PDF file (each page is a separate document)
+                docs = loader.load()
+
+                # Count the number of pages/documents loaded
+                num_pages = len(docs)
+
+                # Show the log popup to indicate that document loading has started
+                self.DownloadLogPopup.show()
+
+                # Log the number of pages in the PDF
+                self.DownloadLogPopup.Append_Log(f"Number of pages: {num_pages}")
+
+                # Process any pending GUI events to keep the interface responsive
+                QApplication.processEvents()
+
+                # Loop through each page and log its content
+                for i in range(num_pages):
+                    # Log the page number
+                    self.DownloadLogPopup.Append_Log(f"Page {i + 1}:")
+
+                    # Log the content of the current page
+                    self.DownloadLogPopup.Append_Log(str(docs[i].page_content))
+
+                    # Add a newline for readability
+                    self.DownloadLogPopup.Append_Log("\n")
 
 # Define a custom LangChain tool for querying Wolfram Alpha
 # Inherits from BaseTool to integrate with LangChain's tool interface

@@ -30,4 +30,9 @@ transformers
 urllib3
 wikipedia
 wolframalpha
+unstructured 
+markdown
+bs4 
+lxml
+nltk
 faiss
