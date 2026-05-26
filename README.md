@@ -1,8 +1,8 @@
-**CV** (Computer Vision) with **ML** (Machine Learning) and **DL** (Deep Learning) and **GANs** (Generative adversarial networks)
+Learning **AI** ( Artificial Intelligence ) including **CV** ( Computer Vision ), **ML** ( Machine Learning ), **DL** ( Deep Learning ), **GANs** ( Generative adversarial networks ) and Prompt Engineering.
 #### 🎓 Assistant Tool for Data Science &amp; Computer Science Students Learning Artificial Intelligence 
 
 **Purpose:**
--  To support BSc, MSc, and PhD students in mastering the fundamentals of Computer Vision, through the application of Machine Learning and Deep Learning and Generative adversarial networks techniques.
+-  To support BSc, MSc, and PhD students in mastering the fundamentals of Artificial Intelligence including Computer Vision, Machine Learning, Deep Learning and Generative adversarial networks techniques.
 
 ![UI](/icons/AppUI2.jpg)
 
