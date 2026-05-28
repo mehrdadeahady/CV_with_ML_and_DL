@@ -1,4 +1,4 @@
-Learning **AI** ( Artificial Intelligence ) including **CV** ( Computer Vision ), **ML** ( Machine Learning ), **DL** ( Deep Learning ), **GANs** ( Generative adversarial networks ) and Prompt Engineering.
+Training **AI** ( Artificial Intelligence ) including **CV** ( Computer Vision ), **ML** ( Machine Learning ), **DL** ( Deep Learning ), **GANs** ( Generative adversarial networks ) and Prompt Engineering.
 #### 🎓 Assistant Tool for Data Science &amp; Computer Science Students Learning Artificial Intelligence 
 
 **Purpose:**
