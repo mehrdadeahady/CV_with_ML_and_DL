@@ -1,7 +1,7 @@
-1) First Install Python Version above > 3.9
+1) First, install a Python version greater than 3.9.
 
-2) Second run *** pip install -r requirements.txt *** to install required external third party libraries.
+2) Second, run pip install -r requirements.txt to install all required external third‑party libraries.
 
-3)Third run app.py in the root and look at Console, Install all required libraries that are not installed in the second step.
+3) Third, run app.py in the root directory and check the console. Install any additional required libraries that were not installed in the second step.
 
-*** Check on the Internet for Compatibility of required Libraries version with your Python Version ***
+*** Check online for compatibility between the required library versions and your Python version ***

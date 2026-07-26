@@ -1,28 +1,32 @@
-Main Courses for Computer Vision and AI have Comments for begginers and Students.
-UI Code is Clean by Naming Techniques so it does't need Comments.
-GAN comments refined by Copilot for Clarity.
+Main Courses for Computer Vision and AI include comments for beginners and students.
+UI code is clean due to proper naming techniques, so it does not require comments.
+GAN comments are refined by Copilot for clarity.
 
-For extending or changing ui.ui inside qtDesigner:
+For extending or modifying ui.ui inside QtDesigner:
 
-After change in qtDesigner run pyuic6 in terminal to convert the design to python code in qt6:
-(you can load ui but then editing will be hard)
+After making changes in QtDesigner, run pyuic6 in the terminal to convert the design into Python code for Qt6:
+(You can load the .ui file directly, but editing will be more difficult.)
 
 pyuic6 -x -o ./temporaryFile.py ./ui.ui
-explanation:
-pyuic6 > command
--x parameter > making it executable
--o parameter > taking path and name of output temporary File, here temporaryFile.py 
-   < Name of output file should be different than python files inside project to avoid overwrite >
-ui.ui > .ui is an extension for qtdesigner files, help you to change UI easily and faster.
 
-Ui_MainWindow class in temporaryFile should change as below:
+Explanation:
 
+pyuic6 — command
+
+-x — makes the output executable
+
+-o — specifies the path and name of the output temporary file, here temporaryFile.py  
+< The output file name should be different from existing Python files in the project to avoid overwriting >
+
+ui.ui — .ui is the extension for QtDesigner files, helping you modify the UI easily and quickly.
+
+Ui_MainWindow class in temporaryFile.py should be updated as follows:
 #**************************************************************************
-From Ui_MainWindow class in old Ui_MainWindow.py in utilities folder copy codes between below and top symbole lines (these lines have a comment like this beside self: #*******************************)
+From the Ui_MainWindow class in the old Ui_MainWindow.py (inside the utilities folder), copy the code located between the symbol lines (these lines have comments beside self: like this → #*******************************).
 #**************************************************************************
-(There are 3 blocks: 2 blocks in setupUi function and 1 block in retranslateUi function). 
-Replace same lines in Ui_MainWindow class in temporaryFile with copied files.
 
-Now replace old Ui_MainWindow class inside Ui_MainWindow.py with new Ui_MainWindow class in temporaryFile.py.
-You can delete aptemporaryFile.py file. 
+(There are 3 blocks: 2 blocks in the setupUi function and 1 block in the retranslateUi function.)
+Replace the corresponding lines in the Ui_MainWindow class inside temporaryFile.py with the copied blocks.
 
+Now replace the old Ui_MainWindow class inside Ui_MainWindow.py with the updated Ui_MainWindow class from temporaryFile.py.
+You can delete the temporaryFile.py file afterward.
