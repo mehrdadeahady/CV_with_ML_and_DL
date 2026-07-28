@@ -15,8 +15,9 @@ try:
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1' # '0' or '1' 1 activate intel speed support
     # print(tf.config.list_physical_devices('GPU'))
-    import tensorflow as tf
-    from tensorflow.keras.preprocessing.image import ImageDataGenerator
+    #import tensorflow as tf
+    #from tensorflow.keras.preprocessing.image import ImageDataGenerator
+    from keras.src.legacy.preprocessing.image import ImageDataGenerator
     import keras
     from keras.applications import VGG16
     from keras.applications import VGG19

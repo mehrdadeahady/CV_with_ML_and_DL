@@ -1,6 +1,10 @@
-1) First, install a Python version greater than 3.9.
+I developed this project in 2025 using Python 3.13 together with a customized, unofficial TensorFlow build, and standalone Keras in some sections. 
+The project also relied on the 2025 versions of LangChain, LangGraph, and LangSmith. 
+Since these libraries evolve quickly, the current task is to identify compatible modern versions and update both requirements.py and requirements.txt accordingly.
 
-2) Second, run pip install -r requirements.txt to install all required external third‑party libraries.
+1) First, install Python version greater than 3.9.
+
+2) Second, run python requirements.py or run pip install -r requirements.txt to install all required external third‑party libraries.
 
 3) Third, run app.py in the root directory and check the console. Install any additional required libraries that were not installed in the second step.
 

@@ -1,21 +1,5 @@
 # Import Essential Libraries
-from utilities.ScrollableMessageBox import show_scrollable_message
 import os
-from os.path import isfile, join
-import sys
-import time
-import threading
-import urllib.request
-import urllib.error
-import hashlib
-import json
-import traceback
-import random
-import requests
-from urllib3.exceptions import IncompleteRead
-import tarfile
-import gzip
-import shutil
 try:
     os.environ["KERAS_BACKEND"] = "tensorflow"  # or "jax", "torch"
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -38,6 +22,22 @@ try:
     import urllib.request   
 except:
     print("Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
+from utilities.ScrollableMessageBox import show_scrollable_message
+from os.path import isfile, join
+import sys
+import time
+import threading
+import urllib.request
+import urllib.error
+import hashlib
+import json
+import traceback
+import random
+import requests
+from urllib3.exceptions import IncompleteRead
+import tarfile
+import gzip
+import shutil
 try:
     import numpy as np
 except:

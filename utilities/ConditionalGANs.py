@@ -1,16 +1,4 @@
-import io
-import sys
-import contextlib
 import os
-from os.path import isfile, join
-import time
-import shutil
-import random
-import tkinter as tk
-import threading
-from utilities.DeepLearningFoundationOperations import DownloadLogPopup, LogEmitter
-from utilities.DLbyPyTorch import EarlyStop, DLbyPyTorch
-from utilities.ScrollableMessageBox import show_scrollable_message
 try:
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1' # '0' or '1' 1 activate intel speed support
@@ -24,6 +12,18 @@ try:
     from torchvision.datasets import ImageFolder
 except:
     print("Check instalation of torch for Compatibility with OS and HardWare!")
+import io
+import sys
+import contextlib
+from os.path import isfile, join
+import time
+import shutil
+import random
+import tkinter as tk
+import threading
+from utilities.DeepLearningFoundationOperations import DownloadLogPopup, LogEmitter
+from utilities.DLbyPyTorch import EarlyStop, DLbyPyTorch
+from utilities.ScrollableMessageBox import show_scrollable_message
 try:
     import numpy as np
 except:

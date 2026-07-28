@@ -2,6 +2,21 @@ import io
 import sys
 import contextlib
 import os
+try:
+    os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+    os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1' # '0' or '1' 1 activate intel speed support
+    # print(tf.config.list_physical_devices('GPU'))
+    import torch
+    import torch.nn as nn
+    import torch.nn.functional as F
+    from torch.utils.data import DataLoader, Dataset
+    import torchvision
+    import torchvision.transforms as T
+    from torchvision.utils import make_grid, save_image
+    from torchvision.datasets import ImageFolder
+except:
+    print("Check instalation of torch for Compatibility with OS and HardWare!")
 from os.path import isfile, join
 import time
 import pickle
@@ -19,21 +34,6 @@ from utilities.DeepLearningFoundationOperations import DownloadLogPopup, LogEmit
 from utilities.DLbyPyTorch import EarlyStop, DLbyPyTorch, PopupStream
 from utilities.bpe import get_encoder, BPETokenizer
 from utilities.ScrollableMessageBox import show_scrollable_message
-try:
-    os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-    os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1' # '0' or '1' 1 activate intel speed support
-    # print(tf.config.list_physical_devices('GPU'))
-    import torch
-    import torch.nn as nn
-    import torch.nn.functional as F
-    from torch.utils.data import DataLoader, Dataset
-    import torchvision
-    import torchvision.transforms as T
-    from torchvision.utils import make_grid, save_image
-    from torchvision.datasets import ImageFolder
-except:
-    print("Check instalation of torch for Compatibility with OS and HardWare!")
 try:
     import numpy as np
 except:

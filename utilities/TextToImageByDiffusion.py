@@ -4,6 +4,22 @@ import requests
 import sys
 import contextlib
 import os
+try:
+    os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+    os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1' # '0' or '1' 1 activate intel speed support
+    # print(tf.config.list_physical_devices('GPU'))
+    import torch
+    #import torch.nn as nn
+    from torch import nn, einsum
+    import torch.nn.functional as F
+    from torch.utils.data import DataLoader, Dataset
+    import torchvision
+    import torchvision.transforms as T
+    from torchvision.utils import make_grid, save_image
+    from torchvision.datasets import ImageFolder
+except:
+    print("Check instalation of torch for Compatibility with OS and HardWare!")
 from os.path import isfile, join
 import time
 import shutil
@@ -23,22 +39,6 @@ from utilities.bpe import get_encoder, BPETokenizer
 from utilities.processor import (_control_preprocess,_note_preprocess,_divide_note,_make_time_sift_events,_snote2events,encode_midi, decode_midi)
 from utilities.ScrollableMessageBox import show_scrollable_message
 from utilities.diffusion_unet import (transforms,DDIMScheduler,Attention,UNet)
-try:
-    os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-    os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1' # '0' or '1' 1 activate intel speed support
-    # print(tf.config.list_physical_devices('GPU'))
-    import torch
-    #import torch.nn as nn
-    from torch import nn, einsum
-    import torch.nn.functional as F
-    from torch.utils.data import DataLoader, Dataset
-    import torchvision
-    import torchvision.transforms as T
-    from torchvision.utils import make_grid, save_image
-    from torchvision.datasets import ImageFolder
-except:
-    print("Check instalation of torch for Compatibility with OS and HardWare!")
 try:
     import numpy as np
 except:

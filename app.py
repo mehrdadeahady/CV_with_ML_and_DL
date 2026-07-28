@@ -2,11 +2,12 @@
 """
 @Author | Developer: Mehrdad Ahady
 """
+import os
 from utilities.ImagesAndColorsManipulationsAndOprations import ImagesAndColorsManipulationsAndOprations
 from utilities.CreateSimpleCNN import CreateSimpleCNN
 from utilities.DeepLearningFoundationOperations import DeepLearningFoundationOperations
 from utilities.CreateHandGestureRecognitionCNN import CreateHandGestureRecognitionCNN
-from utilities.UI_MainWindow import UI_MainWindow
+from utilities.Ui_MainWindow import UI_MainWindow
 from utilities.FaceRecognitionOperation import FaceRecognitionOperation
 from utilities.TransferLearning import TransferLearning
 from utilities.NeuralStyleTransfer import NeuralStyleTransfer
@@ -24,7 +25,6 @@ from utilities.GeneratingMusicByGPTStyleMusicTransformer import GeneratingMusicB
 from utilities.TextToImageByDiffusion import TextToImageByDiffusion
 from utilities.OpenAIPromptEngineeringLangChain import OpenAIPromptEngineeringLangChain
 from utilities.ScrollableMessageBox import show_scrollable_message
-import os
 import json
 from os import path, listdir
 from os.path import isfile, join
@@ -1983,8 +1983,8 @@ class MainWindow(QMainWindow):
 def LunchApp():
     import sys
     if sys.version_info.major < 3 or sys.version_info.minor < 10:
-       print("You must use Python 3.10 or higher. Recommended version is Python 3.13")
-       raise Exception("You must use Python 3.10 or higher. Recommended version is Python 3.13")
+       print("You must use Python 3.10 or higher. Recommended version is Python 3.11")
+       raise Exception("You must use Python 3.10 or higher. Recommended version is Python 3.11")
     else:
         app = QApplication(sys.argv)
         window = MainWindow()

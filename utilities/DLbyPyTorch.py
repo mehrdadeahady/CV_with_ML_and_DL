@@ -1,15 +1,7 @@
 
-import io
-import sys
-import contextlib
 import os
-from os.path import isfile, join
-import time
-import tkinter as tk
-import threading
-from utilities.DeepLearningFoundationOperations import DownloadLogPopup, LogEmitter
 try:
-   # os.environ["KERAS_BACKEND"] = "torch" # "tensorflow"  # or "jax", "torch"
+    # os.environ["KERAS_BACKEND"] = "torch" # "tensorflow"  # or "jax", "torch"
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1' # '0' or '1' 1 activate intel speed support
     # print(tf.config.list_physical_devices('GPU'))
@@ -19,6 +11,14 @@ try:
     import torchvision.transforms as T
 except:
     print("Check instalation of torch for Compatibility with OS and HardWare!")
+import io
+import sys
+import contextlib
+from os.path import isfile, join
+import time
+import tkinter as tk
+import threading
+from utilities.DeepLearningFoundationOperations import DownloadLogPopup, LogEmitter
 try:
     import numpy as np
 except:

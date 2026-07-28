@@ -1,16 +1,12 @@
-from utilities.CreateSimpleCNN import SignalEmitter, ConsoleCallback, TrainingLogPopupClass
 import os
-from os.path import isfile, join
-import time
-import json
-import math
 try:
     os.environ["KERAS_BACKEND"] = "tensorflow"  # or "jax", "torch"
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1' # '0' or '1' 1 activate intel speed support
     # print(tf.config.list_physical_devices('GPU'))
+    #from tensorflow.keras.preprocessing.image import ImageDataGenerator
+    from keras.src.legacy.preprocessing.image import ImageDataGenerator
     import keras
-    from tensorflow.keras.preprocessing.image import ImageDataGenerator
     from keras import callbacks
     from keras.callbacks import Callback
     from keras.datasets import mnist 
@@ -21,6 +17,11 @@ try:
     from keras.optimizers import SGD 
 except:
     print("Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare!")
+from utilities.CreateSimpleCNN import SignalEmitter, ConsoleCallback, TrainingLogPopupClass
+from os.path import isfile, join
+import time
+import json
+import math
 try:
     import numpy as np
 except:

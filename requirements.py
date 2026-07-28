@@ -1,0 +1,67 @@
+import subprocess
+
+packages = [
+    "numpy",
+    "packaging",
+    "urllib3",
+    "regex",
+    "requests",
+    "tqdm",
+
+    "torch",
+    "torchvision",
+    "tensorflow",
+
+    "opencv-python",
+    "albumentations",
+    "pillow",
+    "pretty_midi",
+    "music21",
+
+    "pandas",
+    "datasets",
+    "nltk",
+    "lxml",
+    "bs4",
+    "markdown",
+    "unstructured",
+
+    "einops",
+    "transformers",
+    "diffusers",
+
+    "langchain-core",
+    "langchain-text-splitters",
+    "langchain",
+    "langchainhub",
+    "langchain-openai",
+    "langchain_classic",
+    "langchain-chroma",
+    "langchain-community",
+    "langchain-ollama"
+
+    "langgraph",
+    "langgraph-checkpoint",
+    "langgraph-prebuilt",
+    "langgraph-sdk",
+
+    "PyQt6",
+    "PyQt6-WebEngine",
+    "PySide6",
+
+    "openai",
+    "wikipedia",
+    "wolframalpha",
+    "faiss-cpu",
+    "cv2-enumerate-cameras"
+]
+
+
+for pkg in packages:
+    try:
+        print(f"Installing {pkg} ...")
+        subprocess.check_call(["pip", "install", pkg])
+    except Exception as e:
+        print(f"You Should Install {pkg} Library")
+        print(e)
+        print("-----------------------------------")

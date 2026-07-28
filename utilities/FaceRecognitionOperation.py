@@ -1,4 +1,3 @@
-from utilities.DeepLearningFoundationOperations import LogEmitter, Downloader, DownloadLogPopup
 import os
 from os.path import isfile, join
 import time
@@ -18,6 +17,7 @@ try:
     from keras.applications.imagenet_utils import preprocess_input
 except:
     print("Check instalation of Tensorflow and Keras for Compatibility with OS and HardWare2!")
+from utilities.DeepLearningFoundationOperations import LogEmitter, Downloader, DownloadLogPopup
 try:
     import numpy as np
 except:

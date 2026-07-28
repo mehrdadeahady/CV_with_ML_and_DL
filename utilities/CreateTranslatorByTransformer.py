@@ -1,21 +1,5 @@
-import io
-import sys
-import contextlib
 import os
 os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
-from os.path import isfile, join
-import time
-import pickle
-import shutil
-import random
-import tkinter as tk
-import threading
-import math
-from copy import deepcopy
-from collections import Counter
-from utilities.DeepLearningFoundationOperations import DownloadLogPopup, LogEmitter
-from utilities.DLbyPyTorch import EarlyStop, DLbyPyTorch, PopupStream
-from utilities.ScrollableMessageBox import show_scrollable_message
 try:
     os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -31,6 +15,22 @@ try:
     from torchvision.datasets import ImageFolder
 except:
     print("Check instalation of torch for Compatibility with OS and HardWare!")
+from os.path import isfile, join
+import io
+import sys
+import contextlib
+import time
+import pickle
+import shutil
+import random
+import tkinter as tk
+import threading
+import math
+from copy import deepcopy
+from collections import Counter
+from utilities.DeepLearningFoundationOperations import DownloadLogPopup, LogEmitter
+from utilities.DLbyPyTorch import EarlyStop, DLbyPyTorch, PopupStream
+from utilities.ScrollableMessageBox import show_scrollable_message
 try:
     import numpy as np
 except:
